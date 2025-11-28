@@ -1,0 +1,312 @@
+.insreq-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    margin: -10px -16px 6px;
+    background-color: #f3faf9;
+    border-bottom: 1px solid #e0f0ee;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.dashboard-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dashboard-subtitle {
+    margin: 4px 0 0;
+    font-size: 14px;
+}
+
+.dashboard-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-user-email {
+    font-size: 13px;
+    color: #555;
+}
+
+.dashboard-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #40b6ae;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.dashboard-user-name {
+    font-weight: 600;
+}
+
+.insreq-tabs-card {
+    padding: 12px 24px 0;
+}
+
+.inv-tabs-row {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 8px;
+}
+
+.inv-tabs {
+    display: inline-flex;
+    background-color: #ffffff;
+    border-radius: 999px;
+    padding: 3px;
+}
+
+.inv-tab {
+    border: none;
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.inv-tab.inv-tab-active {
+    background-color: #0f8b8d;
+    color: #ffffff;
+}
+
+.insreq-body {
+    padding: 0 24px 32px;
+}
+
+.insreq-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.insreq-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 20px 22px 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.insreq-form-title {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.insreq-patient-info {
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.insreq-patient-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.insreq-patient-row {
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+.insreq-claim-details {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.insreq-claim-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.insreq-claim-header,
+.insreq-claim-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.4fr;
+    font-size: 13px;
+}
+
+.insreq-claim-header {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.insreq-claim-row {
+    margin-bottom: 2px;
+}
+
+.insreq-claim-total span:first-child {
+    font-weight: 600;
+}
+
+.insreq-submit-button {
+    margin-top: 12px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    border: none;
+    background-color: #0f8b8d;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.insreq-submit-button:hover {
+    background-color: #0c6f71;
+}
+
+.insreq-actions-row {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.insreq-generate-button {
+    padding: 4px 14px; /* match submit button padding */
+    border-radius: 999px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
+    color: #0f8b8d;
+    font-size: 12px; /* match submit button font size */
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 12px; /* lower the generate button a tiny bit more */
+}
+
+.insreq-generate-button:hover {
+    background-color: #e6f6f7;
+}
+
+.insreq-generate-button,
+.insreq-submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap; /* keep text in one line so height matches */
+    height: 32px;
+    box-sizing: border-box;
+}
+
+.insreq-section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 4px;
+    margin-bottom: 12px;
+}
+
+.insreq-doc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.insreq-doc-item {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #9ca3af;
+    padding: 2px 6px 2px 12px; /* mas gamay ang right padding */
+    background-color: #ffffff;
+}
+
+.insreq-doc-icon {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.insreq-doc-label {
+    font-size: 13px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #b3b3b3; /* lighter, placeholder-like */
+    font-weight: 400;
+}
+
+.insreq-doc-item input[type="file"] {
+    max-width: 190px;
+    font-size: 12px;
+    align-self: stretch;
+    margin-right: 0;
+}
+
+.insreq-complete-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    font-size: 13px;
+}
+
+.insreq-search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 999px;
+    border: 1px solid #9ca3af;
+    padding: 6px 12px;
+    margin-bottom: 14px;
+}
+
+.insreq-search-input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 13px;
+}
+
+.insreq-insurance-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.insreq-insurance-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-radius: 999px;
+    border: 1px solid #9ca3af;
+    padding: 8px 14px;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.insreq-insurance-label {
+    font-size: 13px;
+}
+
+.insreq-insurance-action {
+    font-size: 14px;
+}

@@ -1,0 +1,349 @@
+.create-account-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.create-account-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(135deg, rgba(15, 139, 141, 0.55), rgba(12, 113, 111, 0.55)),
+        url("/images/Background_login.png") center center no-repeat;
+    background-size: cover;
+    filter: blur(5px);
+    transform: scale(1.05);
+    z-index: -1;
+}
+
+.create-account-card {
+    width: 100%;
+    max-width: 520px;
+    background-color: #e4f9f8;
+    border-radius: 28px;
+    padding: 36px 44px 40px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    position: relative;
+    z-index: 1;
+}
+
+.create-account-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #0f4b4b;
+}
+
+.create-account-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+}
+
+.create-account-subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #4b6b69;
+    margin-top: -8px;
+}
+
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-field label {
+    font-size: 13px;
+    color: #0f4b4b;
+    font-weight: 500;
+    text-align: left;
+}
+
+.form-helper {
+    font-size: 12px;
+    color: #5c7d7b;
+    line-height: 1.4;
+}
+
+.validation-summary {
+    max-width: 420px;
+    margin: 0 auto 12px;
+    padding: 12px 16px;
+    background-color: rgba(255, 107, 107, 0.12);
+    border: 1px solid rgba(255, 107, 107, 0.4);
+    border-radius: 16px;
+    color: #7b0606;
+    font-size: 13px;
+}
+
+.status-message {
+    max-width: 420px;
+    margin: 0 auto 16px;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-message.info {
+    background-color: rgba(15, 139, 141, 0.15);
+    color: #0f4b4b;
+}
+
+.status-message.success {
+    background-color: rgba(19, 173, 142, 0.18);
+    color: #0b5b49;
+}
+
+.status-message.error {
+    background-color: rgba(255, 107, 107, 0.18);
+    color: #7b0606;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 420px;
+    margin: 0 auto 14px;
+}
+
+.form-row label {
+    flex: 0 0 90px;
+    font-size: 14px;
+    color: #0f4b4b;
+    text-align: right;
+    font-weight: 500;
+}
+
+.form-input {
+    flex: 1; /* fixed width for all inputs so they line up horizontally */
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 20px !important;
+    border: 3px solid #0f8b8d !important;
+    font-size: 14px;
+    outline: none;
+    background-color: #f4fbfb;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+/* Ensure the Role dropdown (select) visually matches the text inputs */
+select.form-input {
+    padding: 10px 40px 10px 16px;       /* match text input padding with extra space for arrow */
+    line-height: 1.2;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #f4fbfb;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9a98' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 12px 12px;
+}
+
+.role-highlights {
+    max-width: 420px;
+    margin: 20px auto 0;
+    padding: 18px 20px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(15, 139, 141, 0.15);
+}
+
+.role-highlights h3 {
+    margin-top: 0;
+    font-size: 14px;
+    color: #0f4b4b;
+    letter-spacing: 0.02em;
+}
+
+.role-highlights ul {
+    margin: 8px 0 0 18px;
+    padding: 0;
+    color: #355655;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.role-highlights li {
+    margin-bottom: 4px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    max-width: 420px;
+    margin: 24px auto 0;
+    gap: 16px;
+}
+
+.btn-primary,
+.btn-secondary {
+    min-width: 120px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.btn-primary {
+    background-color: #1b7471;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #16615f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(27, 116, 113, 0.3);
+}
+
+.btn-secondary {
+    background-color: #0f8b8d;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background-color: #0c716f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(15, 139, 141, 0.3);
+}
+
+@media (max-width: 600px) {
+    .create-account-card {
+        padding: 24px 20px 20px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-row label {
+        flex: 0 0 auto;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+
+    /* ===== CUSTOM DROPDOWN STYLES ===== */
+    .dropdown-wrapper {
+        position: relative;
+        flex: 1;
+        width: 100%;
+    }
+
+    .custom-dropdown {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        background-color: #f4fbfb;
+        border: 1px solid #c9e3e1 !important;
+        border-radius: 12px !important;
+        padding: 0 12px;
+        height: 42px;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .custom-dropdown:hover {
+            border-color: #0f8b8d !important;
+        }
+
+    .dropdown-selected {
+        color: #333;
+        font-size: 14px;
+        flex: 1;
+    }
+
+    .dropdown-arrow {
+        color: #7a9a98;
+        font-size: 12px;
+        transition: transform 0.3s ease;
+        margin-left: 8px;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #c9e3e1;
+        border-radius: 12px;
+        margin-top: 4px;
+        padding: 8px 0;
+        list-style: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+        .dropdown-menu li {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s ease;
+        }
+
+            .dropdown-menu li:hover {
+                background-color: #f0f9f9;
+            }
+
+    /* Close dropdown when clicking outside */
+    .dropdown-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 999;
+    }
+
+
+}

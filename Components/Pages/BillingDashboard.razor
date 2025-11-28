@@ -1,0 +1,310 @@
+@page "/billing-dashboard"
+@layout Layout.DashboardLayout
+
+<div class="dashboard-page @(IsNotificationDismissed ? "dashboard-no-notification" : string.Empty)">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Dashboard</h1>
+            <p class="dashboard-subtitle">Welcome back Billing Staff!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">billing@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Billing</span>
+        </div>
+    </header>
+
+    @if (IsOverviewMode)
+    {
+        <section class="pm-overview">
+            <div class="pm-overview-header">
+                <h2 class="pm-section-title">Patient Bill Overview</h2>
+                <div class="pm-show-entries">
+                    <span>Show</span>
+                    <select>
+                        <option>5</option>
+                        <option>10</option>
+                        <option>25</option>
+                    </select>
+                    <span>entries</span>
+                </div>
+            </div>
+
+            <div class="pm-filters-row">
+                <div class="pm-alpha-filter">
+                    <button class="pm-filter-pill @(ShowLetters && ActiveLetter is null ? "active" : string.Empty)" @onclick="ToggleLetters">All</button>
+
+                    @if (ShowLetters)
+                    {
+                        @foreach (var letter in Alphabet)
+                        {
+                            <button class="pm-filter-pill @(ActiveLetter == letter ? "active" : string.Empty)"
+                                    @onclick="() => SelectLetter(letter)">@letter</button>
+                        }
+                    }
+                </div>
+
+                <div class="pm-search-row">
+                    <div class="pm-search-box">
+                        <span class="pm-search-icon">🔍</span>
+                        <input class="pm-search-input" placeholder="Search Patient" />
+                    </div>
+
+                    <div class="pm-actions">
+                        <button class="activity-action-btn">Sort</button>
+                        <button class="activity-action-btn">Filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pm-table-outer">
+                <div class="pm-table-wrapper">
+                    <table class="pm-table">
+                        <thead>
+                            <tr>
+                                <th class="pm-col-id">ID</th>
+                                <th>Patient Name<br /><span class="pm-subcol">Email</span></th>
+                                <th>Assessment Status</th>
+                                <th class="pm-col-date">Date of Visit</th>
+                                <th class="pm-col-action">Billing</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in GetOrderedRows().Select((bill, index) => new { Bill = bill, Index = index + 1 }))
+                            {
+                                var b = row.Bill;
+                                <tr>
+                                    <td class="pm-col-id">@row.Index.ToString("00")</td>
+                                    <td>
+                                        <div class="pm-patient-name">@b.PatientName</div>
+                                        <div class="pm-patient-email">@b.PatientEmail</div>
+                                    </td>
+                                    <td>@b.AssessmentStatus</td>
+                                    <td class="pm-col-date">@b.DateOfVisit</td>
+                                    <td class="pm-col-action">
+                                        <button class="pm-view-btn" @onclick="() => ViewBill(b)" aria-label="View patient bill">
+                                            <span class="pm-view-icon"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <button type="button" class="pm-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
+                <span>@(ShowPagination ? "▾" : "▴")</span>
+            </button>
+
+            @if (ShowPagination)
+            {
+                <div class="pm-pagination">
+                    <button class="pm-page-btn">Previous</button>
+                    <button class="pm-page-number active">1</button>
+                    <button class="pm-page-number">2</button>
+                    <button class="pm-page-number">3</button>
+                    <span class="pm-page-dots">...</span>
+                    <button class="pm-page-number">8</button>
+                    <button class="pm-page-btn">Next</button>
+                </div>
+            }
+        </section>
+    }
+    else
+    {
+        @if (IsNotificationDismissed)
+        {
+            <div class="dashboard-notification-toggle" @onclick="ShowNotificationBar">
+                <span class="notification-toggle-icon">▾</span>
+            </div>
+        }
+
+        @if (!IsNotificationDismissed)
+        {
+            <section class="dashboard-notification">
+                <div class="notification-header-row">
+                    <div class="notification-title">Lease Notification</div>
+                    <div class="notification-controls">
+                        @if (IsNotificationCollapsed)
+                        {
+                            <span class="notification-control-icon" @onclick="ShowNotification">▢</span>
+                        }
+                        else
+                        {
+                            <span class="notification-control-icon" @onclick="HideNotification">▭</span>
+                        }
+                        <span class="notification-control-icon" @onclick="ExitNotification">✕</span>
+                    </div>
+                </div>
+
+                @if (!IsNotificationCollapsed)
+                {
+                    <div class="notification-body">
+                        <div class="notification-icon">!</div>
+                        <div class="notification-text">
+                            <div>Unpaid invoice detected: INV-2045 for Patient #122 is overdue by 7 days.</div>
+                            <button class="notification-button">Go to notification</button>
+                        </div>
+                    </div>
+                }
+            </section>
+        }
+
+        <section class="dashboard-cards-row">
+            <div class="dashboard-card">
+                <h3>Daily / Monthly Revenue Trend</h3>
+                <div class="card-placeholder">[Bar chart placeholder]</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Claims Status</h3>
+                <div class="card-placeholder">[Pie chart placeholder]</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Payment Method Distribution</h3>
+                <div class="card-placeholder">[Pie chart placeholder]</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Outstanding Bills / Unpaid Balances</h3>
+                <div class="card-placeholder">[Bar chart placeholder]</div>
+            </div>
+        </section>
+
+        <section class="dashboard-activity">
+            <div class="activity-header">
+                <h3>Recent Activity</h3>
+                <div class="activity-search-area">
+                    <input class="activity-search" placeholder="Search activity..." />
+                    <div class="activity-actions">
+                        <button class="activity-action-btn">Sort</button>
+                        <button class="activity-action-btn">Filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-table-wrapper">
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Activity</th>
+                            <th>User</th>
+                            <th>Date &amp; Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Generated invoice INV-2045 for Patient #122</td>
+                            <td>Billing Staff</td>
+                            <td>10:24 AM</td>
+                        </tr>
+                        <tr>
+                            <td>Marked payment received for Invoice INV-1980</td>
+                            <td>Billing Staff</td>
+                            <td>10:15 AM</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    }
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    private bool IsNotificationCollapsed { get; set; }
+    private bool IsNotificationDismissed { get; set; }
+    private bool IsOverviewMode { get; set; }
+
+    private static readonly string[] Alphabet = new[]
+    {
+        "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
+    };
+
+    private record BillingRow(string PatientName, string PatientEmail, string AssessmentStatus, string DateOfVisit);
+
+    private bool ShowLetters { get; set; }
+    private string? ActiveLetter { get; set; }
+    private bool ShowPagination { get; set; } = true;
+
+    private readonly BillingRow[] Bills = new BillingRow[]
+    {
+        new("Himeko Murata", "himeko_murata@gmail.com", "For Discharge", "03/09/24"),
+        new("Yae Miko", "miko.yae@mail.com", "For Discharge", "03/09/24"),
+        new("Black Swan", "ms.blkswan@mail.com", "For Discharge", "03/09/24"),
+        new("Ruan Mei", "therm_ei@gmail.com", "For Discharge", "03/09/24"),
+        new("Bronya Rand", "bronya.rr@mail.com", "For Discharge", "03/09/24"),
+    };
+
+    protected override void OnParametersSet()
+    {
+        var uri = new Uri(Navigation.Uri);
+        var query = uri.Query ?? string.Empty;
+
+        IsOverviewMode = query.Contains("view=overview", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void ToggleLetters()
+    {
+        ShowLetters = !ShowLetters;
+        ActiveLetter = null;
+    }
+
+    private void SelectLetter(string letter)
+    {
+        ShowLetters = true;
+        ActiveLetter = letter;
+    }
+
+    private IEnumerable<BillingRow> GetOrderedRows()
+    {
+        if (string.IsNullOrEmpty(ActiveLetter))
+        {
+            return Bills;
+        }
+
+        var upper = ActiveLetter.ToUpperInvariant();
+
+        var startsWithLetter = Bills
+            .Where(r => (r.PatientName ?? string.Empty).StartsWith(upper, StringComparison.OrdinalIgnoreCase));
+
+        var others = Bills
+            .Where(r => !(r.PatientName ?? string.Empty).StartsWith(upper, StringComparison.OrdinalIgnoreCase));
+
+        return startsWithLetter.Concat(others);
+    }
+
+    private void HideNotification()
+    {
+        IsNotificationCollapsed = true;
+    }
+
+    private void ShowNotification()
+    {
+        IsNotificationCollapsed = false;
+    }
+
+    private void ExitNotification()
+    {
+        IsNotificationDismissed = true;
+        IsNotificationCollapsed = false;
+    }
+
+    private void ShowNotificationBar()
+    {
+        IsNotificationDismissed = false;
+        IsNotificationCollapsed = false;
+    }
+
+    private void TogglePagination()
+    {
+        ShowPagination = !ShowPagination;
+    }
+
+    private void ViewBill(BillingRow row)
+    {
+        Navigation.NavigateTo("/invoice-pdf");
+    }
+}

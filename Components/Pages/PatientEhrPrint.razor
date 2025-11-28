@@ -1,0 +1,32 @@
+@page "/patient-ehr-print"
+@layout Layout.DashboardLayout
+
+<div class="ehr-print-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Health Records</h1>
+            <p class="dashboard-subtitle">Electronic Health Record (Printable View)</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    <section class="ehr-print-card">
+        <p style="margin-bottom:1rem;">This is a placeholder for the printable EHR layout. You can style and populate this later.</p>
+        <button class="pr-btn pr-btn-secondary" @onclick="GoBack">Back to Records</button>
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/patient-records");
+    }
+}

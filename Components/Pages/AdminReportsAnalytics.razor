@@ -1,0 +1,265 @@
+@page "/admin-reports-analytics"
+@layout Layout.DashboardLayout
+
+<div class="ara-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Reports and Analytics</h1>
+            <p class="dashboard-subtitle">Welcome back Admin!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    <section class="ara-tabs-row">
+        <button class="ara-tab @(ActiveTab == "analytical" ? "active" : string.Empty)" @onclick="SetAnalyticalTab">Analytical Trend Reports</button>
+        <button class="ara-tab @(ActiveTab == "descriptive" ? "active" : string.Empty)" @onclick="SetDescriptiveTab">Basic Descriptive Reports</button>
+        <button class="ara-tab @(ActiveTab == "exception" ? "active" : string.Empty)" @onclick="SetExceptionTab">Revenue Exception Reports</button>
+    </section>
+
+    <section class="ara-main">
+        <div class="ara-report-config">
+            <div class="ara-card-header">
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-report"></span>
+                    <div>
+                        <div class="ara-card-title">Report Configuration</div>
+                        <div class="ara-card-subtitle">@ReportSubtitle</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ara-config-grid">
+                <div class="ara-config-field">
+                    <label>Start Date</label>
+                    <div class="ara-input-with-icon">
+                        <input type="date" />
+                    </div>
+                </div>
+                <div class="ara-config-field">
+                    <label>End Date</label>
+                    <div class="ara-input-with-icon">
+                        <input type="date" />
+                    </div>
+                </div>
+                <div class="ara-config-field">
+                    <label>Report type</label>
+                    <div class="ara-input-with-icon">
+                        <select class="ara-select">
+                            <option value="" selected disabled>Select report</option>
+                            <option>Monthly Revenue</option>
+                            <option>Patient Visit summary</option>
+                            <option>Low Stock Alert</option>
+                            <option>Billing Collection</option>
+                            <option>Staff Activity summary</option>
+                        </select>
+                        <span class="ara-input-icon ara-icon-dropdown"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ara-config-actions">
+                <button class="ara-btn-primary">
+                    <span class="ara-btn-icon ara-icon-generate"></span>
+                    <span>Generate Report</span>
+                </button>
+                <button class="ara-btn-outline">
+                    <span class="ara-btn-icon ara-icon-preview"></span>
+                    <span>Preview</span>
+                </button>
+                <button class="ara-btn-secondary">
+                    <span class="ara-btn-icon ara-icon-export"></span>
+                    <span>Export PDF</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="ara-quick-stats">
+            <div class="ara-card-header">
+                <div>
+                    <div class="ara-card-title">Quick Stats</div>
+                    <div class="ara-card-subtitle">Key performance indicators</div>
+                </div>
+            </div>
+
+            <div class="ara-quick-stats-grid">
+                <div class="ara-stat-card">
+                    <div class="ara-stat-icon ara-icon-revenue"></div>
+                    <div class="ara-stat-label">Total Revenue</div>
+                    <div class="ara-stat-value">₱147,000</div>
+                    <div class="ara-stat-caption">This month</div>
+                </div>
+                <div class="ara-stat-card">
+                    <div class="ara-stat-icon ara-icon-visits"></div>
+                    <div class="ara-stat-label">Monthly Visits</div>
+                    <div class="ara-stat-value">170</div>
+                    <div class="ara-stat-caption">Unique patients</div>
+                </div>
+                <div class="ara-stat-card">
+                    <div class="ara-stat-icon ara-icon-patients"></div>
+                    <div class="ara-stat-label">Active Patients</div>
+                    <div class="ara-stat-value">280</div>
+                    <div class="ara-stat-caption">57% female / 43% male</div>
+                </div>
+                <div class="ara-stat-card">
+                    <div class="ara-stat-icon ara-icon-alert"></div>
+                    <div class="ara-stat-label">Low Stock Items</div>
+                    <div class="ara-stat-value">5</div>
+                    <div class="ara-stat-caption">Inventory alerts</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ara-quick-reports">
+            <div class="ara-card-header">
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-quickreports"></span>
+                    <div class="ara-card-title">Quick Reports</div>
+                </div>
+                <button class="ara-link-button">View All</button>
+            </div>
+
+            <div class="ara-quickreports-list">
+                @foreach (var qr in QuickReports)
+                {
+                    <div class="ara-quickreports-row">
+                        <div class="ara-quickreports-name">@qr.Name</div>
+                        <div class="ara-quickreports-preview">
+                            <span class="ara-quickreports-icon"></span>
+                            <span class="ara-quickreports-label">[Chart Preview]</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="ara-dept-analytics">
+            <div class="ara-card-header">
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-deptgrid"></span>
+                    <div class="ara-card-title">Department Analytics</div>
+                </div>
+            </div>
+
+            <div class="ara-dept-grid">
+                @foreach (var d in DepartmentRevenue)
+                {
+                    <div class="ara-dept-card">
+                        <div class="ara-dept-name">@d.Name</div>
+                        <div class="ara-dept-value">@d.Amount</div>
+                        <div class="ara-dept-percent">@d.Percent%</div>
+                        <div class="ara-dept-bar">
+                            <div class="ara-dept-bar-fill" style="width:@d.Percent%"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="ara-dept-categories">
+            <div class="ara-card-header">
+                <div class="ara-card-title">Department Analytics</div>
+            </div>
+            <div class="ara-deptcat-grid">
+                <div class="ara-deptcat-card">
+                    <div class="ara-deptcat-icon ara-icon-financial"></div>
+                    <div class="ara-deptcat-title">Financial</div>
+                    <div class="ara-deptcat-line">Revenue Reports</div>
+                    <div class="ara-deptcat-line">Billing Analytics</div>
+                    <div class="ara-deptcat-line">Expense Tracking</div>
+                    <div class="ara-deptcat-view">View</div>
+                </div>
+                <div class="ara-deptcat-card">
+                    <div class="ara-deptcat-icon ara-icon-operational"></div>
+                    <div class="ara-deptcat-title">Operational</div>
+                    <div class="ara-deptcat-line">Patient Reports</div>
+                    <div class="ara-deptcat-line">Visit Analytics</div>
+                    <div class="ara-deptcat-line">Staff Performance</div>
+                    <div class="ara-deptcat-view">View</div>
+                </div>
+                <div class="ara-deptcat-card">
+                    <div class="ara-deptcat-icon ara-icon-inventory"></div>
+                    <div class="ara-deptcat-title">Inventory</div>
+                    <div class="ara-deptcat-line">Stock Reports</div>
+                    <div class="ara-deptcat-line">Usage</div>
+                    <div class="ara-deptcat-line">Expiry</div>
+                    <div class="ara-deptcat-view">View</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ara-recent-reports">
+            <div class="ara-card-header">
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-recent"></span>
+                    <div class="ara-card-title">Recently Generated</div>
+                </div>
+                <button class="ara-link-button">Generate new</button>
+            </div>
+
+            <div class="ara-recent-list">
+                @foreach (var r in RecentReports)
+                {
+                    <div class="ara-recent-row">
+                        <div class="ara-recent-name">@r.Name</div>
+                        <div class="ara-recent-time">@r.GeneratedAt</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+</div>
+
+@code {
+    private string ActiveTab { get; set; } = "analytical";
+
+    private string ReportSubtitle => ActiveTab switch
+    {
+        "descriptive" => "Select filters to generate basic descriptive reports",
+        "exception" => "Highlight outliers and revenue exceptions for review",
+        _ => "Select date range and report type to generate analytics"
+    };
+
+    private record QuickReport(string Name);
+    private record DeptRevenue(string Name, string Amount, int Percent);
+    private record RecentReport(string Name, string GeneratedAt);
+
+    private readonly List<QuickReport> QuickReports = new()
+    {
+        new("Revenue Trend (Monthly)"),
+        new("Patient Demographics"),
+        new("Department Performance"),
+        new("Inventory Status"),
+    };
+
+    private readonly List<DeptRevenue> DepartmentRevenue = new()
+    {
+        new("Inpatient", "₱65,000", 45),
+        new("Outpatient", "₱45,000", 31),
+        new("Pharmacy", "₱25,000", 17),
+        new("Laboratory", "₱25,000", 8),
+    };
+
+    private readonly List<RecentReport> RecentReports = new()
+    {
+        new("Monthly Revenue Report - Nov 2024", "[11/15 2:30 PM]"),
+        new("Patient Demographics - Q4 2024", "[11/14 10:15 AM]"),
+        new("Inventory Audit Report", "[11/13 3:45 PM]"),
+        new("Staff Performance - October", "[11/12 9:20 AM]"),
+    };
+
+    private void SetTab(string key)
+    {
+        ActiveTab = key;
+    }
+
+    private void SetAnalyticalTab() => SetTab("analytical");
+
+    private void SetDescriptiveTab() => SetTab("descriptive");
+
+    private void SetExceptionTab() => SetTab("exception");
+}

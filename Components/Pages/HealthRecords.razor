@@ -1,0 +1,208 @@
+@page "/health-records"
+@layout Layout.DashboardLayout
+@using IT_13FinalProject.Services
+@using IT_13FinalProject.Models;
+@inject IHealthRecordService HealthRecordService
+@inject NavigationManager Navigation
+
+<div class="pm-page">
+    <!-- Header reusing the same style as Dashboard/Patient Management -->
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Health Records</h1>
+            <p class="dashboard-subtitle">Welcome back Admin!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    <!-- ===================== PATIENT RECORDS OVERVIEW ===================== -->
+    <section class="pm-overview">
+        <div class="pm-overview-header">
+            <h2 class="pm-section-title">Patient Records Overview</h2>
+            <div class="pm-show-entries">
+                <span>Show</span>
+                <select>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>25</option>
+                </select>
+                <span>entries</span>
+            </div>
+        </div>
+
+        <div class="pm-filters-row">
+            <div class="pm-alpha-filter">
+                <button class="pm-filter-pill @(ShowLetters && ActiveLetter is null ? "active" : string.Empty)" @onclick="ToggleLetters">All</button>
+
+                @if (ShowLetters)
+                {
+                    @foreach (var letter in Alphabet)
+                    {
+                        <button class="pm-filter-pill @(ActiveLetter == letter ? "active" : string.Empty)"
+                                @onclick="() => SelectLetter(letter)">
+                            @letter
+                        </button>
+                    }
+                }
+            </div>
+
+            <div class="pm-search-row">
+                <div class="pm-search-box">
+                    <span class="pm-search-icon"></span>
+                    <input class="pm-search-input" placeholder="Search Patient" />
+                </div>
+
+                <div class="pm-actions">
+                    <button class="activity-action-btn">Sort</button>
+                    <button class="activity-action-btn">Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pm-table-outer">
+            <div class="pm-table-wrapper">
+                <table class="pm-table">
+                    <thead>
+                        <tr>
+                            <th class="pm-col-id">ID</th>
+                            <th>Patient Name<br /><span class="pm-subcol">Email</span></th>
+                            <th>Doctor's Name<br /><span class="pm-subcol">Email</span></th>
+                            <th>Nurse Assist<br /><span class="pm-subcol">Email</span></th>
+                            <th class="pm-col-date">Date of Check-up</th>
+                            <th class="pm-col-status">Visit Status</th>
+                            <th class="pm-col-action">More Info</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Records != null && Records.Any())
+                        {
+                            @foreach (var row in GetOrderedRecords().Select((record, index) => new { Record = record, Index = index + 1 }))
+                            {
+                                var r = row.Record;
+                                <tr>
+                                    <td class="pm-col-id">@row.Index.ToString("00")</td>
+                                    <td>
+                                        <div class="pm-patient-name">@r.PatientName</div>
+                                        <div class="pm-patient-email">@r.PatientEmail</div>
+                                    </td>
+                                    <td>
+                                        <div class="pm-patient-name">@r.DoctorName</div>
+                                        <div class="pm-patient-email">@r.DoctorEmail</div>
+                                    </td>
+                                    <td>
+                                        <div class="pm-patient-name">@r.NurseName</div>
+                                        <div class="pm-patient-email">@r.NurseEmail</div>
+                                    </td>
+                                    <td class="pm-col-date">@r.DateOfCheckup</td>
+                                    <td class="pm-col-status">@r.VisitStatus</td>
+                                    <td class="pm-col-action">
+                                        <button class="pm-view-btn" @onclick="() => ViewRecord(r)" aria-label="View patient record">
+                                            <span class="pm-view-icon"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center">No health records found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button type="button" class="pm-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
+            <span>@(ShowPagination ? "›" : "‹")</span>
+        </button>
+
+        @if (ShowPagination)
+        {
+            <div class="pm-pagination">
+                <button class="pm-page-btn">Previous</button>
+                <button class="pm-page-number active">1</button>
+                <button class="pm-page-number">2</button>
+                <button class="pm-page-number">3</button>
+                <span class="pm-page-dots">...</span>
+                <button class="pm-page-number">8</button>
+                <button class="pm-page-btn">Next</button>
+            </div>
+        }
+    </section>
+</div>
+
+@code {
+    private static readonly string[] Alphabet = new[]
+    {
+        "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
+    };
+
+    private bool ShowLetters { get; set; }
+    private string? ActiveLetter { get; set; }
+    private bool ShowPagination { get; set; } = true;
+
+    private List<HealthRecord> Records { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Use the correct method name - GetAllAsync instead of GetAll
+            Records = (await HealthRecordService.GetAllAsync())
+                .OrderBy(r => r.PatientName)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            // Handle error - you might want to show an error message
+            Console.WriteLine($"Error loading health records: {ex.Message}");
+        }
+    }
+
+    private void ViewRecord(HealthRecord record)
+    {
+        Navigation.NavigateTo($"/patient-records/{record.RecordId}");
+    }
+
+    private void ToggleLetters()
+    {
+        ShowLetters = !ShowLetters;
+        ActiveLetter = null;
+    }
+
+    private void SelectLetter(string letter)
+    {
+        ShowLetters = true;
+        ActiveLetter = letter;
+    }
+
+    private IEnumerable<HealthRecord> GetOrderedRecords()
+    {
+        if (string.IsNullOrEmpty(ActiveLetter))
+        {
+            return Records;
+        }
+
+        var upper = ActiveLetter.ToUpperInvariant();
+
+        var startsWithLetter = Records
+            .Where(r => (r.PatientName ?? string.Empty).StartsWith(upper, StringComparison.OrdinalIgnoreCase));
+
+        var others = Records
+            .Where(r => !(r.PatientName ?? string.Empty).StartsWith(upper, StringComparison.OrdinalIgnoreCase));
+
+        return startsWithLetter.Concat(others);
+    }
+
+    private void TogglePagination()
+    {
+        ShowPagination = !ShowPagination;
+    }
+}

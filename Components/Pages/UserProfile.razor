@@ -1,0 +1,251 @@
+@page "/user-profile"
+@layout Layout.DashboardLayout
+
+<div class="dashboard-page up-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">User Profile</h1>
+            <p class="dashboard-subtitle">Welcome back Admin!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    <section class="up-main">
+        <div class="up-topbar">
+            <div class="up-userchip">
+                <div class="up-userchip-avatar">JD</div>
+                <div class="up-userchip-text">
+                    <div class="up-userchip-name">Juan Dela Cruz</div>
+                    <div class="up-userchip-email">juan.delacruz@gmail.com</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="up-card">
+            <div class="up-card-inner">
+                <div class="up-left">
+                    <div class="up-photo-frame">
+                        <div class="up-photo-icon">＋</div>
+                    </div>
+                    <div class="up-upload-row">
+                        <InputFile OnChange="OnProfileImageSelected" />
+                    </div>
+                </div>
+
+                <div class="up-right">
+                    <h2 class="up-name">Juan Dela Cruz</h2>
+                    <div class="up-field-row"><span class="up-field-label">Email:</span> <a href="mailto:juan.delacruz@gmail.com" class="up-field-link">juan.delacruz@gmail.com</a></div>
+                    <div class="up-field-row"><span class="up-field-label">Username:</span> <span class="up-field-value">Admin1</span></div>
+                    <div class="up-field-row"><span class="up-field-label">Pass:</span> <span class="up-field-value">12345</span></div>
+                    <div class="up-field-row"><span class="up-field-label">Role:</span> <span class="up-field-value">Admin</span></div>
+
+                    <div class="up-actions">
+                        <button type="button" class="up-action-link" @onclick="OpenMoreDetails">Add more details</button>
+                        <button type="button" class="up-action-link" @onclick="OpenEditDetails">Edit details</button>
+                        <button type="button" class="up-action-link" @onclick="OpenResetOptions">Reset Credentials</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @if (ShowMoreDetails)
+    {
+        <div class="up-more-overlay">
+            <div class="up-more-panel">
+                <h2 class="up-more-title">More Details</h2>
+
+                <div class="up-more-fields">
+                    <input class="up-more-input" placeholder="Address" />
+                    <input class="up-more-input" placeholder="Contact" />
+                    <input class="up-more-input" placeholder="Nationality" />
+                    <input class="up-more-input" placeholder="Profession" />
+                    <input class="up-more-input" placeholder="Socialization" />
+                    <input class="up-more-input" placeholder="License No." />
+                    <input class="up-more-input" placeholder="Date of Birth" />
+                    <select class="up-more-input">
+                        <option value="" disabled selected>Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="up-more-actions">
+                    <button type="button" class="up-more-btn up-more-cancel" @onclick="CloseMoreDetails">Cancel</button>
+                    <button type="button" class="up-more-btn up-more-save" @onclick="SaveMoreDetails">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ShowEditDetails)
+    {
+        <div class="up-more-overlay">
+            <div class="up-more-panel">
+                <h2 class="up-more-title">Edit Details</h2>
+
+                <div class="up-more-fields">
+                    <input class="up-more-input" placeholder="Name" />
+                    <input class="up-more-input" placeholder="Email" />
+                    <input class="up-more-input" placeholder="Address" />
+                    <input class="up-more-input" placeholder="Contact" />
+                    <input class="up-more-input" placeholder="Nationality" />
+                    <input class="up-more-input" placeholder="Profession" />
+                    <input class="up-more-input" placeholder="Socialization" />
+                    <input class="up-more-input" placeholder="License No." />
+                    <input class="up-more-input" placeholder="Date of Birth" />
+                    <select class="up-more-input">
+                        <option value="" disabled selected>Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="up-more-actions">
+                    <button type="button" class="up-more-btn up-more-cancel" @onclick="CloseEditDetails">Cancel</button>
+                    <button type="button" class="up-more-btn up-more-save" @onclick="SaveEditDetails">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ShowResetOptions)
+    {
+        <div class="up-more-overlay">
+            <div class="up-more-panel">
+                <h2 class="up-more-title">Reset Credentials</h2>
+
+                <div class="up-reset-options">
+                    <button type="button" class="up-reset-option-btn" @onclick="OpenChangeUsername">Change Username</button>
+                    <button type="button" class="up-reset-option-btn" @onclick="OpenChangePassword">Change Password</button>
+                </div>
+
+                <div class="up-more-actions">
+                    <button type="button" class="up-more-btn up-more-cancel" @onclick="CloseResetOptions">Cancel</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ShowChangePassword)
+    {
+        <div class="up-more-overlay">
+            <div class="up-more-panel">
+                <h2 class="up-more-title">Change Password</h2>
+
+                <div class="up-more-fields">
+                    <input class="up-more-input" placeholder="Current password" />
+                    <input class="up-more-input" placeholder="New password" />
+                    <input class="up-more-input" placeholder="Confirm new password" />
+                </div>
+
+                <div class="up-more-actions">
+                    <button type="button" class="up-more-btn up-more-cancel" @onclick="CloseChangePassword">Cancel</button>
+                    <button type="button" class="up-more-btn up-more-save" @onclick="SaveChangePassword">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ShowChangeUsername)
+    {
+        <div class="up-more-overlay">
+            <div class="up-more-panel">
+                <h2 class="up-more-title">Change Username</h2>
+
+                <div class="up-more-fields">
+                    <input class="up-more-input" placeholder="Current username" />
+                    <input class="up-more-input" placeholder="New username" />
+                    <input class="up-more-input" placeholder="Confirm new username" />
+                </div>
+
+                <div class="up-more-actions">
+                    <button type="button" class="up-more-btn up-more-cancel" @onclick="CloseChangeUsername">Cancel</button>
+                    <button type="button" class="up-more-btn up-more-save" @onclick="SaveChangeUsername">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@using Microsoft.AspNetCore.Components.Forms
+
+@code {
+    private bool ShowMoreDetails { get; set; }
+    private bool ShowEditDetails { get; set; }
+    private bool ShowResetOptions { get; set; }
+    private bool ShowChangePassword { get; set; }
+    private bool ShowChangeUsername { get; set; }
+
+    private string? _selectedFileName;
+
+    private void OpenMoreDetails() => ShowMoreDetails = true;
+
+    private void CloseMoreDetails() => ShowMoreDetails = false;
+
+    private void SaveMoreDetails()
+    {
+        // Sample only; values will be wired to real data later.
+        ShowMoreDetails = false;
+    }
+
+    private void OnProfileImageSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        _selectedFileName = file?.Name;
+    }
+
+    private void OpenEditDetails() => ShowEditDetails = true;
+
+    private void CloseEditDetails() => ShowEditDetails = false;
+
+    private void SaveEditDetails()
+    {
+        // Sample only; values will be wired to real data later.
+        ShowEditDetails = false;
+    }
+
+    private void OpenResetOptions()
+    {
+        ShowResetOptions = true;
+        ShowChangePassword = false;
+        ShowChangeUsername = false;
+    }
+
+    private void CloseResetOptions() => ShowResetOptions = false;
+
+    private void OpenChangePassword()
+    {
+        ShowResetOptions = false;
+        ShowChangePassword = true;
+    }
+
+    private void CloseChangePassword() => ShowChangePassword = false;
+
+    private void SaveChangePassword()
+    {
+        // Sample only; values will be wired to real data later.
+        ShowChangePassword = false;
+    }
+
+    private void OpenChangeUsername()
+    {
+        ShowResetOptions = false;
+        ShowChangeUsername = true;
+    }
+
+    private void CloseChangeUsername() => ShowChangeUsername = false;
+
+    private void SaveChangeUsername()
+    {
+        // Sample only; values will be wired to real data later.
+        ShowChangeUsername = false;
+    }
+}

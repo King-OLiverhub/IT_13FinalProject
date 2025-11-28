@@ -1,0 +1,159 @@
+@page "/doctor-consultation-edit"
+@layout Layout.DashboardLayout
+
+<div class="dc-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Doctors Consultation Form</h1>
+            <p class="dashboard-subtitle">Clinical Findings, Treatment, and Approval</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">doctor@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Clinical</span>
+        </div>
+    </header>
+
+    <section class="dc-card">
+        <div class="dc-header-row">
+            <div class="dc-title-wrap">
+                <span class="dc-title-icon">👤</span>
+                <h2 class="dc-title">Doctors Consultation Form</h2>
+            </div>
+        </div>
+
+        <div class="dc-grid">
+            <!-- Clinical Findings -->
+            <div class="dc-column">
+                <h3 class="dc-section-title">Clinical Findings</h3>
+
+                <label class="dc-field">
+                    <span class="dc-label">Subjective Findings</span>
+                    <textarea class="dc-input dc-input-multi" oninput="this.style.height='auto';this.style.height=this.scrollHeight + 'px'"></textarea>
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Objective Findings</span>
+                    <textarea class="dc-input dc-input-multi" oninput="this.style.height='auto';this.style.height=this.scrollHeight + 'px'"></textarea>
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Assessment / Diagnosis</span>
+                    <textarea class="dc-input dc-input-multi" oninput="this.style.height='auto';this.style.height=this.scrollHeight + 'px'"></textarea>
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">ICD-10 Code</span>
+                    <input class="dc-input" />
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Additional Tests Order</span>
+                    <input class="dc-input" />
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Doctor's Remarks (Notes)</span>
+                    <textarea class="dc-input dc-input-multi" oninput="this.style.height='auto';this.style.height=this.scrollHeight + 'px'"></textarea>
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Nurse Remarks (Notes)</span>
+                    <textarea class="dc-input dc-input-multi" oninput="this.style.height='auto';this.style.height=this.scrollHeight + 'px'"></textarea>
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Recommendation (Notes)</span>
+                    <textarea class="dc-input dc-input-multi" oninput="this.style.height='auto';this.style.height=this.scrollHeight + 'px'"></textarea>
+                </label>
+            </div>
+
+            <!-- Treatment / Prescription -->
+            <div class="dc-column">
+                <h3 class="dc-section-title">Treatment / Prescription</h3>
+
+                <label class="dc-field">
+                    <span class="dc-label">Medicine Name</span>
+                    <input class="dc-input" />
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Dosage</span>
+                    <input class="dc-input" />
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Frequency</span>
+                    <input class="dc-input" />
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Duration</span>
+                    <input class="dc-input" />
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Notes / Special Instructions</span>
+                    <textarea class="dc-input dc-input-multi" oninput="this.style.height='auto';this.style.height=this.scrollHeight + 'px'"></textarea>
+                </label>
+
+                <h3 class="dc-section-title dc-section-title-spaced">Follow-up &amp; Outcome</h3>
+
+                <label class="dc-field dc-field-inline-icon">
+                    <span class="dc-label">Follow-up Date</span>
+                    <div class="dc-input-with-icon">
+                        <input class="dc-input" type="date" />
+                        <span class="dc-input-icon">📅</span>
+                    </div>
+                </label>
+
+                <label class="dc-field">
+                    <span class="dc-label">Visit Status</span>
+                    <select class="dc-input">
+                        <option value="">Select status</option>
+                        <option>New</option>
+                        <option>Follow-up</option>
+                        <option>Completed</option>
+                    </select>
+                </label>
+
+                <h3 class="dc-section-title dc-section-title-spaced">Doctor Approval</h3>
+
+                <label class="dc-field">
+                    <span class="dc-label">Electronic Signature / Name</span>
+                    <select class="dc-input">
+                        <option value="">Select doctor</option>
+                        <option>Doctor 1</option>
+                        <option>Doctor 2</option>
+                    </select>
+                </label>
+
+                <label class="dc-field dc-field-inline-icon">
+                    <span class="dc-label">Date Approved</span>
+                    <div class="dc-input-with-icon">
+                        <input class="dc-input" type="date" />
+                        <span class="dc-input-icon">📅</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <div class="dc-notes-section">
+            <label class="dc-field">
+                <span class="dc-label">Doctors Initial Remarks</span>
+                <textarea class="dc-input dc-input-multi" oninput="this.style.height='auto';this.style.height=this.scrollHeight + 'px'"></textarea>
+            </label>
+        </div>
+
+        <div class="dc-actions dc-actions--edit">
+            <button class="dc-btn dc-btn-delete">Delete</button>
+            <button class="dc-btn dc-btn-update">Update</button>
+        </div>
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+}

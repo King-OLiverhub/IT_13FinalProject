@@ -1,0 +1,273 @@
+@using IT_13FinalProject.Components.Pages
+@using IT_13FinalProject.Components.Layout
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Routing
+@inject NavigationManager Navigation
+
+@code {
+    private string _currentPath = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        _currentPath = GetCurrentPath();
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        _currentPath = GetCurrentPath();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private string GetCurrentPath()
+    {
+        var relative = Navigation.ToBaseRelativePath(Navigation.Uri);
+
+        // Strip query string and fragment so routes with parameters (e.g. "billing-dashboard?view=overview")
+        // still match the base path ("billing-dashboard") in the routing table below.
+        var pathOnly = relative.Split('?', '#')[0];
+
+        return pathOnly.Trim('/').ToLowerInvariant();
+    }
+}
+
+@* Simple router: decide which page component to render based on the current path.
+   Layouts (DashboardLayout, etc.) are still controlled by each page via @layout,
+   so we do NOT wrap them here. *@
+
+@{
+    var path = _currentPath;
+}
+
+@if (string.IsNullOrEmpty(path) || path == "" || path == "login")
+{
+    <Login />
+}
+else if (path == "dashboard")
+{
+    <DashboardLayout>
+        <Dashboard />
+    </DashboardLayout>
+}
+else if (path == "nurse-dashboard")
+{
+    <DashboardLayout>
+        <NurseDashboard />
+    </DashboardLayout>
+}
+else if (path == "doctor-dashboard")
+{
+    <DashboardLayout>
+        <DoctorDashboard />
+    </DashboardLayout>
+}
+else if (path == "billing-dashboard")
+{
+    <DashboardLayout>
+        <BillingDashboard />
+    </DashboardLayout>
+}
+else if (path == "billing-patient-overview")
+{
+    <DashboardLayout>
+        <BillingPatientOverview />
+    </DashboardLayout>
+}
+else if (path == "billing-computation")
+{
+    <DashboardLayout>
+        <BillingComputation />
+    </DashboardLayout>
+}
+else if (path == "billing-insurance-claims")
+{
+    <DashboardLayout>
+        <BillingInsuranceClaims />
+    </DashboardLayout>
+}
+else if (path == "billing-insurance-request")
+{
+    <DashboardLayout>
+        <BillingInsuranceRequest />
+    </DashboardLayout>
+}
+else if (path == "admin-insurance-claims")
+{
+    <DashboardLayout>
+        <AdminInsuranceClaims />
+    </DashboardLayout>
+}
+else if (path == "billing-cashiering")
+{
+    <DashboardLayout>
+        <BillingCashiering />
+    </DashboardLayout>
+}
+else if (path == "inventory-dashboard")
+{
+    <DashboardLayout>
+        <InventoryDashboard />
+    </DashboardLayout>
+}
+else if (path == "inventory-prescriptions")
+{
+    <DashboardLayout>
+        <InventoryPrescriptions />
+    </DashboardLayout>
+}
+else if (path == "pharmacy-inventory")
+{
+    <DashboardLayout>
+        <PharmacyInventory />
+    </DashboardLayout>
+}
+else if (path == "admin-pharmacy-inventory")
+{
+    <DashboardLayout>
+        <AdminPharmacyInventory />
+    </DashboardLayout>
+}
+else if (path == "admin-reports-analytics")
+{
+    <DashboardLayout>
+        <AdminReportsAnalytics />
+    </DashboardLayout>
+}
+else if (path == "patient-management")
+{
+    <DashboardLayout>
+        <PatientManagement />
+    </DashboardLayout>
+}
+else if (path == "patient-list")
+{
+    <DashboardLayout>
+        <PatientList />
+    </DashboardLayout>
+}
+else if (path == "health-records")
+{
+    <DashboardLayout>
+        <HealthRecords />
+    </DashboardLayout>
+}
+else if (path == "invoicing-overview")
+{
+    <DashboardLayout>
+        <InvoicingOverview />
+    </DashboardLayout>
+}
+else if (path == "receipt-overview")
+{
+    <DashboardLayout>
+        <ReceiptsOverview />
+    </DashboardLayout>
+}
+else if (path == "invoice-pdf")
+{
+    <DashboardLayout>
+        <InvoicePdf />
+    </DashboardLayout>
+}
+else if (path == "receipt-pdf")
+{
+    <DashboardLayout>
+        <ReceiptPdf />
+    </DashboardLayout>
+}
+else if (path == "nurse-patient-list")
+{
+    <DashboardLayout>
+        <NursePatientList />
+    </DashboardLayout>
+}
+else if (path == "nurse-vitals-list")
+{
+    <DashboardLayout>
+        <NurseVitalsList />
+    </DashboardLayout>
+}
+else if (path == "nurse-vitals")
+{
+    <DashboardLayout>
+        <NurseVitalsForm />
+    </DashboardLayout>
+}
+else if (path == "nurse-vitals-edit")
+{
+    <DashboardLayout>
+        <NurseVitalsEdit />
+    </DashboardLayout>
+}
+else if (path == "patient-profile")
+{
+    <DashboardLayout>
+        <PatientProfile />
+    </DashboardLayout>
+}
+else if (path == "doctor-patient-profile")
+{
+    <DashboardLayout>
+        <PatientProfile />
+    </DashboardLayout>
+}
+else if (path == "doctor-vitals-info")
+{
+    <DashboardLayout>
+        <DoctorVitalsInfo />
+    </DashboardLayout>
+}
+else if (path == "doctor-consultation")
+{
+    <DashboardLayout>
+        <DoctorConsultForm />
+    </DashboardLayout>
+}
+else if (path == "doctor-consultation-edit")
+{
+    <DashboardLayout>
+        <DoctorConsultEdit />
+    </DashboardLayout>
+}
+else if (path == "doctor-health-records")
+{
+    <DashboardLayout>
+        <DoctorHealthRecordList />
+    </DashboardLayout>
+}
+else if (path == "doctor-prescriptions")
+{
+    <DashboardLayout>
+        <DoctorPrescriptions />
+    </DashboardLayout>
+}
+else if (path == "patient-records")
+{
+    <DashboardLayout>
+        <PatientRecords />
+    </DashboardLayout>
+}
+else if (path == "patient-ehr-print")
+{
+    <DashboardLayout>
+        <PatientEhrPdf />
+    </DashboardLayout>
+}
+else if (path == "user-profile")
+{
+    <DashboardLayout>
+        <UserProfile />
+    </DashboardLayout>
+}
+else if (path == "forgot-password")
+{
+    <ForgotPassword />
+}
+else if (path == "create-account")
+{
+    <CreateAccount />
+}
+else
+{
+    <Login />
+}

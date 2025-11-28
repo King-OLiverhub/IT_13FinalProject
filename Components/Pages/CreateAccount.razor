@@ -1,0 +1,304 @@
+﻿@page "/create-account"
+@layout Layout.EmptyLayout
+@using IT_13FinalProject.Services
+@using IT_13FinalProject.Models
+@using System.ComponentModel.DataAnnotations
+@inject IJSRuntime JsRuntime
+
+<div class="create-account-page">
+    <div class="create-account-card">
+        <div class="create-account-inner">
+            <h2 class="create-account-title">Create User Account</h2>
+            <p class="create-account-subtitle">Fill in the details below to add a new MedFlow user.</p>
+
+            <EditForm Model="createModel" OnValidSubmit="HandleSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="validation-summary" />
+
+                @if (!string.IsNullOrWhiteSpace(FormAlert))
+                {
+                    <div class="status-message @AlertType">@FormAlert</div>
+                }
+
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="nameInput">Full name</label>
+                        <InputText id="nameInput" class="form-input" @bind-Value="createModel.FullName" />
+                        <ValidationMessage For="@(() => createModel.FullName)" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="emailInput">Work email</label>
+                        <InputText id="emailInput" class="form-input" @bind-Value="createModel.Email" type="email" />
+                        <div class="form-helper">We'll use this for important account notices.</div>
+                        <ValidationMessage For="@(() => createModel.Email)" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="usernameInput">Username</label>
+                        <InputText id="usernameInput" class="form-input" @bind-Value="createModel.Username" />
+                        <ValidationMessage For="@(() => createModel.Username)" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="passwordInput">Password</label>
+                        <InputText id="passwordInput" class="form-input" @bind-Value="createModel.Password" type="password" />
+                        <div class="form-helper">Use 8+ characters with a mix of letters and numbers.</div>
+                        <ValidationMessage For="@(() => createModel.Password)" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="confirmPasswordInput">Confirm password</label>
+                        <InputText id="confirmPasswordInput" class="form-input" @bind-Value="createModel.ConfirmPassword" type="password" />
+                        <ValidationMessage For="@(() => createModel.ConfirmPassword)" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="roleSelect">Role</label>
+                        <InputSelect id="roleSelect" class="form-input" @bind-Value="createModel.Role">
+                            <option value="">Select role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Doctor">Doctor</option>
+                            <option value="Nurse">Nurse</option>
+                            <option value="Billing Staff">Billing Staff</option>
+                            <option value="Inventory Staff">Inventory Staff</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => createModel.Role)" />
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" @onclick="GoBack" disabled="@IsSubmitting">Back</button>
+                    <button type="submit" class="btn-primary" disabled="@IsSubmitting">
+                        @(IsSubmitting ? "Creating…" : "Create Account")
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private CreateUserModel createModel = new();
+    private bool IsSubmitting { get; set; }
+    private string? FormAlert { get; set; }
+    private string AlertType { get; set; } = "info";
+    private CancellationTokenSource _cancellationTokenSource = new();
+    private SemaphoreSlim _submitSemaphore = new SemaphoreSlim(1, 1);
+
+    [Inject]
+    private IUserAccountService UserAccountService { get; set; } = default!;
+
+    [Inject]
+    private IPasswordHasher PasswordHasher { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/login");
+    }
+
+    private void HandleInvalidSubmit(EditContext _)
+    {
+        SetAlert("Please fix the highlighted fields before continuing.", "error");
+    }
+
+    private async Task HandleSubmit()
+    {
+        // Use semaphore to prevent concurrent submissions
+        if (!await _submitSemaphore.WaitAsync(0))
+        {
+            SetAlert("Please wait for the current operation to complete.", "error");
+            return;
+        }
+
+        try
+        {
+            await HandleSubmitInternal();
+        }
+        finally
+        {
+            _submitSemaphore.Release();
+        }
+    }
+
+    private async Task HandleSubmitInternal()
+    {
+        if (IsSubmitting)
+        {
+            return;
+        }
+
+        IsSubmitting = true;
+        SetAlert(null);
+        StateHasChanged();
+
+        try
+        {
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(createModel.Role))
+            {
+                SetAlert("Role is required.", "error");
+                IsSubmitting = false;
+                StateHasChanged();
+                return;
+            }
+
+            // Create account without timeout checks first to simplify
+            var result = await CreateAccountAsync();
+
+            if (result.success)
+            {
+                SetAlert("Account created successfully! The user can now sign in.", "success");
+                StateHasChanged();
+
+                await Task.Delay(2000);
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                SetAlert(result.errorMessage, "error");
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = GetUserFriendlyErrorMessage(ex);
+            SetAlert(errorMessage, "error");
+
+            await JsRuntime.InvokeVoidAsync("console.error", "Create account error:", ex.Message, ex.StackTrace);
+
+            if (ex.InnerException != null)
+            {
+                await JsRuntime.InvokeVoidAsync("console.error", "Inner exception:", ex.InnerException.Message, ex.InnerException.StackTrace);
+            }
+        }
+        finally
+        {
+            IsSubmitting = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task<(bool success, string errorMessage)> CreateAccountAsync()
+    {
+        try
+        {
+            // Check if username already exists
+            var userExists = await UserAccountService.UserExistsAsync(createModel.Username);
+            if (userExists)
+            {
+                return (false, "That username already exists. Please choose another one.");
+            }
+
+            // Create user entity
+            var newUser = new User
+            {
+                Username = createModel.Username.Trim(),
+                PasswordHash = PasswordHasher.HashPassword(createModel.Password),
+                Role = createModel.Role!,
+                Email = createModel.Email?.Trim() ?? string.Empty,
+                FullName = createModel.FullName?.Trim() ?? string.Empty,
+                CreatedAt = DateTime.Now,
+                IsActive = true
+            };
+
+            // Save to database
+            var createdUser = await UserAccountService.CreateUserAsync(newUser);
+
+            if (createdUser != null)
+            {
+                ResetForm();
+                return (true, string.Empty);
+            }
+            else
+            {
+                return (false, "Failed to create account. Please try again.");
+            }
+        }
+        catch (Exception ex)
+        {
+            return (false, GetUserFriendlyErrorMessage(ex));
+        }
+    }
+
+    private string GetUserFriendlyErrorMessage(Exception ex)
+    {
+        var message = ex.Message.ToLower();
+
+        if (message.Contains("second operation") && message.Contains("dbcontext"))
+        {
+            return "System is busy processing another request. Please try again in a moment.";
+        }
+        else if (message.Contains("timeout") || message.Contains("timed out"))
+        {
+            return "The operation is taking too long. Please check your connection and try again.";
+        }
+        else if (message.Contains("network") || message.Contains("connection"))
+        {
+            return "Network connection issue. Please check your internet connection.";
+        }
+        else if (message.Contains("database") || message.Contains("sql"))
+        {
+            return "Database temporarily unavailable. Please try again in a moment.";
+        }
+        else
+        {
+            return $"Unable to create account: {ex.Message}";
+        }
+    }
+
+    private void ResetForm()
+    {
+        createModel = new CreateUserModel();
+    }
+
+    private void SetAlert(string? message, string type = "info")
+    {
+        FormAlert = message;
+        AlertType = type;
+    }
+
+    public void Dispose()
+    {
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
+        _submitSemaphore?.Dispose();
+    }
+
+    public class CreateUserModel
+    {
+        [Required(ErrorMessage = "Full name is required.")]
+        [StringLength(100, ErrorMessage = "Name must be less than 100 characters.")]
+        public string? FullName { get; set; }
+
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
+        public string? Email { get; set; }
+
+        [Required(ErrorMessage = "Username is required.")]
+        [MinLength(4, ErrorMessage = "Username must be at least 4 characters.")]
+        [MaxLength(50, ErrorMessage = "Username must be less than 50 characters.")]
+        [RegularExpression(@"^[a-zA-Z0-9_]+$", ErrorMessage = "Username can only contain letters, numbers, and underscores.")]
+        public string Username { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Password is required.")]
+        [StringLength(32, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 32 characters.")]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d).+$", ErrorMessage = "Password must contain both letters and numbers.")]
+        public string Password { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Please confirm the password.")]
+        [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Role is required.")]
+        public string? Role { get; set; }
+    }
+}

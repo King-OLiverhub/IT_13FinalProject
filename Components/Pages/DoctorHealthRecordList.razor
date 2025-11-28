@@ -1,0 +1,176 @@
+@page "/doctor-health-records"
+@layout Layout.DashboardLayout
+
+<div class="pm-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Health Record List</h1>
+            <p class="dashboard-subtitle">Welcome back Clinical Staff!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">doctor@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Clinical</span>
+        </div>
+    </header>
+
+    <section class="pm-overview">
+        <div class="pm-overview-header">
+            <h2 class="pm-section-title">Health Record List</h2>
+            <div class="pm-show-entries">
+                <span>Show</span>
+                <select>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>25</option>
+                </select>
+                <span>entries</span>
+            </div>
+        </div>
+
+        <div class="pm-filters-row">
+            <div class="pm-alpha-filter">
+                <button class="pm-filter-pill @(ShowLetters && ActiveLetter is null ? "active" : string.Empty)" @onclick="ToggleLetters">All</button>
+
+                @if (ShowLetters)
+                {
+                    @foreach (var letter in Alphabet)
+                    {
+                        <button class="pm-filter-pill @(ActiveLetter == letter ? "active" : string.Empty)"
+                                @onclick="() => SelectLetter(letter)">@letter</button>
+                    }
+                }
+            </div>
+
+            <div class="pm-search-row">
+                <div class="pm-search-box">
+                    <span class="pm-search-icon">🔍</span>
+                    <input class="pm-search-input" placeholder="Search Patient" />
+                </div>
+
+                <div class="pm-actions">
+                    <button class="activity-action-btn">Sort</button>
+                    <button class="activity-action-btn">Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pm-table-outer">
+            <div class="pm-table-wrapper">
+                <table class="pm-table">
+                    <thead>
+                        <tr>
+                            <th class="pm-col-id">ID</th>
+                            <th>Patient Name<br /><span class="pm-subcol">Email</span></th>
+                            <th>Assessment Status</th>
+                            <th class="pm-col-date">Date of Visit</th>
+                            <th class="pm-col-action">More Health Records</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in GetOrderedRecords())
+                        {
+                            <tr>
+                                <td class="pm-col-id">@r.Id</td>
+                                <td>
+                                    <div class="pm-patient-name">@r.PatientName</div>
+                                    <div class="pm-patient-email">@r.PatientEmail</div>
+                                </td>
+                                <td>@r.AssessmentStatus</td>
+                                <td class="pm-col-date">@r.DateOfVisit</td>
+                                <td class="pm-col-action">
+                                    <button class="pm-view-btn" aria-label="View more health records" @onclick="() => ViewHealthRecords(r.Id)">
+                                        <span class="pm-view-icon"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button type="button" class="pm-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
+            <span>@(ShowPagination ? "›" : "‹")</span>
+        </button>
+
+        @if (ShowPagination)
+        {
+            <div class="pm-pagination">
+                <button class="pm-page-btn">Previous</button>
+                <button class="pm-page-number active">1</button>
+                <button class="pm-page-number">2</button>
+                <button class="pm-page-number">3</button>
+                <span class="pm-page-dots">...</span>
+                <button class="pm-page-number">8</button>
+                <button class="pm-page-btn">Next</button>
+            </div>
+        }
+    </section>
+</div>
+
+@code {
+    private static readonly string[] Alphabet = new[]
+    {
+        "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
+    };
+
+    private record DoctorHealthRecordRow(string Id, string PatientName, string PatientEmail, string AssessmentStatus, string DateOfVisit);
+
+    private bool ShowLetters { get; set; }
+    private string? ActiveLetter { get; set; }
+    private bool ShowPagination { get; set; } = true;
+
+    private readonly DoctorHealthRecordRow[] Records = new DoctorHealthRecordRow[]
+    {
+        new DoctorHealthRecordRow("01", "Himeko Murata", "himeko_murata@gmail.com", "Pending Assessment", "03/09/24"),
+        new DoctorHealthRecordRow("02", "Yae Miko", "miko.yae@mail.com", "Vital Signs Taken", "03/09/24"),
+        new DoctorHealthRecordRow("03", "Black Swan", "ms.blkswan@mail.com", "For Doctor Evaluation", "03/09/24"),
+        new DoctorHealthRecordRow("04", "Ruan Mei", "theRM_ei@gmail.com", "Follow-up Required", "03/09/24"),
+        new DoctorHealthRecordRow("05", "Bronya Rand", "bronya.rr@mail.com", "Completed", "03/09/24"),
+    };
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    private void ViewHealthRecords(string id)
+    {
+        Navigation.NavigateTo("/doctor-consultation-edit");
+    }
+
+    private void ToggleLetters()
+    {
+        ShowLetters = !ShowLetters;
+        ActiveLetter = null;
+    }
+
+    private void SelectLetter(string letter)
+    {
+        ShowLetters = true;
+        ActiveLetter = letter;
+    }
+
+    private IEnumerable<DoctorHealthRecordRow> GetOrderedRecords()
+    {
+        if (string.IsNullOrEmpty(ActiveLetter))
+        {
+            return Records;
+        }
+
+        var upper = ActiveLetter.ToUpperInvariant();
+
+        var startsWithLetter = Records
+            .Where(r => (r.PatientName ?? string.Empty).StartsWith(upper, StringComparison.OrdinalIgnoreCase));
+
+        var others = Records
+            .Where(r => !(r.PatientName ?? string.Empty).StartsWith(upper, StringComparison.OrdinalIgnoreCase));
+
+        return startsWithLetter.Concat(others);
+    }
+
+    private void TogglePagination()
+    {
+        ShowPagination = !ShowPagination;
+    }
+}

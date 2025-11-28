@@ -1,0 +1,540 @@
+@inherits LayoutComponentBase
+
+<div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-logo">
+            <img src="/images/Final_logo-removebg-preview.png" alt="MedFlow Logo" class="sidebar-logo-img" />
+            <span class="sidebar-app-name">MedFlow</span>
+        </div>
+
+        <nav class="sidebar-section">
+            <div class="sidebar-section-title">MAIN</div>
+            <button class="sidebar-item @(IsDashboardActive ? "active" : string.Empty)" @onclick="OnDashboardClick">
+                <span class="sidebar-icon sidebar-icon-home"></span>
+                Dashboard
+            </button>
+        </nav>
+
+        <nav class="sidebar-section">
+            <div class="sidebar-section-title">MODULES</div>
+
+            @* Admin modules *@
+            @if (CurrentRole == "Admin")
+            {
+                <button class="sidebar-item @(IsPatientManagementActive ? "active" : string.Empty)" @onclick="OnPatientManagementClick">
+                    <span class="sidebar-icon sidebar-icon-patient"></span>
+                    Patient Management
+                </button>
+                <button class="sidebar-item @(IsHealthRecordActive ? "active" : string.Empty)" @onclick="OnHealthRecordClick">
+                    <span class="sidebar-icon sidebar-icon-health"></span>
+                    Health Record
+                </button>
+                <button class="sidebar-item @(IsInvoicingActive ? "active" : string.Empty)" @onclick="OnInvoicingClick">
+                    <span class="sidebar-icon sidebar-icon-billing"></span>
+                    Invoicing &amp; Cashiering
+                </button>
+                <button class="sidebar-item @(IsAdminInsuranceActive ? "active" : string.Empty)" @onclick="OnAdminInsuranceClick">
+                    <span class="sidebar-icon sidebar-icon-insurance"></span>
+                    Insurance &amp; Claims
+                </button>
+                <button class="sidebar-item @(IsAdminPharmacyInventoryActive ? "active" : string.Empty)" @onclick="OnAdminPharmacyInventoryClick">
+                    <span class="sidebar-icon sidebar-icon-pharmacy"></span>
+                    Pharmacy &amp; Inventory
+                </button>
+                <button class="sidebar-item @(IsAdminReportsActive ? "active" : string.Empty)" @onclick="OnAdminReportsClick">
+                    <span class="sidebar-icon sidebar-icon-reports"></span>
+                    Reports / Analytics
+                </button>
+            }
+            @* Nurse modules *@
+            else if (CurrentRole == "Nurse")
+            {
+                <button class="sidebar-item @(IsNursePatientListActive ? "active" : string.Empty)" @onclick="OnNursePatientListClick">
+                    <span class="sidebar-icon sidebar-icon-patient"></span>
+                    Patient List
+                </button>
+                <button class="sidebar-item @(IsNurseVitalsActive ? "active" : string.Empty)" @onclick="OnNurseVitalsClick">
+                    <span class="sidebar-icon sidebar-icon-vitals"></span>
+                    Vital Signs Monitoring
+                </button>
+                <button class="sidebar-item">
+                    <span class="sidebar-icon sidebar-icon-medication"></span>
+                    Medication Schedules
+                </button>
+                <button class="sidebar-item">
+                    <span class="sidebar-icon sidebar-icon-notes"></span>
+                    Nursing Notes
+                </button>
+                <button class="sidebar-item">
+                    <span class="sidebar-icon sidebar-icon-request"></span>
+                    Request
+                </button>
+                <button class="sidebar-item">
+                    <span class="sidebar-icon sidebar-icon-reports"></span>
+                    Reports
+                </button>
+            }
+            @* Doctor modules *@
+            else if (CurrentRole == "Doctor")
+            {
+                <button class="sidebar-item @(IsDoctorPatientListActive ? "active" : string.Empty)" @onclick="OnDoctorPatientListClick">
+                    <span class="sidebar-icon sidebar-icon-patient"></span>
+                    Patient List
+                </button>
+                <button class="sidebar-item @(IsDoctorHealthRecordActive ? "active" : string.Empty)" @onclick="OnDoctorHealthRecordClick">
+                    <span class="sidebar-icon sidebar-icon-health"></span>
+                    Health Record
+                </button>
+                <button class="sidebar-item">
+                    <span class="sidebar-icon sidebar-icon-appointments"></span>
+                    Appointments
+                </button>
+                <button class="sidebar-item @(IsDoctorPrescriptionsActive ? "active" : string.Empty)" @onclick="OnDoctorPrescriptionsClick">
+                    <span class="sidebar-icon sidebar-icon-prescriptions"></span>
+                    Prescriptions
+                </button>
+                <button class="sidebar-item">
+                    <span class="sidebar-icon sidebar-icon-lab"></span>
+                    Laboratory Results
+                </button>
+                <button class="sidebar-item">
+                    <span class="sidebar-icon sidebar-icon-reports"></span>
+                    Reports
+                </button>
+            }
+            @* Billing modules *@
+            else if (CurrentRole == "Billing")
+            {
+                <button class="sidebar-item @(IsBillingInvoicingActive ? "active" : string.Empty)" @onclick="OnBillingInvoicingClick">
+                    <span class="sidebar-icon sidebar-icon-billing"></span>
+                    Billing &amp; Invoicing
+                </button>
+                <button class="sidebar-item @(IsBillingInsuranceActive ? "active" : string.Empty)" @onclick="OnBillingInsuranceClick">
+                    <span class="sidebar-icon sidebar-icon-insurance"></span>
+                    Insurance &amp; Claims
+                </button>
+                <button class="sidebar-item">
+                    <span class="sidebar-icon sidebar-icon-reports"></span>
+                    Reports
+                </button>
+            }
+            @* Inventory / Pharmacist modules *@
+            else if (CurrentRole == "Inventory")
+            {
+                <button class="sidebar-item @(IsInventoryPharmacyActive ? "active" : string.Empty)" @onclick="OnInventoryPharmacyClick">
+                    <span class="sidebar-icon sidebar-icon-inventory"></span>
+                    Pharmacy Inventory
+                </button>
+                <button class="sidebar-item @(IsInventoryPrescriptionsActive ? "active" : string.Empty)" @onclick="OnInventoryPrescriptionsClick">
+                    <span class="sidebar-icon sidebar-icon-prescriptions"></span>
+                    Prescriptions
+                </button>
+                <button class="sidebar-item">
+                    <span class="sidebar-icon sidebar-icon-stock"></span>
+                    Stock Reports
+                </button>
+            }
+        </nav>
+
+        <nav class="sidebar-section">
+            <div class="sidebar-section-title">USER MANAGEMENT</div>
+
+            @* Admin: full user submenu; others: only User Profile *@
+            <button class="sidebar-item sidebar-item-expand" @onclick="ToggleUserMenu">
+                <span class="sidebar-icon sidebar-icon-user"></span>
+                User
+                <span class="sidebar-chevron">@(IsUserMenuExpanded ? "▾" : "▸")</span>
+            </button>
+
+            @if (IsUserMenuExpanded)
+            {
+                <button class="sidebar-subitem @(IsUserProfileActive ? "active" : string.Empty)" @onclick="OnUserProfileClick">
+                    <span class="sidebar-icon sidebar-icon-user-profile"></span>
+                    User Profile
+                </button>
+
+                @if (CurrentRole == "Admin")
+                {
+                    <button class="sidebar-subitem">
+                        <span class="sidebar-icon sidebar-icon-role"></span>
+                        Role
+                    </button>
+                    <button class="sidebar-subitem">
+                        <span class="sidebar-icon sidebar-icon-permission"></span>
+                        Permission
+                    </button>
+                }
+            }
+        </nav>
+
+        <nav class="sidebar-section">
+            <div class="sidebar-section-title">SYSTEM</div>
+            <button class="sidebar-item">
+                <span class="sidebar-icon sidebar-icon-audit"></span>
+                Audit Logs
+            </button>
+            <button class="sidebar-item">
+                <span class="sidebar-icon sidebar-icon-sync"></span>
+                Sync Management
+            </button>
+            <button class="sidebar-item @(IsSettingsOpen ? "sidebar-item-settings-active" : string.Empty)" @onclick="ToggleSettingsModal">
+                <span class="sidebar-icon sidebar-icon-settings"></span>
+                Settings
+            </button>
+        </nav>
+
+        <button class="sidebar-logout" @onclick="LogoutAsync">LOG OUT</button>
+    </aside>
+
+    <div class="@GetDashboardMainClasses()">
+        @if (ChildContent is not null)
+        {
+            @ChildContent
+        }
+        else
+        {
+            @Body
+        }
+    </div>
+
+    @if (IsSettingsOpen)
+    {
+        <div class="settings-overlay" @onclick="CloseSettingsModal">
+            <div class="settings-modal" @onclick:stopPropagation>
+                <div class="settings-modal-header">
+                    <span class="settings-modal-title">Settings</span>
+                    <button class="settings-modal-close" @onclick="CloseSettingsModal">✕</button>
+                </div>
+
+                <div class="settings-modal-body">
+                    <button class="settings-item">
+                        <span class="sidebar-icon sidebar-icon-request"></span>
+                        Notification
+                    </button>
+                    <button class="settings-item" @onclick="ToggleAccessibilityPanel">
+                        <span class="sidebar-icon sidebar-icon-user"></span>
+                        Accessibility
+                    </button>
+                    <button class="settings-item">
+                        <span class="sidebar-icon sidebar-icon-sync"></span>
+                        Database / Backup
+                    </button>
+                    <button class="settings-item">
+                        <span class="sidebar-icon sidebar-icon-settings"></span>
+                        System Configuration
+                    </button>
+                </div>
+            </div>
+
+            @if (IsAccessibilityOpen)
+            {
+                <div class="accessibility-modal" @onclick:stopPropagation>
+                    <div class="accessibility-header">
+                        <span class="accessibility-title">Display</span>
+                        <button class="accessibility-close" @onclick="CloseAccessibilityPanel">✕</button>
+                    </div>
+
+                    <div class="accessibility-section">
+                        <div class="accessibility-options">
+                            <button class="accessibility-option" @onclick="SetDisplayModeNormal">
+                                <span class="accessibility-radio @(CurrentDisplayMode == "Normal" ? "accessibility-radio--selected" : string.Empty)"></span>
+                                <span>Normal mode</span>
+                            </button>
+                            <button class="accessibility-option" @onclick="SetDisplayModeDark">
+                                <span class="accessibility-radio @(CurrentDisplayMode == "Dark" ? "accessibility-radio--selected" : string.Empty)"></span>
+                                <span>Dark mode</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="accessibility-section">
+                        <div class="accessibility-section-title">Resize Text</div>
+                        <div class="accessibility-options">
+                            <button class="accessibility-option" @onclick="SetTextSizeSmall">
+                                <span class="accessibility-radio @(CurrentTextSize == "Small" ? "accessibility-radio--selected" : string.Empty)"></span>
+                                <span>Small</span>
+                            </button>
+                            <button class="accessibility-option" @onclick="SetTextSizeStandard">
+                                <span class="accessibility-radio @(CurrentTextSize == "Standard" ? "accessibility-radio--selected" : string.Empty)"></span>
+                                <span>Standard</span>
+                            </button>
+                            <button class="accessibility-option" @onclick="SetTextSizeLarge">
+                                <span class="accessibility-radio @(CurrentTextSize == "Large" ? "accessibility-radio--selected" : string.Empty)"></span>
+                                <span>Large</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    // JS runtime used to show a simple browser confirm dialog
+    [Inject]
+    private IJSRuntime JsRuntime { get; set; } = default!;
+
+    private string CurrentRole
+    {
+        get
+        {
+            var uri = Navigation.Uri.ToLowerInvariant();
+
+            // Nurse: dashboard + nurse-specific pages
+            if (uri.Contains("/nurse-dashboard")
+                || uri.Contains("/nurse-patient-list")
+                || uri.Contains("/nurse-vitals-list")
+                || uri.Contains("/nurse-vitals")
+                || uri.Contains("/nurse-patient-profile")
+                || uri.Contains("/patient-profile"))
+                return "Nurse";
+
+            // Doctor: dashboard and doctor-specific pages
+            if (uri.Contains("/doctor-dashboard")
+                || uri.Contains("/patient-list")
+                || uri.Contains("/doctor-patient-profile")
+                || uri.Contains("/doctor-vitals-info")
+                || uri.Contains("/doctor-consultation")
+                || uri.Contains("/doctor-consultation-edit")
+                || uri.Contains("/doctor-health-records")
+                || uri.Contains("/doctor-prescriptions"))
+                return "Doctor";
+
+            // Billing (including PDFs opened from Billing via source=billing)
+            if (uri.Contains("/billing-dashboard")
+                || uri.Contains("/billing-patient-overview")
+                || uri.Contains("/billing-computation")
+                || uri.Contains("/billing-cashiering")
+                || uri.Contains("/billing-insurance-claims")
+                || uri.Contains("/billing-insurance-request")
+                || (uri.Contains("/receipt-pdf") && uri.Contains("source=billing"))
+                || (uri.Contains("/invoice-pdf") && uri.Contains("source=billing")))
+                return "Billing";
+
+            // Inventory
+            if (uri.Contains("/inventory-dashboard")
+                || uri.Contains("/pharmacy-inventory")
+                || uri.Contains("/inventory-prescriptions"))
+                return "Inventory";
+
+            // Default: Admin dashboard and modules
+            return "Admin";
+        }
+    }
+
+    private bool IsDashboardActive =>
+        Navigation.Uri.Contains("/dashboard", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/nurse-dashboard", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/doctor-dashboard", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/billing-dashboard", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/inventory-dashboard", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsPatientManagementActive => Navigation.Uri.Contains("/patient-management", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsAdminPharmacyInventoryActive =>
+        Navigation.Uri.Contains("/admin-pharmacy-inventory", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsAdminReportsActive =>
+        Navigation.Uri.Contains("/admin-reports-analytics", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsNursePatientListActive =>
+        Navigation.Uri.Contains("/nurse-patient-list", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.EndsWith("/nurse-vitals", StringComparison.OrdinalIgnoreCase) // Add form belongs under Patient List (but not list/edit)
+        || Navigation.Uri.Contains("/nurse-patient-profile", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/patient-profile", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsNurseVitalsActive =>
+        Navigation.Uri.Contains("/nurse-vitals-list", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/nurse-vitals-edit", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsDoctorPatientListActive =>
+        Navigation.Uri.Contains("/patient-list", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/doctor-patient-profile", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/doctor-vitals-info", StringComparison.OrdinalIgnoreCase)
+        // Only the ADD consultation form belongs under Patient List (not the edit page)
+        || Navigation.Uri.EndsWith("/doctor-consultation", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsDoctorHealthRecordActive =>
+        Navigation.Uri.Contains("/doctor-health-records", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/doctor-consultation-edit", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsDoctorPrescriptionsActive =>
+        Navigation.Uri.Contains("/doctor-prescriptions", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsHealthRecordActive =>
+        Navigation.Uri.Contains("/health-records", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/patient-records", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/patient-ehr-print", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsInvoicingActive =>
+        Navigation.Uri.Contains("/invoicing-overview", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/receipt-overview", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/invoice-pdf", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/receipt-pdf", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsAdminInsuranceActive =>
+        Navigation.Uri.Contains("/admin-insurance-claims", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsBillingInvoicingActive =>
+        Navigation.Uri.Contains("/billing-patient-overview", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/billing-computation", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/billing-cashiering", StringComparison.OrdinalIgnoreCase)
+        || ((Navigation.Uri.Contains("/receipt-pdf", StringComparison.OrdinalIgnoreCase)
+             || Navigation.Uri.Contains("/invoice-pdf", StringComparison.OrdinalIgnoreCase))
+            && Navigation.Uri.Contains("source=billing", StringComparison.OrdinalIgnoreCase));
+
+    private bool IsBillingInsuranceActive =>
+        Navigation.Uri.Contains("/billing-insurance-claims", StringComparison.OrdinalIgnoreCase)
+        || Navigation.Uri.Contains("/billing-insurance-request", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsInventoryPharmacyActive =>
+        Navigation.Uri.Contains("/pharmacy-inventory", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsInventoryPrescriptionsActive =>
+        Navigation.Uri.Contains("/inventory-prescriptions", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsUserProfileActive =>
+        Navigation.Uri.Contains("/user-profile", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsUserMenuExpanded { get; set; }
+    private bool IsSettingsOpen { get; set; }
+    private bool IsAccessibilityOpen { get; set; }
+
+    private string CurrentDisplayMode { get; set; } = "Normal";
+    private string CurrentTextSize { get; set; } = "Standard";
+
+    private void OnDashboardClick()
+    {
+        var target = CurrentRole switch
+        {
+            "Nurse" => "/nurse-dashboard",
+            "Doctor" => "/doctor-dashboard",
+            "Billing" => "/billing-dashboard",
+            "Inventory" => "/inventory-dashboard",
+            _ => "/dashboard"
+        };
+
+        Navigation.NavigateTo(target);
+    }
+
+    private void OnPatientManagementClick() => Navigation.NavigateTo("/patient-management");
+
+    private void OnAdminPharmacyInventoryClick() => Navigation.NavigateTo("/admin-pharmacy-inventory");
+
+    private void OnAdminReportsClick() => Navigation.NavigateTo("/admin-reports-analytics");
+
+    private void OnNursePatientListClick() => Navigation.NavigateTo("/nurse-patient-list");
+
+    private void OnNurseVitalsClick() => Navigation.NavigateTo("/nurse-vitals-list");
+
+    private void OnDoctorPatientListClick()
+    {
+        Navigation.NavigateTo("/patient-list");
+    }
+
+    private void OnDoctorHealthRecordClick()
+    {
+        Navigation.NavigateTo("/doctor-health-records");
+    }
+
+    private void OnHealthRecordClick() => Navigation.NavigateTo("/health-records");
+
+    private void OnInvoicingClick() => Navigation.NavigateTo("/invoicing-overview");
+
+    private void OnBillingInvoicingClick() => Navigation.NavigateTo("/billing-patient-overview");
+
+    private void OnBillingInsuranceClick() => Navigation.NavigateTo("/billing-insurance-claims");
+
+    private void OnAdminInsuranceClick() => Navigation.NavigateTo("/admin-insurance-claims");
+
+    private void OnInventoryPharmacyClick() => Navigation.NavigateTo("/pharmacy-inventory");
+
+    private void OnInventoryPrescriptionsClick() => Navigation.NavigateTo("/inventory-prescriptions");
+
+    private void OnDoctorPrescriptionsClick() => Navigation.NavigateTo("/doctor-prescriptions");
+
+    private void OnUserProfileClick() => Navigation.NavigateTo("/user-profile");
+
+    private void ToggleUserMenu()
+    {
+        IsUserMenuExpanded = !IsUserMenuExpanded;
+    }
+
+    private void ToggleSettingsModal()
+    {
+        IsSettingsOpen = !IsSettingsOpen;
+        if (!IsSettingsOpen)
+        {
+            IsAccessibilityOpen = false;
+        }
+    }
+
+    private void CloseSettingsModal()
+    {
+        IsSettingsOpen = false;
+        IsAccessibilityOpen = false;
+    }
+
+    private void ToggleAccessibilityPanel()
+    {
+        IsAccessibilityOpen = !IsAccessibilityOpen;
+    }
+
+    private void CloseAccessibilityPanel()
+    {
+        IsAccessibilityOpen = false;
+    }
+
+    private string GetDashboardMainClasses()
+    {
+        var classes = "dashboard-main";
+
+        if (CurrentDisplayMode == "Dark")
+        {
+            classes += " dashboard-main--dark";
+        }
+
+        switch (CurrentTextSize)
+        {
+            case "Small":
+                classes += " dashboard-main--text-small";
+                break;
+            case "Large":
+                classes += " dashboard-main--text-large";
+                break;
+            default:
+                // Standard: no extra class needed
+                break;
+        }
+
+        return classes;
+    }
+
+    private void SetDisplayModeNormal() => CurrentDisplayMode = "Normal";
+
+    private void SetDisplayModeDark() => CurrentDisplayMode = "Dark";
+
+    private void SetTextSizeSmall() => CurrentTextSize = "Small";
+
+    private void SetTextSizeStandard() => CurrentTextSize = "Standard";
+
+    private void SetTextSizeLarge() => CurrentTextSize = "Large";
+
+    // Shows a confirmation dialog before navigating back to the login page
+    private async Task LogoutAsync()
+    {
+        var confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to log out?");
+
+        if (confirmed)
+        {
+            Navigation.NavigateTo("/login", forceLoad: true);
+        }
+    }
+}

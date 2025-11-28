@@ -1,0 +1,208 @@
+.dc-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    margin: -10px -16px 6px;
+    background-color: #f3faf9;
+    border-bottom: 1px solid #e0f0ee;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.dashboard-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dashboard-subtitle {
+    margin: 4px 0 0;
+    font-size: 14px;
+}
+
+.dashboard-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-user-email {
+    font-size: 13px;
+    color: #555;
+}
+
+.dashboard-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #40b6ae;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.dashboard-user-name {
+    font-weight: 600;
+}
+
+.dc-card {
+    margin-top: 16px;
+    padding: 20px 24px 28px;
+    border-radius: 16px;
+    background-color: #f6fbfb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.dc-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.dc-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dc-title-icon {
+    font-size: 20px;
+}
+
+.dc-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dc-grid {
+    display: grid;
+    grid-template-columns: 2fr 1.4fr;
+    gap: 18px 32px;
+}
+
+.dc-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dc-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.dc-section-title-spaced {
+    margin-top: 16px;
+}
+
+.dc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dc-label {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dc-input {
+    border-radius: 10px;
+    border: 1px solid #9ba8ac;
+    padding: 8px 10px;
+    font-size: 13px;
+    outline: none;
+    background-color: #ffffff;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dc-input-multi {
+    min-height: 72px;
+    resize: none;
+    overflow: hidden;
+}
+
+.dc-input:focus,
+.dc-input-multi:focus {
+    border-color: #0f8b8d;
+    box-shadow: 0 0 0 2px rgba(15, 139, 141, 0.2);
+}
+
+.dc-input-with-icon {
+    position: relative;
+}
+
+.dc-input-with-icon .dc-input {
+    padding-right: 32px;
+}
+
+.dc-input-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+}
+
+.dc-notes-section {
+    margin-top: 20px;
+}
+
+.dc-actions {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.dc-actions--edit {
+    justify-content: flex-end;
+}
+
+.dc-btn {
+    min-width: 120px;
+    padding: 8px 20px;
+    border-radius: 999px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.dc-btn-delete {
+    background-color: #b3544b;
+    color: #ffffff;
+}
+
+.dc-btn-delete:hover {
+    background-color: #943f37;
+}
+
+.dc-btn-update {
+    background-color: #0f8b8d;
+    color: #ffffff;
+}
+
+.dc-btn-update:hover {
+    background-color: #0b6f70;
+}
+
+@media (max-width: 1000px) {
+    .dc-grid {
+        grid-template-columns: 1fr;
+    }
+}

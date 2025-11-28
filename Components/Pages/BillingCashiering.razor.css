@@ -1,0 +1,172 @@
+.billing-cashiering-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Match header layout used by BillingPatientOverview/BillingComputation */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    margin: -10px -16px 6px;
+    background-color: #f3faf9;
+    border-bottom: 1px solid #e0f0ee;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.dashboard-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dashboard-subtitle {
+    margin: 4px 0 0;
+    font-size: 14px;
+}
+
+.dashboard-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-user-email {
+    font-size: 13px;
+    color: #555;
+}
+
+.dashboard-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #40b6ae;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.dashboard-user-name {
+    font-weight: 600;
+}
+
+/* Tabs: same style as BillingComputation */
+.billing-comp-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 0 16px;
+}
+
+.billing-comp-tab {
+    padding: 8px 18px;
+    border-radius: 4px 4px 0 0;
+    border: 1px solid #c9d9dd;
+    border-bottom: none;
+    background-color: #f4fbfb;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.billing-comp-tab--current {
+    background-color: #0f8b8d;
+    color: #ffffff;
+    border-color: #0f8b8d;
+}
+
+.billing-cashiering-body {
+    margin: 0 16px 16px;
+    padding: 16px 20px 24px;
+    background-color: #ffffff;
+    border-radius: 0 12px 12px 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.billing-cashiering-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+.billing-cashiering-layout {
+    display: grid;
+    grid-template-columns: 1.1fr 1.4fr;
+    gap: 24px;
+}
+
+.billing-cashiering-panel {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px 20px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.billing-cashiering-panel--pdf {
+    height: 100%;
+}
+
+.billing-cashiering-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.billing-cashiering-pdf-placeholder {
+    border-radius: 12px;
+    border: 1px dashed #9ca3af;
+    background: #f9fafb;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.billing-cashiering-options {
+    display: grid;
+    gap: 8px;
+}
+
+.billing-cashiering-options--payment {
+    grid-template-columns: 1fr;
+}
+
+.billing-cashiering-options--insurance {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.billing-cashiering-amount-row {
+    margin-top: 20px;
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+.billing-cashiering-amount-input label {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.billing-cashiering-input {
+    width: 220px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+}
+
+.billing-cashiering-pay-btn {
+    padding: 10px 28px;
+    border-radius: 999px;
+    border: none;
+    background: #0f8b8d;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+}

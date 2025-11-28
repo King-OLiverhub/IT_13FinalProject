@@ -1,0 +1,171 @@
+@page "/doctor-vitals-info"
+@layout Layout.DashboardLayout
+
+<div class="nv-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Patient Management</h1>
+            <p class="dashboard-subtitle">Vital Sign Information</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">doctor@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Clinical</span>
+        </div>
+    </header>
+
+    <section class="nv-form-card">
+        <div class="nv-form-header-row">
+            <div class="nv-form-title-wrap">
+                <span class="nv-form-icon">👤</span>
+                <h2 class="nv-form-title">Vital Sign Information</h2>
+            </div>
+        </div>
+
+        <div class="nv-form-grid">
+            <div class="nv-form-column">
+                <h3 class="nv-column-title">Medical History</h3>
+
+                <label class="nv-field">
+                    <span class="nv-label">Allergies</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Past Illnesses</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Past Surgeries</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Current Medications</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Family History of Illnesses</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Immunization History (optional)</span>
+                    <input class="nv-input" readonly />
+                </label>
+            </div>
+
+            <div class="nv-form-column">
+                <h3 class="nv-column-title">Vital Signs</h3>
+
+                <label class="nv-field">
+                    <span class="nv-label">Blood Pressure</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Heart Rate / Pulse Rate</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Respiratory Rate</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Temperature</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Oxygen Saturation (SpO₂)</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Weight</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Height</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Body Mass Index</span>
+                    <input class="nv-input" readonly />
+                </label>
+            </div>
+
+            <div class="nv-form-column">
+                <h3 class="nv-column-title">Current Visit Details</h3>
+
+                <label class="nv-field">
+                    <span class="nv-label">Doctor's Name Assisted</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Nurse Name</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Date of Visit / Consultation</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Time In/out</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Department / Clinic Assigned</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Type of Visit (New / Follow-up)</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Chief Complaint</span>
+                    <input class="nv-input" readonly />
+                </label>
+
+                <label class="nv-field">
+                    <span class="nv-label">Duration of Symptoms</span>
+                    <input class="nv-input" readonly />
+                </label>
+            </div>
+        </div>
+
+        <div class="nv-notes-section">
+            <label class="nv-field">
+                <span class="nv-label">Nurse Initial Remarks / Notes</span>
+                <textarea class="nv-textarea" readonly></textarea>
+            </label>
+        </div>
+
+        <div class="nv-actions nv-actions--single">
+            <button class="nv-back-btn" @onclick="GoBack">Back</button>
+        </div>
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/patient-list");
+    }
+}

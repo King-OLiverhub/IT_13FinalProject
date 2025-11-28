@@ -1,0 +1,149 @@
+@page "/billing-insurance-request"
+@layout Layout.DashboardLayout
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="insreq-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Billing and Invoicing</h1>
+            <p class="dashboard-subtitle">Welcome back Billing Staff!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">billing@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Billing staff</span>
+        </div>
+    </header>
+
+    <section class="insreq-tabs-card">
+        <div class="inv-tabs-row">
+            <div class="inv-tabs">
+                <button class="inv-tab" @onclick="GoToOverview">Overview</button>
+                <button class="inv-tab inv-tab-active">Request</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="insreq-body">
+        <div class="insreq-layout">
+            <div class="insreq-column">
+                <h2 class="insreq-form-title">Insurance Request Form</h2>
+                <div class="insreq-patient-info">
+                    <h3 class="insreq-patient-title">Patient Information</h3>
+                    <div class="insreq-patient-row">Name:</div>
+                    <div class="insreq-patient-row">Patient ID:</div>
+                    <div class="insreq-patient-row">Insurance:</div>
+                    <div class="insreq-patient-row">Date:</div>
+                </div>
+
+                <div class="insreq-claim-details">
+                    <h3 class="insreq-claim-title">Claim Details</h3>
+                    <div class="insreq-claim-header">
+                        <span>SERVICE</span>
+                        <span>AMOUNT</span>
+                        <span>COVERABLE</span>
+                    </div>
+                    <div class="insreq-claim-row">
+                        <span>Consultation</span>
+                        <span>₱500</span>
+                        <span>₱250 (50%)</span>
+                    </div>
+                    <div class="insreq-claim-row">
+                        <span>Blood Test</span>
+                        <span>₱300</span>
+                        <span>₱150 (50%)</span>
+                    </div>
+                    <div class="insreq-claim-row">
+                        <span>Urinalysis</span>
+                        <span>₱250</span>
+                        <span>₱125 (50%)</span>
+                    </div>
+                    <div class="insreq-claim-row insreq-claim-total">
+                        <span>TOTAL COVERABLE:</span>
+                        <span></span>
+                        <span>₱525</span>
+                    </div>
+                </div>
+
+                <h2 class="insreq-section-title">Documents</h2>
+
+                <div class="insreq-doc-list">
+                    @foreach (var doc in DocumentItems)
+                    {
+                        <div class="insreq-doc-item">
+                            <span class="insreq-doc-icon">📁</span>
+                            <InputFile OnChange="@(e => OnFileSelected(e, doc))" />
+                            <span class="insreq-doc-label">@GetDocumentPlaceholder(doc)</span>
+                        </div>
+                    }
+                </div>
+
+                <label class="insreq-complete-row">
+                    <input type="checkbox" />
+                    <span>Complete all the document requirement to submit request</span>
+                </label>
+
+                <div class="insreq-actions-row">
+                    <button class="insreq-generate-button">Generate Claim Form</button>
+                    <button class="insreq-submit-button">Submit to Admin</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    private readonly string[] DocumentItems = new[]
+    {
+        "Medical Certificate",
+        "Laboratory Results",
+        "Prescription Copies",
+        "Eligibility Verification",
+        "Claim Form",
+        "Official Receipt/Invoice",
+        "Patient Information Sheet",
+        "Valid ID Copies",
+    };
+
+    private readonly Dictionary<string, string> DocumentFileNames = new();
+
+    protected override void OnInitialized()
+    {
+        foreach (var doc in DocumentItems)
+        {
+            if (!DocumentFileNames.ContainsKey(doc))
+            {
+                DocumentFileNames[doc] = string.Empty;
+            }
+        }
+    }
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e, string docKey)
+    {
+        var file = e.File;
+        if (file is not null)
+        {
+            DocumentFileNames[docKey] = file.Name;
+        }
+
+        await Task.CompletedTask;
+    }
+
+    private string GetDocumentPlaceholder(string doc)
+    {
+        if (DocumentFileNames.TryGetValue(doc, out var name) && !string.IsNullOrWhiteSpace(name))
+        {
+            // Once a file is selected, hide the placeholder text
+            return string.Empty;
+        }
+
+        // No file yet: show the document name as light placeholder text
+        return doc;
+    }
+
+    private void GoToOverview() => Navigation.NavigateTo("/billing-insurance-claims");
+}

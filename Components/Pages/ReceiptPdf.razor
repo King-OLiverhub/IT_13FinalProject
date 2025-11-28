@@ -1,0 +1,77 @@
+@page "/receipt-pdf"
+@layout Layout.DashboardLayout
+
+<div class="inv-pdf-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Patient Receipt Document</h1>
+            <p class="dashboard-subtitle">Preview and export the patient receipt for payments.</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    <section class="inv-pdf-title-row">
+        <h2 class="inv-pdf-title">Official Receipt</h2>
+    </section>
+
+    <section class="inv-pdf-content">
+        <div class="inv-pdf-frame-container">
+            <iframe src="/pdfs/patient-invoice.pdf" class="inv-pdf-frame"></iframe>
+        </div>
+    </section>
+
+    <section class="inv-pdf-actions">
+        <div class="inv-pdf-actions-left">
+            <button class="inv-pdf-btn inv-pdf-btn-secondary" @onclick="GoBack">Back</button>
+        </div>
+        <div class="inv-pdf-actions-right">
+            <button class="inv-pdf-btn inv-pdf-btn-secondary" @onclick="DownloadPdf">
+                <span class="inv-pdf-btn-icon">📥</span>
+                Download PDF file
+            </button>
+            <button class="inv-pdf-btn inv-pdf-btn-primary" @onclick="PrintPdf">
+                <span class="inv-pdf-btn-icon">🖨️</span>
+                Print
+            </button>
+        </div>
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    [Inject]
+    private IJSRuntime JsRuntime { get; set; } = default!;
+
+    private void GoBack()
+    {
+        var uri = Navigation.Uri;
+
+        var fromBilling = uri.Contains("source=billing", StringComparison.OrdinalIgnoreCase);
+
+        if (fromBilling)
+        {
+            Navigation.NavigateTo("/billing-patient-overview");
+        }
+        else
+        {
+            Navigation.NavigateTo("/receipt-overview");
+        }
+    }
+
+    private async Task DownloadPdf()
+    {
+        await JsRuntime.InvokeVoidAsync("open", "/pdfs/patient-invoice.pdf", "_blank");
+    }
+
+    private async Task PrintPdf()
+    {
+        await JsRuntime.InvokeVoidAsync("open", "/pdfs/patient-invoice.pdf", "_blank");
+    }
+}

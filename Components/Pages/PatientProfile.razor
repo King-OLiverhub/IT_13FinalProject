@@ -1,0 +1,114 @@
+@page "/patient-profile"
+@layout Layout.DashboardLayout
+
+<div class="npp-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Patient Management</h1>
+            <p class="dashboard-subtitle">Patient Profile</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">nurse@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Clinical</span>
+        </div>
+    </header>
+
+    <section class="npp-card">
+        <div class="npp-header-row">
+            <div class="npp-title-wrap">
+                <span class="npp-icon">👤</span>
+                <h2 class="npp-title">Patient Profile</h2>
+            </div>
+        </div>
+
+        <div class="npp-form-grid">
+            <div class="npp-column">
+                <label class="npp-field">
+                    <span class="npp-label">First Name</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Middle Name</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Last Name</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Address</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Contact Number</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Email Address</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Gender</span>
+                    <input class="npp-input" readonly />
+                </label>
+            </div>
+
+            <div class="npp-column">
+                <label class="npp-field">
+                    <span class="npp-label">Civil Status</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Occupation</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Nationality</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Religion</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Emergency Contact Name</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Emergency Contact Relationship</span>
+                    <input class="npp-input" readonly />
+                </label>
+                <label class="npp-field">
+                    <span class="npp-label">Emergency Contact Number</span>
+                    <input class="npp-input" readonly />
+                </label>
+            </div>
+        </div>
+
+        <div class="npp-actions">
+            <button class="npp-back-btn" @onclick="GoBack">Back</button>
+        </div>
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    private void GoBack()
+    {
+        // Shared page: choose where to go back based on the current URL
+        var uri = Navigation.Uri.ToLowerInvariant();
+
+        if (uri.Contains("/doctor-patient-profile"))
+        {
+            Navigation.NavigateTo("/patient-list"); // doctor view patient list
+        }
+        else
+        {
+            Navigation.NavigateTo("/nurse-patient-list"); // nurse view patient list
+        }
+    }
+}

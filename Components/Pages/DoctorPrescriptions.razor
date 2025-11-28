@@ -1,0 +1,621 @@
+@page "/doctor-prescriptions"
+@layout Layout.DashboardLayout
+
+<div class="dashboard-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Prescription</h1>
+            <p class="dashboard-subtitle">Welcome back Clinical Staff!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Clinical</span>
+        </div>
+    </header>
+
+    <section class="ip-overview">
+        <div class="ip-overview-header">
+            <h2 class="ip-section-title">Prescription Overview</h2>
+            <div class="ip-show-entries">
+                <span>Show</span>
+                <select>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>25</option>
+                </select>
+                <span>entries</span>
+            </div>
+        </div>
+
+        <div class="ip-filters-row">
+            <div class="ip-alpha-filter">
+                <button class="ip-filter-pill @(ShowLetters && ActiveLetter is null ? "active" : string.Empty)" @onclick="ToggleLetters">All</button>
+
+                @if (ShowLetters)
+                {
+                    @foreach (var letter in Alphabet)
+                    {
+                        <button class="ip-filter-pill @(ActiveLetter == letter ? "active" : string.Empty)"
+                                @onclick="() => SelectLetter(letter)">@letter</button>
+                    }
+                }
+            </div>
+
+            <div class="ip-search-row">
+                <div class="ip-search-box">
+                    <span class="ip-search-icon"></span>
+                    <input class="ip-search-input" placeholder="Search Patient" />
+                </div>
+
+                <div class="ip-actions">
+                    <button class="ip-action-btn">Sort</button>
+                    <button class="ip-action-btn">Filters</button>
+                    <button class="ip-stock-btn" @onclick="OpenPrescriptionForm">+ New Prescription</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ip-table-outer">
+            <div class="ip-table-wrapper">
+                <table class="ip-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Diagnosis</th>
+                            <th>Medications</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th class="ip-col-actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Prescriptions)
+                        {
+                            <tr>
+                                <td>@p.Patient</td>
+                                <td>@p.Doctor</td>
+                                <td>@p.Diagnosis</td>
+                                <td>@p.Medications</td>
+                                <td>
+                                    <span class="ip-status-pill ip-status-@p.StatusKey">
+                                        <span class="ip-status-dot"></span>
+                                        <span>@p.StatusLabel</span>
+                                    </span>
+                                </td>
+                                <td>@p.Date</td>
+                                <td class="ip-actions-cell">
+                                    <button type="button" class="ip-edit-btn" aria-label="Edit prescription" @onclick="() => OpenEditPrescription(p)">
+                                        <span class="ip-edit-icon"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button type="button" class="ip-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
+            <span>@(ShowPagination ? "›" : "‹")</span>
+        </button>
+
+        @if (ShowPagination)
+        {
+            <div class="ip-pagination">
+                <button class="ip-page-btn">Previous</button>
+                <button class="ip-page-number active">1</button>
+                <button class="ip-page-number">2</button>
+                <button class="ip-page-number">3</button>
+                <span class="ip-page-dots">...</span>
+                <button class="ip-page-number">8</button>
+                <button class="ip-page-btn">Next</button>
+            </div>
+        }
+    </section>
+
+    @if (ShowPrescriptionForm)
+    {
+        <div class="dp-form-overlay">
+            <div class="dp-form-panel">
+                <h2 class="dp-form-title">Prescription Form</h2>
+
+                <div class="dp-form-top-search">
+                    <div class="dp-form-search dp-form-search-patient">
+                        <span class="dp-search-icon"></span>
+                        <input placeholder="Patient Name" list="dp-patient-options" />
+                    </div>
+                    <div class="dp-form-search dp-form-search-doctor">
+                        <span class="dp-search-icon"></span>
+                        <input placeholder="Doctor" list="dp-doctor-options" />
+                    </div>
+                </div>
+
+                <div class="dp-form-grid">
+                    <div class="dp-form-section">
+                        <h3 class="dp-form-section-title">Patient Information</h3>
+                        <div class="dp-form-field"><span>Name:</span><span></span></div>
+                        <div class="dp-form-field"><span>PatientID:</span><span></span></div>
+                        <div class="dp-form-field"><span>Contact Number:</span><span></span></div>
+                        <div class="dp-form-field"><span>Date of Birth:</span><span></span></div>
+                        <div class="dp-form-field"><span>Age:</span><span></span></div>
+                        <div class="dp-form-field"><span>Address:</span><span></span></div>
+                        <div class="dp-form-field"><span>Diagnosis:</span><span></span></div>
+                    </div>
+
+                    <div class="dp-form-section">
+                        <h3 class="dp-form-section-title">Doctor's Information</h3>
+                        <div class="dp-form-field"><span>Name:</span><span></span></div>
+                        <div class="dp-form-field"><span>License Number:</span><span></span></div>
+                        <div class="dp-form-field"><span>Specialty:</span><span></span></div>
+                        <div class="dp-form-field"><span>Contact Information:</span><span></span></div>
+                    </div>
+                </div>
+
+                <div class="dp-form-grid dp-form-grid-bottom">
+                    <div class="dp-form-section">
+                        <h3 class="dp-form-section-title">Prescription Details</h3>
+                        <div class="dp-form-input-row">
+                            <label>Prescription Date:</label>
+                            <input type="date" />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Validity Period:</label>
+                            <input />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Priority:</label>
+                            <select>
+                                <option selected disabled>-- Select priority --</option>
+                                <option>Routine</option>
+                                <option>Urgent</option>
+                                <option>Emergency</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="dp-form-section">
+                        <div class="dp-form-section-header">
+                            <h3 class="dp-form-section-title">Medication Entries</h3>
+                            <button type="button" class="dp-form-add-link" @onclick="AddMedicationEntry">Add</button>
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Medication:</label>
+                            <input placeholder="ex. Amoxicillin" list="dp-medication-options" @bind="CurrentMedication" />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Dosage:</label>
+                            <input placeholder="ex. 250mg" list="dp-dosage-options" @bind="CurrentDosage" />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Quantity:</label>
+                            <input placeholder="ex. 21 tablets" list="dp-quantity-options" @bind="CurrentQuantity" />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Frequency:</label>
+                            <input placeholder="ex. 3 times daily" list="dp-frequency-options" @bind="CurrentFrequency" />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Duration:</label>
+                            <input placeholder="ex. 7 days" list="dp-duration-options" @bind="CurrentDuration" />
+                        </div>
+                    </div>
+                </div>
+
+                @if (MedicationEntries.Any())
+                {
+                    <div class="dp-form-meds-table-wrapper">
+                        <table class="dp-form-meds-table">
+                            <thead>
+                                <tr>
+                                    <th>Medication</th>
+                                    <th>Dosage</th>
+                                    <th>Quantity</th>
+                                    <th>Frequency</th>
+                                    <th>Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (var i = 0; i < MedicationEntries.Count; i++)
+                                {
+                                    var med = MedicationEntries[i];
+                                    <tr @onclick="() => LoadMedicationEntry(i)">
+                                        <td>@med.Medication</td>
+                                        <td>@med.Dosage</td>
+                                        <td>@med.Quantity</td>
+                                        <td>@med.Frequency</td>
+                                        <td>@med.Duration</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+                <div class="dp-form-actions">
+                    <button type="button" class="dp-form-cancel" @onclick="ClosePrescriptionForm">Cancel</button>
+                    <button type="button" class="dp-form-save" @onclick="ClosePrescriptionForm">Save</button>
+                </div>
+
+                <datalist id="dp-patient-options">
+                    <option value="Juan Dela Cruz" />
+                    <option value="Maria Santos" />
+                    <option value="Pedro Reyes" />
+                    <option value="Bronya Rand" />
+                    <option value="Himeko Murata" />
+                    <option value="Ruan Mei" />
+                </datalist>
+
+                <datalist id="dp-doctor-options">
+                    <option value="Dr. Lee" />
+                    <option value="Dr. Smith" />
+                    <option value="Dr. Cruz" />
+                    <option value="Dr. Santos" />
+                </datalist>
+
+                <datalist id="dp-medication-options">
+                    <option value="Paracetamol" />
+                    <option value="Ibuprofen" />
+                    <option value="Amoxicillin" />
+                    <option value="Cefalexin" />
+                    <option value="Metformin" />
+                    <option value="Amlodipine" />
+                    <option value="Omeprazole" />
+                </datalist>
+
+                <datalist id="dp-dosage-options">
+                    <option value="125 mg" />
+                    <option value="250 mg" />
+                    <option value="500 mg" />
+                    <option value="850 mg" />
+                    <option value="1 g" />
+                </datalist>
+
+                <datalist id="dp-quantity-options">
+                    <option value="7 tablets" />
+                    <option value="14 tablets" />
+                    <option value="21 tablets" />
+                    <option value="28 tablets" />
+                    <option value="1 bottle" />
+                </datalist>
+
+                <datalist id="dp-frequency-options">
+                    <option value="Once daily" />
+                    <option value="Twice daily" />
+                    <option value="3 times daily" />
+                    <option value="Every 4 hours" />
+                    <option value="Every 8 hours" />
+                    <option value="As needed" />
+                </datalist>
+
+                <datalist id="dp-duration-options">
+                    <option value="3 days" />
+                    <option value="5 days" />
+                    <option value="7 days" />
+                    <option value="10 days" />
+                    <option value="14 days" />
+                </datalist>
+            </div>
+        </div>
+    }
+
+    @if (ShowEditForm && SelectedPrescription is not null)
+    {
+        <div class="dp-form-overlay">
+            <div class="dp-form-panel">
+                <h2 class="dp-form-title">Edit Prescription</h2>
+
+                <div class="dp-form-grid">
+                    <div class="dp-form-section">
+                        <h3 class="dp-form-section-title">Patient Information</h3>
+                        <div class="dp-form-field"><span>Name:</span><span>@SelectedPrescription.Patient</span></div>
+                        <div class="dp-form-field"><span>PatientID:</span><span></span></div>
+                        <div class="dp-form-field"><span>Contact Number:</span><span></span></div>
+                        <div class="dp-form-field"><span>Date of Birth:</span><span></span></div>
+                        <div class="dp-form-field"><span>Age:</span><span></span></div>
+                        <div class="dp-form-field"><span>Address:</span><span></span></div>
+                        <div class="dp-form-field"><span>Diagnosis:</span><span>@SelectedPrescription.Diagnosis</span></div>
+                    </div>
+
+                    <div class="dp-form-section">
+                        <h3 class="dp-form-section-title">Doctor's Information</h3>
+                        <div class="dp-form-field"><span>Name:</span><span>@SelectedPrescription.Doctor</span></div>
+                        <div class="dp-form-field"><span>License Number:</span><span></span></div>
+                        <div class="dp-form-field"><span>Specialty:</span><span></span></div>
+                        <div class="dp-form-field"><span>Contact Information:</span><span></span></div>
+                    </div>
+                </div>
+
+                <div class="dp-form-grid dp-form-grid-bottom">
+                    <div class="dp-form-section">
+                        <h3 class="dp-form-section-title">Prescription Details</h3>
+                        <div class="dp-form-input-row">
+                            <label>Prescription Date:</label>
+                            <input type="date" />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Validity Period:</label>
+                            <input />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Priority:</label>
+                            <select>
+                                <option selected disabled>-- Select priority --</option>
+                                <option>Routine</option>
+                                <option>Urgent</option>
+                                <option>Emergency</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="dp-form-section">
+                        <div class="dp-form-section-header">
+                            <h3 class="dp-form-section-title">Medication Entries</h3>
+                            <button type="button" class="dp-form-add-link" @onclick="AddMedicationEntry">Add</button>
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Medication:</label>
+                            <input placeholder="ex. Amoxicillin" list="dp-medication-options" @bind="CurrentMedication" />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Dosage:</label>
+                            <input placeholder="ex. 250mg" list="dp-dosage-options" @bind="CurrentDosage" />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Quantity:</label>
+                            <input placeholder="ex. 21 tablets" list="dp-quantity-options" @bind="CurrentQuantity" />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Frequency:</label>
+                            <input placeholder="ex. 3 times daily" list="dp-frequency-options" @bind="CurrentFrequency" />
+                        </div>
+                        <div class="dp-form-input-row">
+                            <label>Duration:</label>
+                            <input placeholder="ex. 7 days" list="dp-duration-options" @bind="CurrentDuration" />
+                        </div>
+                    </div>
+                </div>
+
+                @if (MedicationEntries.Any())
+                {
+                    <div class="dp-form-meds-table-wrapper">
+                        <table class="dp-form-meds-table">
+                            <thead>
+                                <tr>
+                                    <th>Medication</th>
+                                    <th>Dosage</th>
+                                    <th>Quantity</th>
+                                    <th>Frequency</th>
+                                    <th>Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (var i = 0; i < MedicationEntries.Count; i++)
+                                {
+                                    var med = MedicationEntries[i];
+                                    <tr @onclick="() => LoadMedicationEntry(i)">
+                                        <td>@med.Medication</td>
+                                        <td>@med.Dosage</td>
+                                        <td>@med.Quantity</td>
+                                        <td>@med.Frequency</td>
+                                        <td>@med.Duration</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+                <datalist id="dp-medication-options">
+                    <option value="Paracetamol" />
+                    <option value="Ibuprofen" />
+                    <option value="Amoxicillin" />
+                    <option value="Cefalexin" />
+                    <option value="Metformin" />
+                    <option value="Amlodipine" />
+                    <option value="Omeprazole" />
+                </datalist>
+
+                <datalist id="dp-dosage-options">
+                    <option value="125 mg" />
+                    <option value="250 mg" />
+                    <option value="500 mg" />
+                    <option value="850 mg" />
+                    <option value="1 g" />
+                </datalist>
+
+                <datalist id="dp-quantity-options">
+                    <option value="7 tablets" />
+                    <option value="14 tablets" />
+                    <option value="21 tablets" />
+                    <option value="28 tablets" />
+                    <option value="1 bottle" />
+                </datalist>
+
+                <datalist id="dp-frequency-options">
+                    <option value="Once daily" />
+                    <option value="Twice daily" />
+                    <option value="3 times daily" />
+                    <option value="Every 4 hours" />
+                    <option value="Every 8 hours" />
+                    <option value="As needed" />
+                </datalist>
+
+                <datalist id="dp-duration-options">
+                    <option value="3 days" />
+                    <option value="5 days" />
+                    <option value="7 days" />
+                    <option value="10 days" />
+                    <option value="14 days" />
+                </datalist>
+
+                <div class="dp-form-actions">
+                    <button type="button" class="dp-form-cancel" @onclick="CloseEditForm">Cancel</button>
+                    <button type="button" class="dp-form-save" @onclick="CloseEditForm">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private readonly char[] Alphabet =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+    private bool ShowLetters { get; set; }
+    private char? ActiveLetter { get; set; }
+    private bool ShowPagination { get; set; } = true;
+    private bool ShowPrescriptionForm { get; set; }
+    private bool ShowEditForm { get; set; }
+
+    private string CurrentMedication { get; set; } = string.Empty;
+    private string CurrentDosage { get; set; } = string.Empty;
+    private string CurrentQuantity { get; set; } = string.Empty;
+    private string CurrentFrequency { get; set; } = string.Empty;
+    private string CurrentDuration { get; set; } = string.Empty;
+
+    private List<MedicationEntry> MedicationEntries { get; set; } = new();
+    private int? EditingMedicationIndex { get; set; }
+    private DoctorPrescriptionRow? SelectedPrescription { get; set; }
+
+    private record DoctorPrescriptionRow(
+        string Patient,
+        string Doctor,
+        string Diagnosis,
+        string Medications,
+        string StatusKey,
+        string StatusLabel,
+        string Date
+    );
+
+    private readonly DoctorPrescriptionRow[] Prescriptions = new[]
+    {
+        new DoctorPrescriptionRow("Bronya Rand", "Dr. Lee", "Infection", "Amoxicillin", "active", "Active", "03/09/24"),
+        new DoctorPrescriptionRow("Himeko Murata", "Dr. Santos", "Infection", "Amoxicillin", "pending", "Pending", "03/09/24"),
+        new DoctorPrescriptionRow("Ruan Mei", "Dr. Cruz", "Fever", "Paracetamol", "pending", "Pending", "03/09/24"),
+    };
+
+    private void ToggleLetters()
+    {
+        ShowLetters = !ShowLetters;
+        ActiveLetter = null;
+    }
+
+    private void SelectLetter(char letter)
+    {
+        ShowLetters = true;
+        ActiveLetter = letter;
+    }
+
+    private void TogglePagination()
+    {
+        ShowPagination = !ShowPagination;
+    }
+
+    private void OpenPrescriptionForm()
+    {
+        ResetMedicationState();
+        SelectedPrescription = null;
+        ShowPrescriptionForm = true;
+    }
+
+    private void ClosePrescriptionForm()
+    {
+        ShowPrescriptionForm = false;
+    }
+
+    private void OpenEditPrescription(DoctorPrescriptionRow row)
+    {
+        SelectedPrescription = row;
+        ResetMedicationState();
+
+        if (!string.IsNullOrWhiteSpace(row.Medications))
+        {
+            MedicationEntries.Add(
+                new MedicationEntry(
+                    row.Medications,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty
+                )
+            );
+        }
+
+        ShowEditForm = true;
+    }
+
+    private void CloseEditForm()
+    {
+        ShowEditForm = false;
+    }
+
+    private void AddMedicationEntry()
+    {
+        if (string.IsNullOrWhiteSpace(CurrentMedication))
+        {
+            return;
+        }
+
+        var newEntry = new MedicationEntry(
+            CurrentMedication,
+            CurrentDosage,
+            CurrentQuantity,
+            CurrentFrequency,
+            CurrentDuration
+        );
+
+        if (EditingMedicationIndex is int index && index >= 0 && index < MedicationEntries.Count)
+        {
+            MedicationEntries[index] = newEntry;
+        }
+        else
+        {
+            MedicationEntries.Add(newEntry);
+        }
+
+        ResetCurrentMedicationInputs();
+    }
+
+    private record MedicationEntry(
+        string Medication,
+        string Dosage,
+        string Quantity,
+        string Frequency,
+        string Duration
+    );
+
+    private void ResetMedicationState()
+    {
+        MedicationEntries.Clear();
+        ResetCurrentMedicationInputs();
+    }
+
+    private void ResetCurrentMedicationInputs()
+    {
+        CurrentMedication = string.Empty;
+        CurrentDosage = string.Empty;
+        CurrentQuantity = string.Empty;
+        CurrentFrequency = string.Empty;
+        CurrentDuration = string.Empty;
+        EditingMedicationIndex = null;
+    }
+
+    private void LoadMedicationEntry(int index)
+    {
+        if (index < 0 || index >= MedicationEntries.Count)
+        {
+            return;
+        }
+
+        var med = MedicationEntries[index];
+        CurrentMedication = med.Medication;
+        CurrentDosage = med.Dosage;
+        CurrentQuantity = med.Quantity;
+        CurrentFrequency = med.Frequency;
+        CurrentDuration = med.Duration;
+        EditingMedicationIndex = index;
+    }
+}

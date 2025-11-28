@@ -1,0 +1,90 @@
+@page "/billing-cashiering"
+@layout Layout.DashboardLayout
+
+<div class="pm-page billing-cashiering-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Billing and Invoicing</h1>
+            <p class="dashboard-subtitle">Welcome back Billing Staff!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">billing@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Billing staff</span>
+        </div>
+    </header>
+
+    <section class="billing-comp-tabs">
+        <button class="billing-comp-tab" @onclick="GoToOverview">Overview</button>
+        <button class="billing-comp-tab" @onclick="GoToBilling">Billing</button>
+        <button class="billing-comp-tab billing-comp-tab--current">Cashiering</button>
+        <button class="billing-comp-tab" @onclick="GoToReceipt">Receipt</button>
+        <button class="billing-comp-tab" @onclick="GoToInvoice">Invoicing</button>
+    </section>
+
+    <section class="billing-cashiering-body">
+        <h2 class="billing-cashiering-title">Clinical Bill Payment Process</h2>
+
+        <div class="billing-cashiering-layout">
+            <div class="billing-cashiering-left">
+                <div class="billing-cashiering-panel billing-cashiering-panel--pdf">
+                    <h3 class="billing-cashiering-subtitle">PDF Medical Billing Invoice</h3>
+                    <div class="billing-cashiering-pdf-placeholder">
+                        <span>PDF PREVIEW</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="billing-cashiering-right">
+                <div class="billing-cashiering-panel">
+                    <h3 class="billing-cashiering-subtitle">Type of Payment</h3>
+                    <div class="billing-cashiering-options billing-cashiering-options--payment">
+                        <label><input type="checkbox" /> Bank Transfer</label>
+                        <label><input type="checkbox" /> Cash</label>
+                        <label><input type="checkbox" /> E-Wallet</label>
+                    </div>
+                </div>
+
+                <div class="billing-cashiering-panel">
+                    <h3 class="billing-cashiering-subtitle">Select Insurance</h3>
+                    <div class="billing-cashiering-options billing-cashiering-options--insurance">
+                        <label><input type="checkbox" /> PhilHealth</label>
+                        <label><input type="checkbox" /> OFW / POEA Health Plan</label>
+                        <label><input type="checkbox" /> GSIS / SSS Health Benefit</label>
+                        <label><input type="checkbox" /> Maxicare</label>
+                        <label><input type="checkbox" /> Medicard</label>
+                        <label><input type="checkbox" /> Intellicare</label>
+                        <label><input type="checkbox" /> Kaiser Health</label>
+                        <label><input type="checkbox" /> PMCare</label>
+                        <label><input type="checkbox" /> Company Health Plan</label>
+                        <label><input type="checkbox" /> Partnership / Sponsor Plan</label>
+                        <label><input type="checkbox" /> Charity / Social Assistance</label>
+                        <label><input type="checkbox" /> Others</label>
+                    </div>
+                </div>
+
+                <div class="billing-cashiering-amount-row">
+                    <div class="billing-cashiering-amount-input">
+                        <label>Input Amount</label>
+                        <input class="billing-cashiering-input" value="1,902.05" />
+                    </div>
+                    <button class="billing-cashiering-pay-btn">Pay</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    private void GoToOverview() => Navigation.NavigateTo("/billing-patient-overview");
+
+    private void GoToBilling() => Navigation.NavigateTo("/billing-computation");
+
+    private void GoToReceipt() => Navigation.NavigateTo("/receipt-pdf?source=billing");
+
+    private void GoToInvoice() => Navigation.NavigateTo("/invoice-pdf?source=billing");
+}

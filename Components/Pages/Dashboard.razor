@@ -1,0 +1,328 @@
+﻿@page "/dashboard"
+@layout Layout.DashboardLayout
+
+<div class="dashboard-page @(IsNotificationDismissed ? "dashboard-no-notification" : string.Empty)">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Dashboard</h1>
+            <p class="dashboard-subtitle">Welcome back Admin!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    @if (IsNotificationDismissed)
+    {
+        <div class="dashboard-notification-toggle" @onclick="ShowNotificationBar">
+            <span class="notification-toggle-icon">▾</span>
+        </div>
+    }
+
+    @if (!IsNotificationDismissed)
+    {
+        <section class="dashboard-notification">
+            <div class="notification-header-row">
+                <div class="notification-title">Lease Notification</div>
+                <div class="notification-controls">
+                    @if (IsNotificationCollapsed)
+                    {
+                        <span class="notification-control-icon" @onclick="ShowNotification">▢</span>
+                    }
+                    else
+                    {
+                        <span class="notification-control-icon" @onclick="HideNotification">▭</span>
+                    }
+                    <span class="notification-control-icon" @onclick="ExitNotification">✕</span>
+                </div>
+            </div>
+
+            @if (!IsNotificationCollapsed)
+            {
+                <div class="notification-body">
+                    <div class="notification-icon">!</div>
+                    <div class="notification-text">
+                        <div>Low stock detected: Paracetamol 500mg &mdash; only 15 units left.</div>
+                        <button class="notification-button">Go to notification</button>
+                    </div>
+                </div>
+            }
+        </section>
+    }
+
+    <section class="dashboard-cards-row">
+        <div class="dashboard-card">
+            <h3>Monthly Revenue</h3>
+            <div class="card-placeholder">
+                <div class="card-kpi-value">@TotalMonthlyRevenueDisplay</div>
+                <div class="card-kpi-subtitle">Total paid receipts this month</div>
+                <div class="card-graph-progress">
+                    <div class="graph-track">
+                        <div class="graph-fill" style=$"width:@MonthlyRevenuePercent%"></div>
+                    </div>
+                    <div class="graph-caption">@MonthlyRevenuePercent% of target ₱200,000</div>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-card">
+            <h3>Patient Weekly Visit</h3>
+            <div class="card-placeholder">
+                <div class="card-kpi-value">@TotalWeeklyVisits</div>
+                <div class="card-kpi-subtitle">Total visits this week</div>
+                <div class="card-kpi-meta">Peak day: @PeakVisitDay (@PeakVisitCount visits)</div>
+                <div class="card-graph-spark">
+                    <div class="spark-bars">
+                        @for (var i = 0; i < WeeklyVisits.Length; i++)
+                        {
+                            <div class="spark-bar" style=$"height:@GetVisitBarHeight(WeeklyVisits[i])px"></div>
+                        }
+                    </div>
+                    <div class="spark-labels">
+                        @for (var i = 0; i < Weekdays.Length; i++)
+                        {
+                            <span class="spark-label">@Weekdays[i]</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-card">
+            <h3>Patient Demographics</h3>
+            <div class="card-placeholder">
+                <div class="card-kpi-value">@TotalPatients</div>
+                <div class="card-kpi-subtitle">Active patients in MedFlow</div>
+                <div class="card-kpi-meta">@FemalePatients female / @MalePatients male</div>
+                <div class="card-graph-progress">
+                    <div class="graph-track graph-track-demographics">
+                        <div class="graph-segment-female" style=$"width:@FemalePercent%"></div>
+                        <div class="graph-segment-male" style=$"width:@MalePercent%"></div>
+                    </div>
+                    <div class="graph-caption">@FemalePercent% female / @MalePercent% male</div>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-card">
+            <h3>Revenue by Department</h3>
+            <div class="card-placeholder">
+                <div class="card-kpi-value">@TopDepartmentRevenueDisplay</div>
+                <div class="card-kpi-subtitle">Top department: @TopRevenueDepartment</div>
+                <div class="card-kpi-meta">Unpaid invoices: @UnpaidInvoicesCount</div>
+                <div class="card-graph-departments">
+                    @for (var i = 0; i < RevenueDepartments.Length; i++)
+                    {
+                        <div class="dept-row">
+                            <span class="dept-label">@RevenueDepartments[i]</span>
+                            <div class="dept-bar-track">
+                                <div class="dept-bar-fill" style=$"width:@GetDepartmentPercent(RevenueValues[i])%"></div>
+                            </div>
+                            <span class="dept-value">₱@RevenueValues[i].ToString("N0")</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard-activity">
+        <div class="activity-header">
+            <h3>Recent Activity</h3>
+            <div class="activity-search-area">
+                <input class="activity-search" placeholder="Search activity..." />
+                <div class="activity-actions">
+                    <button class="activity-action-btn">Sort</button>
+                    <button class="activity-action-btn">Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="activity-table-wrapper">
+            <table class="activity-table">
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>User</th>
+                        <th>Date &amp; Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Registered new patient: Juan Dela Cruz</td>
+                        <td>Receptionist</td>
+                        <td>10:24 AM</td>
+                    </tr>
+                    <tr>
+                        <td>Added Invoice #INV-10321 (₱1,850)</td>
+                        <td>Billing Staff</td>
+                        <td>10:15 AM</td>
+                    </tr>
+                    <tr>
+                        <td>Updated Health Record: Ana Santos</td>
+                        <td>Dr. Reyes</td>
+                        <td>9:59 AM</td>
+                    </tr>
+                    <tr>
+                        <td>Dispensed Paracetamol 500mg (10 tabs)</td>
+                        <td>Pharmacist</td>
+                        <td>9:40 AM</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private bool IsNotificationCollapsed { get; set; }
+    private bool IsNotificationDismissed { get; set; }
+
+    private decimal TotalMonthlyRevenue => 15000m + 25000m + 29000m + 18000m + 60000m;
+
+    private string TotalMonthlyRevenueDisplay => $"₱{TotalMonthlyRevenue:N0}";
+
+    private readonly int[] WeeklyVisits = new[] { 24, 32, 28, 30, 26, 18, 12 };
+    private readonly string[] Weekdays = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+
+    private int TotalWeeklyVisits => WeeklyVisits[0] + WeeklyVisits[1] + WeeklyVisits[2] + WeeklyVisits[3] + WeeklyVisits[4] + WeeklyVisits[5] + WeeklyVisits[6];
+
+    private int GetVisitBarHeight(int visits)
+    {
+        var minHeight = 16;
+        var maxHeight = 56;
+        var max = PeakVisitCount;
+
+        if (max <= 0)
+        {
+            return minHeight;
+        }
+
+        var height = minHeight + (visits * (maxHeight - minHeight) / max);
+        return height;
+    }
+
+    private string PeakVisitDay
+    {
+        get
+        {
+            var max = WeeklyVisits[0];
+            var index = 0;
+
+            for (var i = 1; i < WeeklyVisits.Length; i++)
+            {
+                if (WeeklyVisits[i] > max)
+                {
+                    max = WeeklyVisits[i];
+                    index = i;
+                }
+            }
+
+            return Weekdays[index];
+        }
+    }
+
+    private int PeakVisitCount
+    {
+        get
+        {
+            var max = WeeklyVisits[0];
+
+            for (var i = 1; i < WeeklyVisits.Length; i++)
+            {
+                if (WeeklyVisits[i] > max)
+                {
+                    max = WeeklyVisits[i];
+                }
+            }
+
+            return max;
+        }
+    }
+
+    private int FemalePatients => 160;
+    private int MalePatients => 120;
+    private int TotalPatients => FemalePatients + MalePatients;
+
+    private int FemalePercent => TotalPatients == 0 ? 0 : FemalePatients * 100 / TotalPatients;
+    private int MalePercent => TotalPatients == 0 ? 0 : MalePatients * 100 / TotalPatients;
+
+    private readonly string[] RevenueDepartments = new[] { "Outpatient", "Inpatient", "Laboratory" };
+    private readonly decimal[] RevenueValues = new[] { 48000m, 65000m, 34000m };
+
+    private string TopRevenueDepartment
+    {
+        get
+        {
+            var index = 0;
+            var max = RevenueValues[0];
+
+            for (var i = 1; i < RevenueValues.Length; i++)
+            {
+                if (RevenueValues[i] > max)
+                {
+                    max = RevenueValues[i];
+                    index = i;
+                }
+            }
+
+            return RevenueDepartments[index];
+        }
+    }
+
+    private string TopDepartmentRevenueDisplay
+    {
+        get
+        {
+            var max = RevenueValues[0];
+
+            for (var i = 1; i < RevenueValues.Length; i++)
+            {
+                if (RevenueValues[i] > max)
+                {
+                    max = RevenueValues[i];
+                }
+            }
+
+            return $"₱{max:N0}";
+        }
+    }
+
+    private int UnpaidInvoicesCount => 2;
+
+    private int MonthlyRevenuePercent => (int)(TotalMonthlyRevenue * 100 / 200000m);
+
+    private int GetDepartmentPercent(decimal value)
+    {
+        var total = RevenueValues[0] + RevenueValues[1] + RevenueValues[2];
+
+        if (total <= 0)
+        {
+            return 0;
+        }
+
+        return (int)(value * 100 / total);
+    }
+
+    private void HideNotification()
+    {
+        IsNotificationCollapsed = true;
+    }
+
+    private void ShowNotification()
+    {
+        IsNotificationCollapsed = false;
+    }
+
+    private void ExitNotification()
+    {
+        IsNotificationDismissed = true;
+        IsNotificationCollapsed = false;
+    }
+
+    private void ShowNotificationBar()
+    {
+        IsNotificationDismissed = false;
+        IsNotificationCollapsed = false;
+    }
+}

@@ -1,0 +1,527 @@
+@page "/admin-insurance-claims"
+@layout Layout.DashboardLayout
+
+<div class="inv-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Insurance and Claims</h1>
+            <p class="dashboard-subtitle">Welcome back Admin!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    <section class="inv-card">
+        <div class="inv-controls">
+            <h2 class="inv-section-title">Company Request Overview</h2>
+
+            <div class="inv-tabs-row">
+                <span class="inv-tabs-label">Recent</span>
+                <div class="inv-tabs">
+                    <button class="inv-tab @(CurrentTab == "request" ? "inv-tab-active" : string.Empty)" @onclick="SetRequestTab">Request</button>
+                    <button class="inv-tab @(CurrentTab == "company" ? "inv-tab-active" : string.Empty)" @onclick="SetCompanyTab">Company</button>
+                    <button class="inv-tab @(CurrentTab == "claims" ? "inv-tab-active" : string.Empty)" @onclick="SetClaimsTab">Claims</button>
+                </div>
+            </div>
+
+            @if (CurrentTab == "request")
+            {
+                <div class="inv-search-row">
+                    <div class="inv-search-box">
+                        <span class="inv-search-icon"></span>
+                        <input class="inv-search-input" placeholder="Search Request" />
+                    </div>
+
+                    <div class="inv-actions">
+                        <button class="inv-action-btn">Sort</button>
+                        <button class="inv-action-btn">Filters</button>
+                    </div>
+                </div>
+            }
+            else if (CurrentTab == "claims")
+            {
+                <div class="inv-search-row">
+                    <div class="inv-search-box">
+                        <span class="inv-search-icon"></span>
+                        <input class="inv-search-input" placeholder="Search Request" />
+                    </div>
+
+                    <div class="inv-actions">
+                        <button class="inv-action-btn">Sort</button>
+                        <button class="inv-action-btn">Filters</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (CurrentTab == "request")
+        {
+            <div class="inv-list">
+                @foreach (var item in Requests)
+                {
+                    <div class="inv-row">
+                        <div class="inv-row-main">
+                            <div class="inv-row-name">
+                                <span class="inv-row-label">Billing Staff name</span>
+                                <span class="inv-row-value">@item.BillingStaff</span>
+                            </div>
+                        </div>
+                        <div class="inv-row-columns inv-row-columns-admin">
+                            <div class="inv-row-col">
+                                <span class="inv-row-label">Date</span>
+                                <span class="inv-row-value">@item.Date</span>
+                            </div>
+                            <div class="inv-row-col">
+                                <span class="inv-row-label">Status</span>
+                                <span class="inv-row-value">@item.Status</span>
+                            </div>
+                            <div class="inv-row-col inv-row-col-action">
+                                <div class="inv-decision-buttons">
+                                    <button class="inv-view-btn" type="button" aria-label="View details" @onclick="() => OpenViewPanel(item)">
+                                        <span class="inv-view-icon"></span>
+                                    </button>
+                                    <button class="inv-decision-btn inv-decision-reject" type="button" aria-label="Reject request" @onclick="() => OpenRejectionPanel(item)">
+                                        X
+                                    </button>
+                                    <button class="inv-decision-btn inv-decision-accept" type="button" aria-label="Accept request" @onclick="() => OpenAcceptConfirm(item)">
+                                        ✓
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inv-row">
+                        <div class="inv-row-main">
+                            <div class="inv-row-name">
+                                <span class="inv-row-label">Name</span>
+                                <span class="inv-row-value">@item.ClientName</span>
+                            </div>
+                        </div>
+                        <div class="inv-row-columns inv-row-columns-admin">
+                            <div class="inv-row-col">
+                                <span class="inv-row-label">Date</span>
+                                <span class="inv-row-value">@item.Date</span>
+                            </div>
+                            <div class="inv-row-col">
+                                <span class="inv-row-label">Status</span>
+                                <span class="inv-row-value">@item.Status</span>
+                            </div>
+                            <div class="inv-row-col inv-row-col-action">
+                                <div class="inv-decision-buttons">
+                                    <button class="inv-view-btn" type="button" aria-label="View details">
+                                        <span class="inv-view-icon"></span>
+                                    </button>
+                                    <button class="inv-decision-btn inv-decision-reject" type="button" aria-label="Reject request" @onclick="() => OpenRejectionPanel(item)">
+                                        X
+                                    </button>
+                                    <button class="inv-decision-btn inv-decision-accept" type="button" aria-label="Accept request" @onclick="() => OpenAcceptConfirm(item)">
+                                        ✓
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else if (CurrentTab == "company")
+        {
+            <div class="admin-company-layout">
+                <div class="admin-company-column">
+                    <h3 class="admin-company-heading">Insurance Application</h3>
+                    <div class="admin-company-search">
+                        <span class="admin-company-search-icon"></span>
+                        <input class="admin-company-search-input" placeholder="" />
+                    </div>
+
+                    <div class="admin-app-list">
+                        @foreach (var name in InsuranceApplicants)
+                        {
+                            <div class="admin-app-row">
+                                <div class="admin-app-name">
+                                    <span class="admin-app-label">Name</span>
+                                    <span class="admin-app-value">@name</span>
+                                </div>
+                                <button type="button" class="admin-app-select" aria-label="Select application"></button>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="admin-company-column">
+                    <h3 class="admin-company-heading">Insurance Company</h3>
+                    <div class="admin-company-search">
+                        <span class="admin-company-search-icon"></span>
+                        <input class="admin-company-search-input" placeholder="" />
+                    </div>
+
+                    <div class="admin-company-list">
+                        @foreach (var company in InsuranceCompanies)
+                        {
+                            <div class="admin-company-row">
+                                <div class="admin-company-name">@company</div>
+                                <button type="button" class="admin-company-send" aria-label="Send to company">
+                                    <span class="admin-company-send-icon"></span>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        else if (CurrentTab == "claims")
+        {
+            <div class="inv-list">
+                @foreach (var claim in ClaimRows)
+                {
+                    <div class="inv-row">
+                        <div class="inv-row-main">
+                            <div class="inv-row-name">
+                                <span class="inv-row-label">Application name</span>
+                                <span class="inv-row-value">@claim.ApplicationName</span>
+                            </div>
+                        </div>
+                        <div class="inv-row-columns inv-row-columns-admin">
+                            <div class="inv-row-col">
+                                <span class="inv-row-label">Insurance name</span>
+                                <span class="inv-row-value">@claim.InsuranceName</span>
+                            </div>
+                            <div class="inv-row-col">
+                                <span class="inv-row-label">Date</span>
+                                <span class="inv-row-value">@claim.Date</span>
+                            </div>
+                            <div class="inv-row-col">
+                                <span class="inv-row-label">Status</span>
+                                <span class="inv-row-value">@claim.Status</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (IsViewPanelOpen && SelectedRequest is not null)
+        {
+            <div class="inv-view-overlay">
+                <div class="inv-view-panel">
+                    <h3 class="inv-view-title">Insurance Request Form</h3>
+
+                    <div class="inv-view-section">
+                        <div class="inv-view-section-title">Patient Information</div>
+                        <div class="inv-view-grid">
+                            <div>
+                                <div class="inv-view-label">Name:</div>
+                                <div class="inv-view-value">@SelectedRequest.ClientName</div>
+                            </div>
+                            <div>
+                                <div class="inv-view-label">Patient ID:</div>
+                                <div class="inv-view-value">#001234</div>
+                            </div>
+                            <div>
+                                <div class="inv-view-label">Insurance:</div>
+                                <div class="inv-view-value">PhilHealth</div>
+                            </div>
+                            <div>
+                                <div class="inv-view-label">Date:</div>
+                                <div class="inv-view-value">@SelectedRequest.Date</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inv-view-section">
+                        <div class="inv-view-section-title">Claim Details</div>
+                        <table class="inv-view-table">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Amount</th>
+                                    <th>Coverable</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Consultation</td>
+                                    <td>₱500</td>
+                                    <td>₱250 (50%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Blood Test</td>
+                                    <td>₱300</td>
+                                    <td>₱150 (50%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Urinalysis</td>
+                                    <td>₱250</td>
+                                    <td>₱125 (50%)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="inv-view-total-row">
+                            <span class="inv-view-label">Total Coverable:</span>
+                            <span class="inv-view-value">₱525</span>
+                        </div>
+                    </div>
+
+                    <div class="inv-view-doc-list">
+                        <div class="inv-view-doc-row">
+                            <div class="inv-view-doc-left">
+                                <span class="inv-view-doc-folder"></span>
+                                <span class="inv-view-doc-name">Medical Certificate</span>
+                            </div>
+                            <button type="button" class="inv-view-doc-eye">👁</button>
+                        </div>
+                        <div class="inv-view-doc-row disabled">
+                            <div class="inv-view-doc-left">
+                                <span class="inv-view-doc-folder"></span>
+                                <span class="inv-view-doc-name">Laboratory Results</span>
+                            </div>
+                            <button type="button" class="inv-view-doc-eye">👁</button>
+                        </div>
+                        <div class="inv-view-doc-row">
+                            <div class="inv-view-doc-left">
+                                <span class="inv-view-doc-folder"></span>
+                                <span class="inv-view-doc-name">Prescription Copies</span>
+                            </div>
+                            <button type="button" class="inv-view-doc-eye">👁</button>
+                        </div>
+                        <div class="inv-view-doc-row">
+                            <div class="inv-view-doc-left">
+                                <span class="inv-view-doc-folder"></span>
+                                <span class="inv-view-doc-name">Eligibility Verification</span>
+                            </div>
+                            <button type="button" class="inv-view-doc-eye">👁</button>
+                        </div>
+                        <div class="inv-view-doc-row">
+                            <div class="inv-view-doc-left">
+                                <span class="inv-view-doc-folder"></span>
+                                <span class="inv-view-doc-name">Claim Form</span>
+                            </div>
+                            <button type="button" class="inv-view-doc-eye">👁</button>
+                        </div>
+                        <div class="inv-view-doc-row">
+                            <div class="inv-view-doc-left">
+                                <span class="inv-view-doc-folder"></span>
+                                <span class="inv-view-doc-name">Official Receipt/Invoice</span>
+                            </div>
+                            <button type="button" class="inv-view-doc-eye">👁</button>
+                        </div>
+                        <div class="inv-view-doc-row disabled">
+                            <div class="inv-view-doc-left">
+                                <span class="inv-view-doc-folder"></span>
+                                <span class="inv-view-doc-name">Patient Information Sheet</span>
+                            </div>
+                            <button type="button" class="inv-view-doc-eye">👁</button>
+                        </div>
+                        <div class="inv-view-doc-row">
+                            <div class="inv-view-doc-left">
+                                <span class="inv-view-doc-folder"></span>
+                                <span class="inv-view-doc-name">Valid ID Copies</span>
+                            </div>
+                            <button type="button" class="inv-view-doc-eye">👁</button>
+                        </div>
+                    </div>
+
+                    <div class="inv-view-footer">
+                        <button type="button" class="inv-view-close" @onclick="CloseViewPanel">Close</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (IsRejectionPanelOpen)
+        {
+            <div class="inv-reject-overlay">
+                <div class="inv-reject-panel">
+                    <div class="inv-reject-header">
+                        <span class="inv-reject-title">Rejection Notes:</span>
+                        <button type="button" class="inv-reject-close" @onclick="CloseRejectionPanel">X</button>
+                    </div>
+                    <textarea class="inv-reject-textarea" @bind="RejectionNotes" placeholder="Write notes for the billing staff..."></textarea>
+                    <div class="inv-reject-footer">
+                        <button type="button" class="inv-reject-ok" @onclick="ConfirmRejection">OK</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (IsAcceptConfirmOpen)
+        {
+            <div class="inv-confirm-overlay">
+                <div class="inv-confirm-dialog">
+                    <div class="inv-confirm-text">Are you sure you want to accept this insurance request?</div>
+                    <div class="inv-confirm-actions">
+                        <button type="button" class="inv-confirm-cancel" @onclick="CloseAcceptConfirm">Cancel</button>
+                        <button type="button" class="inv-confirm-ok" @onclick="ConfirmAcceptAsync">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (IsAcceptSuccessVisible)
+        {
+            <div class="inv-accept-overlay">
+                <div class="inv-accept-panel">
+                    <div class="inv-accept-icon-circle">
+                        <span class="inv-accept-check">✓</span>
+                    </div>
+                    <div class="inv-accept-text">Insurance Accepted</div>
+                </div>
+            </div>
+        }
+
+        <button type="button" class="inv-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
+            <span>@(ShowPagination ? "›" : "‹")</span>
+        </button>
+
+        @if (ShowPagination)
+        {
+            <div class="inv-pagination">
+                <button class="inv-page-btn">Previous</button>
+                <button class="inv-page-number inv-page-number-active">1</button>
+                <button class="inv-page-number">2</button>
+                <button class="inv-page-number">3</button>
+                <span class="inv-page-dots">...</span>
+                <button class="inv-page-number">8</button>
+                <button class="inv-page-btn">Next</button>
+            </div>
+        }
+    </section>
+</div>
+
+@code {
+    private record AdminClaimRow(string BillingStaff, string ClientName, string Date, string Status);
+
+    private record AdminClaimListRow(string ApplicationName, string InsuranceName, string Date, string Status);
+
+    private readonly AdminClaimRow[] Requests = new AdminClaimRow[]
+    {
+        new("Himeko Murata", "Yae Miko", "03/09/24", "Under Review"),
+        new("Yae Miko", "Black Swan", "03/03/24", "Under Review"),
+        new("Black Swan", "Ruan Mei", "03/06/24", "Under Review"),
+        new("Ruan Mei", "Bronya Rand", "03/07/24", "Under Review"),
+        new("Bronya Rand", "Kafka", "03/01/24", "Under Review"),
+    };
+
+    private readonly AdminClaimListRow[] ClaimRows = new AdminClaimListRow[]
+    {
+        new("Himiko Murata", "OWWA / POEA Health Plan", "03/09/24", "Pending"),
+        new("Yae Miko", "PhilHealth", "03/03/24", "Complete"),
+        new("Black Swan", "Charity / Social Assistance", "03/06/24", "Pending"),
+        new("Ruan Mei", "GSIS / SSS Health Benefit", "03/07/24", "Pending"),
+        new("Bronya Rand", "PhilCare", "03/01/24", "Pending"),
+    };
+
+    private bool ShowPagination { get; set; } = true;
+
+    private string CurrentTab { get; set; } = "request";
+
+    private bool IsRejectionPanelOpen { get; set; }
+
+    private bool IsAcceptConfirmOpen { get; set; }
+
+    private bool IsAcceptSuccessVisible { get; set; }
+
+    private AdminClaimRow? SelectedRequest { get; set; }
+
+    private bool IsViewPanelOpen { get; set; }
+
+    private string RejectionNotes { get; set; } = string.Empty;
+
+    private readonly string[] InsuranceApplicants = new[]
+    {
+        "Bronya Rand",
+        "Ruan Mei",
+        "Yae Miko",
+        "Ruan Mei",
+        "Black Swan",
+        "Yae Miko",
+        "Himeko Murata",
+    };
+
+    private readonly string[] InsuranceCompanies = new[]
+    {
+        "PhilHealth",
+        "OWWA / POEA Health Plan",
+        "GSIS / SSS Health Benefit",
+        "Maxicare",
+        "Medicard",
+        "Intellicare",
+        "Kaiser Health",
+        "PhilCare",
+        "Company Health Plan",
+        "Charity / Social Assistance",
+    };
+
+    private void TogglePagination()
+    {
+        ShowPagination = !ShowPagination;
+    }
+
+    private void SetRequestTab() => SetTab("request");
+
+    private void SetCompanyTab() => SetTab("company");
+
+    private void SetClaimsTab() => SetTab("claims");
+
+    private void SetTab(string tab)
+    {
+        CurrentTab = tab;
+    }
+
+    private void OpenRejectionPanel(AdminClaimRow row)
+    {
+        SelectedRequest = row;
+        IsRejectionPanelOpen = true;
+    }
+
+    private void CloseRejectionPanel()
+    {
+        IsRejectionPanelOpen = false;
+    }
+
+    private void ConfirmRejection()
+    {
+        // Placeholder: here you could send RejectionNotes to backend in the future.
+        IsRejectionPanelOpen = false;
+        RejectionNotes = string.Empty;
+    }
+
+    private void OpenAcceptConfirm(AdminClaimRow row)
+    {
+        SelectedRequest = row;
+        IsAcceptConfirmOpen = true;
+    }
+
+    private void CloseAcceptConfirm()
+    {
+        IsAcceptConfirmOpen = false;
+    }
+
+    private void OpenViewPanel(AdminClaimRow row)
+    {
+        SelectedRequest = row;
+        IsViewPanelOpen = true;
+    }
+
+    private void CloseViewPanel()
+    {
+        IsViewPanelOpen = false;
+    }
+
+    private async Task ConfirmAcceptAsync()
+    {
+        IsAcceptConfirmOpen = false;
+        IsAcceptSuccessVisible = true;
+        StateHasChanged();
+
+        await Task.Delay(800);
+
+        IsAcceptSuccessVisible = false;
+        StateHasChanged();
+    }
+}

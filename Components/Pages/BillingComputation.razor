@@ -1,0 +1,105 @@
+@page "/billing-computation"
+@layout Layout.DashboardLayout
+
+<div class="pm-page billing-comp-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Billing and Invoicing</h1>
+            <p class="dashboard-subtitle">Welcome back Billing Staff!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">billing@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Billing staff</span>
+        </div>
+    </header>
+
+    <section class="billing-comp-tabs">
+        <button class="billing-comp-tab" @onclick="GoToOverview">Overview</button>
+        <button class="billing-comp-tab billing-comp-tab--current">Billing</button>
+        <button class="billing-comp-tab" @onclick="GoToCashiering">Cashiering</button>
+        <button class="billing-comp-tab" @onclick="GoToReceipt">Receipt</button>
+        <button class="billing-comp-tab" @onclick="GoToInvoice">Invoicing</button>
+    </section>
+
+    <section class="billing-comp-body">
+        <h2 class="billing-comp-title">Clinical Bill Computation</h2>
+
+        <div class="billing-comp-layout">
+            <div class="billing-comp-left">
+                <div class="billing-comp-panel">
+                    <h3 class="billing-comp-subtitle">Patient Information</h3>
+                    <div class="billing-comp-field">Name:</div>
+                    <div class="billing-comp-field">Patient ID:</div>
+                    <div class="billing-comp-field">Insurance:</div>
+                    <div class="billing-comp-field">Date:</div>
+                </div>
+
+                <div class="billing-comp-panel billing-comp-panel--services">
+                    <h3 class="billing-comp-subtitle">Services &amp; Procedures</h3>
+                    <pre class="billing-comp-ascii-box">
+| SERVICE        | QTY | PRICE  | AMOUNT |
+|----------------|-----|--------|--------|
+| Consultation   |  1  | $50.00 | $50.00 |
+| Laboratory Tests| 1  | $75.00 | $75.00 |
+| X-Ray          |  1  | $120.00| $120.00|
+| Medication     |     |        |        |
+| [Add Service]  |     |        |        |
+                    </pre>
+                </div>
+
+                <div class="billing-comp-panel billing-comp-panel--services">
+                    <h3 class="billing-comp-subtitle">Additional Fees (Optional)</h3>
+                    <pre class="billing-comp-ascii-box">
+| FEE TYPE      | DESCRIPTION | AMOUNT |
+|---------------|-------------|--------|
+| [Select Type] | [Notes...]  | [$0.00]|
+| [Add Another Fee]          |        |
+                    </pre>
+                </div>
+            </div>
+
+            <div class="billing-comp-right">
+                <div class="billing-comp-panel">
+                    <h3 class="billing-comp-subtitle">Bill Summary</h3>
+                    <div class="billing-comp-field">Subtotal:</div>
+                    <div class="billing-comp-field">Additional Fees:</div>
+                    <div class="billing-comp-field">Insurance Coverage:</div>
+                    <div class="billing-comp-field">Tax:</div>
+                    <div class="billing-comp-total-label">GRAND TOTAL:</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="billing-comp-actions">
+            <button class="billing-comp-btn">Print Invoice</button>
+            <button class="billing-comp-btn" @onclick="GoToCashiering">Pay Now</button>
+        </div>
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    private void GoToOverview()
+    {
+        Navigation.NavigateTo("/billing-patient-overview");
+    }
+
+    private void GoToCashiering()
+    {
+        Navigation.NavigateTo("/billing-cashiering");
+    }
+
+    private void GoToReceipt()
+    {
+        Navigation.NavigateTo("/receipt-pdf?source=billing");
+    }
+
+    private void GoToInvoice()
+    {
+        Navigation.NavigateTo("/invoice-pdf?source=billing");
+    }
+}

@@ -1,0 +1,173 @@
+@page "/patient-records/{RecordId:int}"
+@layout Layout.DashboardLayout
+@using IT_13FinalProject.Services
+@using IT_13FinalProject.Models;
+@inject IHealthRecordService HealthRecordService
+@inject NavigationManager Navigation
+
+<div class="pm-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Patient Record Details</h1>
+            <p class="dashboard-subtitle">Complete patient health information</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    @if (Record == null)
+    {
+        <div class="loading">Loading patient record...</div>
+    }
+    else
+    {
+        <div class="patient-record-details">
+            <!-- Patient Information -->
+            <section class="record-section">
+                <h2 class="section-title">Patient Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Patient Name:</label>
+                        <span>@Record.PatientName</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Email:</label>
+                        <span>@Record.PatientEmail</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Date of Check-up:</label>
+                        <span>@Record.DateOfCheckup</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Medical Team -->
+            <section class="record-section">
+                <h2 class="section-title">Medical Team</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Doctor:</label>
+                        <span>@Record.DoctorName</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Doctor Email:</label>
+                        <span>@Record.DoctorEmail</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Nurse:</label>
+                        <span>@Record.NurseName</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Nurse Email:</label>
+                        <span>@Record.NurseEmail</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Medical Information -->
+            <section class="record-section">
+                <h2 class="section-title">Medical Information</h2>
+                <div class="info-grid">
+                    <div class="info-item full-width">
+                        <label>Chief Complaint:</label>
+                        <span>@Record.ChiefComplaint</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <label>Diagnosis:</label>
+                        <span>@Record.Diagnosis</span>
+                    </div>
+                    <div class="info-item">
+                        <label>ICD-10 Code:</label>
+                        <span>@Record.Icd10Code</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Visit Status:</label>
+                        <span class="status-badge">@Record.VisitStatus</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Treatment Information -->
+            <section class="record-section">
+                <h2 class="section-title">Treatment Information</h2>
+                <div class="info-grid">
+                    <div class="info-item full-width">
+                        <label>Treatment:</label>
+                        <span>@Record.Treatment</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <label>Prescription:</label>
+                        <span>@Record.Prescription</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <label>Treatment Notes:</label>
+                        <span>@Record.TreatmentNotes</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Additional Information -->
+            <section class="record-section">
+                <h2 class="section-title">Additional Information</h2>
+                <div class="info-grid">
+                    <div class="info-item full-width">
+                        <label>Subjective Findings:</label>
+                        <span>@Record.SubjectiveFindings</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <label>Objective Findings:</label>
+                        <span>@Record.ObjectiveFindings</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <label>Assessment & Diagnosis:</label>
+                        <span>@Record.AssessmentDiagnosis</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <label>Recommendations:</label>
+                        <span>@Record.Recommendations</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn-secondary" @onclick="GoBack">Back to Records</button>
+                <button class="btn-primary" @onclick="EditRecord">Edit Record</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int RecordId { get; set; }
+
+    private HealthRecord? Record { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Use the correct method name - GetByIdAsync instead of GetById
+            Record = await HealthRecordService.GetByIdAsync(RecordId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading patient record: {ex.Message}");
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/health-records");
+    }
+
+    private void EditRecord()
+    {
+        Navigation.NavigateTo($"/edit-health-record/{RecordId}");
+    }
+}

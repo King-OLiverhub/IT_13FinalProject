@@ -1,0 +1,236 @@
+@page "/inventory-prescriptions"
+@layout Layout.DashboardLayout
+
+<div class="dashboard-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Prescription</h1>
+            <p class="dashboard-subtitle">Welcome back Pharmacist Staff!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">inventory@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Pharmacist</span>
+        </div>
+    </header>
+
+    <section class="ip-overview">
+        <div class="ip-overview-header">
+            <h2 class="ip-section-title">Prescription Overview</h2>
+            <div class="ip-show-entries">
+                <span>Show</span>
+                <select>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>25</option>
+                </select>
+                <span>entries</span>
+            </div>
+        </div>
+
+        <div class="ip-filters-row">
+            <div class="ip-alpha-filter">
+                <button class="ip-filter-pill @(ShowLetters && ActiveLetter is null ? "active" : string.Empty)" @onclick="ToggleLetters">All</button>
+
+                @if (ShowLetters)
+                {
+                    @foreach (var letter in Alphabet)
+                    {
+                        <button class="ip-filter-pill @(ActiveLetter == letter ? "active" : string.Empty)"
+                                @onclick="() => SelectLetter(letter)">@letter</button>
+                    }
+                }
+            </div>
+
+            <div class="ip-search-row">
+                <div class="ip-search-box">
+                    <span class="ip-search-icon"></span>
+                    <input class="ip-search-input" placeholder="Search Patient" />
+                </div>
+
+                <div class="ip-actions">
+                    <button class="ip-action-btn">Sort</button>
+                    <button class="ip-action-btn">Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ip-table-outer">
+            <div class="ip-table-wrapper">
+                <table class="ip-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Items</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                            <th class="ip-col-actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Prescriptions)
+                        {
+                            <tr>
+                                <td>@p.Patient</td>
+                                <td>@p.Doctor</td>
+                                <td>@p.Items</td>
+                                <td>
+                                    <span class="ip-status-pill ip-status-@p.StatusKey">
+                                        <span class="ip-status-dot"></span>
+                                        <span>@p.StatusLabel</span>
+                                    </span>
+                                </td>
+                                <td>@p.Time</td>
+                                <td class="ip-actions-cell">
+                                    <button type="button" class="ip-view-btn" aria-label="View prescription" @onclick="() => OpenPrescriptionPanel(p)">
+                                        <span class="ip-view-icon"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button type="button" class="ip-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
+            <span>@(ShowPagination ? "›" : "‹")</span>
+        </button>
+
+        @if (ShowPagination)
+        {
+            <div class="ip-pagination">
+                <button class="ip-page-btn">Previous</button>
+                <button class="ip-page-number active">1</button>
+                <button class="ip-page-number">2</button>
+                <button class="ip-page-number">3</button>
+                <span class="ip-page-dots">...</span>
+                <button class="ip-page-number">8</button>
+                <button class="ip-page-btn">Next</button>
+            </div>
+        }
+    </section>
+
+    @if (ShowPrescriptionPanel && SelectedPrescription is not null)
+    {
+        <div class="ip-prescription-overlay">
+            <div class="ip-prescription-panel">
+                <h2 class="ip-prescription-title">Doctor's Prescription</h2>
+
+                <div class="ip-prescription-grid">
+                    <div class="ip-prescription-section">
+                        <h3 class="ip-prescription-section-title">Patient Information</h3>
+                        <div class="ip-prescription-field"><span>Name:</span><span>@SelectedPrescription.Patient</span></div>
+                        <div class="ip-prescription-field"><span>Patient ID:</span><span></span></div>
+                        <div class="ip-prescription-field"><span>Contact Number:</span><span></span></div>
+                        <div class="ip-prescription-field"><span>Date of Birth:</span><span></span></div>
+                        <div class="ip-prescription-field"><span>Age:</span><span></span></div>
+                        <div class="ip-prescription-field"><span>Address:</span><span></span></div>
+                        <div class="ip-prescription-field"><span>Diagnosis:</span><span></span></div>
+                    </div>
+
+                    <div class="ip-prescription-section">
+                        <h3 class="ip-prescription-section-title">Doctor's Information</h3>
+                        <div class="ip-prescription-field"><span>Name:</span><span>@SelectedPrescription.Doctor</span></div>
+                        <div class="ip-prescription-field"><span>License Number:</span><span></span></div>
+                        <div class="ip-prescription-field"><span>Specialty:</span><span></span></div>
+                        <div class="ip-prescription-field"><span>Contact Information:</span><span></span></div>
+                    </div>
+                </div>
+
+                <div class="ip-prescription-grid ip-prescription-grid-bottom">
+                    <div class="ip-prescription-section">
+                        <h3 class="ip-prescription-section-title">Prescription Details</h3>
+                        <div class="ip-prescription-field"><span>Prescription Date:</span><span>@SelectedPrescription.Time</span></div>
+                        <div class="ip-prescription-field"><span>Validity Period:</span><span></span></div>
+                        <div class="ip-prescription-field"><span>Priority:</span><span></span></div>
+                    </div>
+
+                    <div class="ip-prescription-section">
+                        <h3 class="ip-prescription-section-title">Medication</h3>
+                        <table class="ip-prescription-med-table">
+                            <thead>
+                                <tr>
+                                    <th>Medicine</th>
+                                    <th>Dosage</th>
+                                    <th>Frequency</th>
+                                    <th>Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@SelectedPrescription.Items</td>
+                                    <td>500 mg</td>
+                                    <td>3 times a day</td>
+                                    <td>5 days</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="ip-prescription-actions">
+                    <button type="button" class="ip-prescription-close" @onclick="ClosePrescriptionPanel">Close</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private readonly char[] Alphabet =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+    private bool ShowLetters { get; set; }
+    private char? ActiveLetter { get; set; }
+    private bool ShowPagination { get; set; } = true;
+    private bool ShowPrescriptionPanel { get; set; }
+    private PrescriptionRow? SelectedPrescription { get; set; }
+
+    private record PrescriptionRow(
+        string Patient,
+        string Doctor,
+        string Items,
+        string StatusKey,
+        string StatusLabel,
+        string Time
+    );
+
+    private readonly PrescriptionRow[] Prescriptions = new[]
+    {
+        new PrescriptionRow("Juan Dela Cruz", "Dr. Lee", "Amoxicillin", "active", "Active", "2:30 PM"),
+        new PrescriptionRow("Maria Santos", "Dr. Smith", "Amoxicillin", "pending", "Pending", "2:15 PM"),
+        new PrescriptionRow("Pedro Reyes", "Dr. Smith", "Paracetamol", "pending", "Pending", "3:00 PM"),
+    };
+
+    private void ToggleLetters()
+    {
+        ShowLetters = !ShowLetters;
+        ActiveLetter = null;
+    }
+
+    private void SelectLetter(char letter)
+    {
+        ShowLetters = true;
+        ActiveLetter = letter;
+    }
+
+    private void TogglePagination()
+    {
+        ShowPagination = !ShowPagination;
+    }
+
+    private void OpenPrescriptionPanel(PrescriptionRow row)
+    {
+        SelectedPrescription = row;
+        ShowPrescriptionPanel = true;
+    }
+
+    private void ClosePrescriptionPanel()
+    {
+        ShowPrescriptionPanel = false;
+        SelectedPrescription = null;
+    }
+}

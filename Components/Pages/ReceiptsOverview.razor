@@ -1,0 +1,128 @@
+@page "/receipt-overview"
+@layout Layout.DashboardLayout
+
+<div class="inv-page">
+    <!-- Header same layout as other dashboard pages -->
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Invoicing and Cashiering</h1>
+            <p class="dashboard-subtitle">Welcome back Admin!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    <!-- ===================== RECEIPT OVERVIEW ===================== -->
+    <section class="inv-card">
+        <div class="inv-controls">
+            <h2 class="inv-section-title">Receipt Overview</h2>
+
+            <div class="inv-tabs-row">
+                <span class="inv-tabs-label">Recent</span>
+                <div class="inv-tabs">
+                    <button class="inv-tab" @onclick="GoToBills">Bills</button>
+                    <button class="inv-tab inv-tab-active">Receipt</button>
+                </div>
+            </div>
+
+            <div class="inv-search-row">
+                <div class="inv-search-box">
+                    <span class="inv-search-icon"></span>
+                    <input class="inv-search-input" placeholder="Search Patient" />
+                </div>
+
+                <div class="inv-actions">
+                    <button class="inv-action-btn">Sort</button>
+                    <button class="inv-action-btn">Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="inv-list">
+            @foreach (var receipt in Receipts)
+            {
+                <div class="inv-row">
+                    <div class="inv-row-main">
+                        <div class="inv-row-name">
+                            <span class="inv-row-label">Name</span>
+                            <span class="inv-row-value">@receipt.Name</span>
+                        </div>
+                    </div>
+                    <div class="inv-row-columns">
+                        <div class="inv-row-col">
+                            <span class="inv-row-label">Amount</span>
+                            <span class="inv-row-value">@receipt.Amount</span>
+                        </div>
+                        <div class="inv-row-col">
+                            <span class="inv-row-label">Date</span>
+                            <span class="inv-row-value">@receipt.Date</span>
+                        </div>
+                        <div class="inv-row-col">
+                            <span class="inv-row-label">Status</span>
+                            <span class="inv-row-value">@receipt.Status</span>
+                        </div>
+                        <div class="inv-row-col inv-row-col-action">
+                            <button class="inv-view-btn" @onclick="() => ViewReceipt(receipt)">
+                                <span class="inv-view-icon"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <button type="button" class="inv-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
+            <span>@(ShowPagination ? "›" : "‹")</span>
+        </button>
+
+        @if (ShowPagination)
+        {
+            <div class="inv-pagination">
+                <button class="inv-page-btn">Previous</button>
+                <button class="inv-page-number inv-page-number-active">1</button>
+                <button class="inv-page-number">2</button>
+                <button class="inv-page-number">3</button>
+                <span class="inv-page-dots">...</span>
+                <button class="inv-page-number">8</button>
+                <button class="inv-page-btn">Next</button>
+            </div>
+        }
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    private record ReceiptRow(string Name, string Amount, string Date, string Status);
+
+    private readonly ReceiptRow[] Receipts = new ReceiptRow[]
+    {
+        new("Himeko Murata", "15,000 php", "03/09/24", "Paid"),
+        new("Yae Miko", "25,000 php", "03/03/24", "Paid"),
+        new("Black Swan", "29,000 php", "03/06/24", "Paid"),
+        new("Ruan Mei", "18,000 php", "03/07/24", "Paid"),
+        new("Bronya Rand", "60,000 php", "03/01/24", "Paid"),
+    };
+
+    private bool ShowPagination { get; set; } = true;
+
+    private void GoToBills()
+    {
+        Navigation.NavigateTo("/invoicing-overview");
+    }
+
+    private void ViewReceipt(ReceiptRow receipt)
+    {
+        Navigation.NavigateTo("/receipt-pdf?source=admin");
+    }
+
+    private void TogglePagination()
+    {
+        ShowPagination = !ShowPagination;
+    }
+}

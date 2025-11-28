@@ -1,0 +1,5 @@
+.empty-layout {
+    /* Full-screen container for pages that should not show the dashboard layout */
+    width: 100%;
+    height: 100%;
+}

@@ -1,0 +1,142 @@
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    margin: -10px -16px 6px;
+    background-color: #f3faf9;
+    border-bottom: 1px solid #e0f0ee;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.dashboard-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dashboard-subtitle {
+    margin: 4px 0 0;
+    font-size: 14px;
+}
+
+.dashboard-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-user-email {
+    font-size: 13px;
+    color: #555;
+}
+
+.dashboard-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #40b6ae;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.dashboard-user-name {
+    font-weight: 600;
+}
+
+.inv-pdf-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.inv-pdf-title-row {
+    padding: 8px 18px 0;
+}
+
+.inv-pdf-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.inv-pdf-content {
+    display: flex;
+    justify-content: center;
+    padding-top: 16px;
+}
+
+.inv-pdf-frame-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    padding: 12px;
+}
+
+.inv-pdf-frame {
+    width: 650px;
+    height: calc(100vh - 260px);
+    border: none;
+}
+
+.inv-pdf-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 18px 0;
+}
+
+.inv-pdf-actions-left,
+.inv-pdf-actions-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.inv-pdf-btn {
+    min-width: 120px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.inv-pdf-btn-secondary {
+    border: 2px solid #0f8b8d;
+    background-color: #ffffff;
+    color: #0f8b8d;
+}
+
+.inv-pdf-btn-secondary:hover {
+    background-color: #e9f6f5;
+}
+
+.inv-pdf-btn-primary {
+    background-color: #0f8b8d;
+    color: #ffffff;
+}
+
+.inv-pdf-btn-primary:hover {
+    background-color: #0b6f70;
+}
+
+.inv-pdf-btn-icon {
+    margin-right: 6px;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+}
+
+@media (max-width: 900px) {
+    .inv-pdf-frame {
+        width: 100%;
+        height: calc(100vh - 280px);
+    }
+}

@@ -1,0 +1,194 @@
+/* Match Dashboard/PatientManagement header layout */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    margin: -10px -16px 6px;
+    background-color: #f3faf9;
+    border-bottom: 1px solid #e0f0ee;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.dashboard-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dashboard-subtitle {
+    margin: 4px 0 0;
+    font-size: 14px;
+}
+
+.dashboard-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-user-email {
+    font-size: 13px;
+    color: #555;
+}
+
+.dashboard-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #40b6ae;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.dashboard-user-name {
+    font-weight: 600;
+}
+
+.pr-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pr-card {
+    margin-top: 16px;
+    padding: 16px 20px 24px;
+    border-radius: 16px;
+    background-color: #f6fbfb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.pr-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.pr-header-icon {
+    font-size: 20px;
+}
+
+.pr-header-title {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.pr-grid {
+    display: grid;
+    gap: 16px 32px;
+}
+
+.pr-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.pr-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pr-top-margin {
+    margin-top: 24px;
+}
+
+.pr-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pr-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.pr-section-title-spaced {
+    margin-top: 12px;
+}
+
+.pr-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pr-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Read-only value boxes (view-only records) */
+.pr-value-box {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #9ba8ac;
+    font-size: 13px;
+    background-color: #ffffff;
+    min-height: 32px;
+    box-sizing: border-box;
+}
+
+.pr-value-box-multi {
+    min-height: 80px;
+}
+
+.pr-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.pr-btn {
+    min-width: 110px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.pr-btn-secondary {
+    border: 2px solid #0f8b8d;
+    background-color: #ffffff;
+    color: #0f8b8d;
+}
+
+.pr-btn-secondary:hover {
+    background-color: #e9f6f5;
+}
+
+.pr-btn-primary {
+    background-color: #0f8b8d;
+    color: #ffffff;
+}
+
+.pr-btn-primary:hover {
+    background-color: #0b6f70;
+}
+
+.pr-btn-icon {
+    margin-right: 6px;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+}
+
+@media (max-width: 900px) {
+    .pr-grid-3 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .pr-grid-2 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+}

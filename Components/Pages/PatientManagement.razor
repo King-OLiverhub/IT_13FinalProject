@@ -1,0 +1,690 @@
+@page "/patient-management"
+@layout Layout.DashboardLayout
+@using IT_13FinalProject.Services
+@using IT_13FinalProject.Models
+@inject IPatientService PatientService
+@inject IUserAccountService UserAccountService
+@inject IPasswordHasher PasswordHasher
+@inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime
+
+<div class="pm-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Patient Management</h1>
+            <p class="dashboard-subtitle">Welcome back Admin!</p>
+        </div>
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    @if (!IsPatientFormVisible)
+    {
+        <!-- PATIENT OVERVIEW MODE -->
+        <section class="pm-overview">
+            <div class="pm-overview-header">
+                <h2 class="pm-section-title">Patient Overview</h2>
+                <div class="pm-show-entries">
+                    <span>Show</span>
+                    <select>
+                        <option>5</option>
+                        <option>10</option>
+                        <option>25</option>
+                    </select>
+                    <span>entries</span>
+                </div>
+            </div>
+
+            <div class="pm-filters-row">
+                <div class="pm-alpha-filter">
+                    <button class="pm-filter-pill @(ShowLetters && ActiveLetter is null ? "active" : string.Empty)" @onclick="ToggleLetters">All</button>
+                    @if (ShowLetters)
+                    {
+                        @foreach (var letter in Alphabet)
+                        {
+                            <button class="pm-filter-pill @(ActiveLetter == letter ? "active" : string.Empty)"
+                                    @onclick="() => SelectLetter(letter)">
+                                @letter
+                            </button>
+                        }
+                    }
+                </div>
+
+                <div class="pm-search-row">
+                    <div class="pm-search-box">
+                        <span class="pm-search-icon"></span>
+                        <input class="pm-search-input" placeholder="Search Patient" />
+                    </div>
+                    <div class="pm-actions">
+                        <button class="activity-action-btn">Sort</button>
+                        <button class="activity-action-btn">Filters</button>
+                        <button class="pm-patient-btn" @onclick="ShowPatientForm">+ Patient</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pm-table-outer">
+                <div class="pm-table-wrapper">
+                    <table class="pm-table">
+                        <thead>
+                            <tr>
+                                <th class="pm-col-name">Patient Name</th>
+                                <th class="pm-col-email">Email</th>
+                                <th class="pm-col-date">Date Created</th>
+                                <th class="pm-col-action">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Patients != null && Patients.Any())
+                            {
+                                @foreach (var patient in GetOrderedPatients())
+                                {
+                                    <tr>
+                                        <td class="pm-col-name">
+                                            <div class="pm-patient-name">@patient.FirstName @patient.LastName</div>
+                                        </td>
+                                        <td class="pm-col-email">
+                                            <div class="pm-patient-email">@patient.Email</div>
+                                        </td>
+                                        <td class="pm-col-date">@patient.CreatedAt?.ToString("MM/dd/yy")</td>
+                                        <td class="pm-col-action">
+                                            <button class="pm-view-btn" @onclick="() => ViewPatient(patient)" title="Edit">
+                                                ✏️
+                                            </button>
+                                            <button class="pm-archive-btn" @onclick="() => ArchivePatient(patient)" title="Archive">
+                                                📦
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center">No patients found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ARCHIVED PATIENTS SECTION -->
+            <div class="pm-archives-section">
+                <div class="pm-archives-header">
+                    <span class="pm-archives-icon">📦</span>
+                    <h3 class="pm-archives-title">Archived Patients</h3>
+                    <button class="pm-toggle-archives-btn" @onclick="ToggleArchives">
+                        @(ShowArchives ? "Hide" : "Show") Archives
+                    </button>
+                </div>
+
+                @if (ShowArchives)
+                {
+                    <div class="pm-archives-table-outer">
+                        <div class="pm-archives-table-wrapper">
+                            <table class="pm-archives-table">
+                                <thead>
+                                    <tr>
+                                        <th class="pm-col-name">Patient Name</th>
+                                        <th class="pm-col-email">Email</th>
+                                        <th class="pm-col-date">Archived Date</th>
+                                        <th class="pm-col-action">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ArchivedPatients != null && ArchivedPatients.Any())
+                                    {
+                                        @foreach (var patient in GetOrderedArchivedPatients())
+                                        {
+                                            <tr class="archived-row">
+                                                <td class="pm-col-name">
+                                                    <div class="pm-patient-name">@patient.FirstName @patient.LastName</div>
+                                                </td>
+                                                <td class="pm-col-email">
+                                                    <div class="pm-patient-email">@patient.Email</div>
+                                                </td>
+                                                <td class="pm-col-date">@patient.UpdatedAt?.ToString("MM/dd/yy")</td>
+                                                <td class="pm-col-action">
+                                                    <button class="pm-restore-btn" @onclick="() => RestorePatient(patient)" title="Restore">
+                                                        ↩️
+                                                    </button>
+                                                    <button class="pm-delete-btn" @onclick="() => DeletePatientPermanent(patient)" title="Delete Permanently">
+                                                        🗑️
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4" class="text-center">No archived patients found.</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+    else
+    {
+        <!-- PATIENT INFORMATION FORM MODE -->
+        <section class="pm-patient-form">
+            <div class="pm-form-header">
+                <span class="pm-form-icon">👤</span>
+                <h2 class="pm-form-title">@(IsEditMode ? "Edit Patient" : "Add New Patient")</h2>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }   
+
+            @if (!string.IsNullOrEmpty(SuccessMessage))
+            {
+                <div class="alert alert-success">@SuccessMessage</div>
+            }
+
+            <div class="pm-form-grid">
+                <div class="pm-form-field">
+                    <label class="pm-form-label">First Name *</label>
+                    <input class="pm-form-input" @bind="FirstName" />
+                </div>
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Last Name *</label>
+                    <input class="pm-form-input" @bind="LastName" />
+                </div>
+
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Middle Name</label>
+                    <input class="pm-form-input" @bind="MiddleName" />
+                </div>
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Email Address *</label>
+                    <input class="pm-form-input" @bind="EmailAddress" />
+                </div>
+
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Contact Number</label>
+                    <input class="pm-form-input" @bind="ContactNumber" />
+                </div>
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Gender</label>
+                    <select class="pm-form-input pm-form-select" @bind="Gender">
+                        <option value="">Select Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="pm-form-field full-width">
+                    <label class="pm-form-label">Address</label>
+                    <input class="pm-form-input" @bind="Address" />
+                </div>
+
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Date of Birth</label>
+                    <input class="pm-form-input" type="date" @bind="DateOfBirth" @bind:format="yyyy-MM-dd" />
+                </div>
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Blood Type</label>
+                    <select class="pm-form-input pm-form-select" @bind="BloodType">
+                        <option value="">Select Blood Type</option>
+                        <option>A+</option>
+                        <option>A-</option>
+                        <option>B+</option>
+                        <option>B-</option>
+                        <option>AB+</option>
+                        <option>AB-</option>
+                        <option>O+</option>
+                        <option>O-</option>
+                    </select>
+                </div>
+
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Civil Status</label>
+                    <select class="pm-form-input pm-form-select" @bind="CivilStatus">
+                        <option value="">Select Civil Status</option>
+                        <option>Single</option>
+                        <option>Married</option>
+                        <option>Widowed</option>
+                        <option>Separated</option>
+                        <option>Divorced</option>
+                    </select>
+                </div>
+
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Occupation</label>
+                    <input class="pm-form-input" @bind="Occupation" />
+                </div>
+
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Nationality</label>
+                    <input class="pm-form-input" @bind="Nationality" />
+                </div>
+
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Religion</label>
+                    <input class="pm-form-input" @bind="Religion" />
+                </div>
+
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Emergency Contact Name</label>
+                    <input class="pm-form-input" @bind="EmergencyContactName" />
+                </div>
+
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Emergency Contact Relationship</label>
+                    <input class="pm-form-input" @bind="EmergencyContactRelationship" />
+                </div>
+
+                <div class="pm-form-field">
+                    <label class="pm-form-label">Emergency Contact Number</label>
+                    <input class="pm-form-input" @bind="EmergencyContactNumber" />
+                </div>
+            </div>
+
+            <div class="pm-form-actions">
+                <button class="pm-form-back" @onclick="BackToOverview" disabled="@IsSubmitting">Back</button>
+                @if (IsEditMode)
+                {
+                    <button class="pm-form-save" @onclick="UpdatePatient" disabled="@IsSubmitting">
+                        @(IsSubmitting ? "Updating..." : "Update Patient")
+                    </button>
+                }
+                else
+                {
+                    <button class="pm-form-save" @onclick="SavePatient" disabled="@IsSubmitting">
+                        @(IsSubmitting ? "Saving..." : "Save Patient")
+                    </button>
+                }
+            </div>
+        </section>
+    }
+</div>
+
+@code {
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = default!;
+
+    private bool IsPatientFormVisible { get; set; }
+    private bool IsEditMode { get; set; }
+    private bool IsSubmitting { get; set; }
+
+    private static readonly string[] Alphabet = new[]
+    {
+        "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
+    };
+
+    private bool ShowLetters { get; set; }
+    private string? ActiveLetter { get; set; }
+    private string? ErrorMessage { get; set; }
+    private string? SuccessMessage { get; set; }
+
+    private List<Patient> Patients { get; set; } = new();
+    private Patient? SelectedPatient;
+    private List<Patient> ArchivedPatients { get; set; } = new();
+    private bool ShowArchives { get; set; } = false;
+
+    // Form fields
+    private string? FirstName { get; set; }
+    private string? MiddleName { get; set; }
+    private string? LastName { get; set; }
+    private string? Address { get; set; }
+    private string? ContactNumber { get; set; }
+    private string? EmailAddress { get; set; }
+    private string? Gender { get; set; }
+    private string? BloodType { get; set; }
+    private DateTime? DateOfBirth { get; set; }
+    private string? CivilStatus { get; set; }
+    private string? Occupation { get; set; }
+    private string? Nationality { get; set; }
+    private string? Religion { get; set; }
+    private string? EmergencyContactName { get; set; }
+    private string? EmergencyContactRelationship { get; set; }
+    private string? EmergencyContactNumber { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPatients();
+    }
+
+    private async Task LoadPatients()
+    {
+        try
+        {
+            var allPatients = await PatientService.GetAllAsync();
+            
+            // Separate active and archived patients
+            // Archived patients are those with UpdatedAt significantly later than CreatedAt (indicating archiving)
+            Patients = allPatients.Where(p => 
+                !p.UpdatedAt.HasValue || 
+                Math.Abs((p.UpdatedAt.Value - (p.CreatedAt ?? DateTime.MinValue)).TotalMinutes) < 1).ToList();
+            
+            ArchivedPatients = allPatients.Where(p => 
+                p.UpdatedAt.HasValue && 
+                p.CreatedAt.HasValue &&
+                Math.Abs((p.UpdatedAt.Value - p.CreatedAt.Value).TotalMinutes) >= 1).ToList();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error loading patients: {ex.Message}";
+        }
+    }
+
+    private void ShowPatientForm()
+    {
+        IsEditMode = false;
+        ClearForm();
+        ClearMessages();
+        IsPatientFormVisible = true;
+    }
+
+    private void BackToOverview()
+    {
+        IsPatientFormVisible = false;
+        IsEditMode = false;
+        SelectedPatient = null;
+        ClearMessages();
+        StateHasChanged();
+    }
+
+    private void ViewPatient(Patient patient)
+    {
+        SelectedPatient = patient;
+        IsEditMode = true;
+        IsPatientFormVisible = true;
+        ClearMessages();
+
+        // Populate form fields
+        FirstName = patient.FirstName;
+        MiddleName = patient.MiddleName;
+        LastName = patient.LastName;
+        Address = patient.Address;
+        ContactNumber = patient.Phone;
+        EmailAddress = patient.Email;
+        Gender = patient.Gender;
+        BloodType = patient.BloodType;
+        DateOfBirth = patient.DateOfBirth;
+        CivilStatus = patient.CivilStatus;
+        Occupation = patient.Occupation;
+        Nationality = patient.Nationality;
+        Religion = patient.Religion;
+        EmergencyContactName = patient.EmergencyContactName;
+        EmergencyContactRelationship = patient.EmergencyContactRelationship;
+        EmergencyContactNumber = patient.EmergencyContactNumber;
+    }
+
+    private async Task SavePatient()
+    {
+        if (IsSubmitting) return;
+
+        IsSubmitting = true;
+        ClearMessages();
+
+        try
+        {
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName) || string.IsNullOrWhiteSpace(EmailAddress))
+            {
+                ErrorMessage = "First Name, Last Name, and Email are required.";
+                IsSubmitting = false;
+                return;
+            }
+
+            // Create patient record without user account
+            // Patients are stored only in the patients table, not in users table
+            var patient = new Patient
+            {
+                UserId = null, // No user account - patient only
+                FirstName = FirstName!,
+                LastName = LastName!,
+                MiddleName = MiddleName,
+                Email = EmailAddress,
+                Phone = ContactNumber,
+                Address = Address,
+                Gender = Gender,
+                DateOfBirth = DateOfBirth,
+                BloodType = BloodType,
+                CivilStatus = CivilStatus,
+                Occupation = Occupation,
+                Nationality = Nationality,
+                Religion = Religion,
+                EmergencyContactName = EmergencyContactName,
+                EmergencyContactRelationship = EmergencyContactRelationship,
+                EmergencyContactNumber = EmergencyContactNumber,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+
+            Console.WriteLine($"Creating patient record");
+
+            await PatientService.CreateAsync(patient);
+
+            SuccessMessage = "Patient created successfully!";
+            await LoadPatients();
+
+            await Task.Delay(2000);
+            BackToOverview();
+        }
+        catch (Exception ex)
+        {
+            // Log detailed error information
+            Console.WriteLine($"Error creating patient: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+            if (ex.InnerException != null)
+            {
+                Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                Console.WriteLine($"Inner stack trace: {ex.InnerException.StackTrace}");
+                ErrorMessage = $"Database error: {ex.InnerException.Message}";
+            }
+            else
+            {
+                ErrorMessage = $"Error creating patient: {ex.Message}";
+            }
+        }
+        finally
+        {
+            IsSubmitting = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task UpdatePatient()
+    {
+        if (IsSubmitting || SelectedPatient == null) return;
+
+        IsSubmitting = true;
+        ClearMessages();
+
+        try
+        {
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName) || string.IsNullOrWhiteSpace(EmailAddress))
+            {
+                ErrorMessage = "First Name, Last Name, and Email are required.";
+                IsSubmitting = false;
+                return;
+            }
+
+            // Update patient record
+            SelectedPatient.FirstName = FirstName!;
+            SelectedPatient.LastName = LastName!;
+            SelectedPatient.MiddleName = MiddleName;
+            SelectedPatient.Email = EmailAddress;
+            SelectedPatient.Phone = ContactNumber;
+            SelectedPatient.Address = Address;
+            SelectedPatient.Gender = Gender;
+            SelectedPatient.BloodType = BloodType;
+            SelectedPatient.DateOfBirth = DateOfBirth;
+            SelectedPatient.CivilStatus = CivilStatus;
+            SelectedPatient.Occupation = Occupation;
+            SelectedPatient.Nationality = Nationality;
+            SelectedPatient.Religion = Religion;
+            SelectedPatient.EmergencyContactName = EmergencyContactName;
+            SelectedPatient.EmergencyContactRelationship = EmergencyContactRelationship;
+            SelectedPatient.EmergencyContactNumber = EmergencyContactNumber;
+            SelectedPatient.UpdatedAt = DateTime.Now;
+
+            await PatientService.UpdateAsync(SelectedPatient);
+            await LoadPatients();
+
+            SuccessMessage = "Patient updated successfully!";
+            await Task.Delay(2000);
+            BackToOverview();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error updating patient: {ex.Message}";
+        }
+        finally
+        {
+            IsSubmitting = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ClearForm()
+    {
+        FirstName = MiddleName = LastName = Address = ContactNumber = EmailAddress = Gender = BloodType = string.Empty;
+        CivilStatus = Occupation = Nationality = Religion = EmergencyContactName = EmergencyContactRelationship = EmergencyContactNumber = string.Empty;
+        DateOfBirth = null;
+    }
+
+    private void ClearMessages()
+    {
+        ErrorMessage = null;
+        SuccessMessage = null;
+    }
+
+    private string GenerateUsername(string firstName, string lastName)
+    {
+        var baseUsername = $"{firstName.ToLower()}.{lastName.ToLower()}";
+        var username = baseUsername;
+        var counter = 1;
+
+        while (Patients.Any(p => p.Email == username))
+        {
+            username = $"{baseUsername}{counter}";
+            counter++;
+        }
+
+        return username;
+    }
+
+    private void ToggleLetters()
+    {
+        ShowLetters = !ShowLetters;
+        ActiveLetter = null;
+    }
+
+    private void SelectLetter(string letter)
+    {
+        ShowLetters = true;
+        ActiveLetter = letter;
+    }
+
+    private IEnumerable<Patient> GetOrderedPatients()
+    {
+        if (string.IsNullOrEmpty(ActiveLetter))
+        {
+            return Patients;
+        }
+
+        var upper = ActiveLetter.ToUpperInvariant();
+
+        var startsWithLetter = Patients
+            .Where(p => (p.FirstName ?? string.Empty).StartsWith(upper, StringComparison.OrdinalIgnoreCase) ||
+                       (p.LastName ?? string.Empty).StartsWith(upper, StringComparison.OrdinalIgnoreCase));
+
+        var others = Patients
+            .Where(p => !(p.FirstName ?? string.Empty).StartsWith(upper, StringComparison.OrdinalIgnoreCase) &&
+                       !(p.LastName ?? string.Empty).StartsWith(upper, StringComparison.OrdinalIgnoreCase));
+
+        return startsWithLetter.Concat(others);
+    }
+
+    // Archive-related methods
+    private void ToggleArchives()
+    {
+        ShowArchives = !ShowArchives;
+    }
+
+    private IEnumerable<Patient> GetOrderedArchivedPatients()
+    {
+        return ArchivedPatients
+            .OrderByDescending(p => p.UpdatedAt)
+            .ThenBy(p => p.LastName)
+            .ThenBy(p => p.FirstName);
+    }
+
+    private async Task ArchivePatient(Patient patient)
+    {
+        try
+        {
+            // Mark as archived by updating UpdatedAt to a future date
+            patient.UpdatedAt = DateTime.Now.AddMinutes(10); // Future date indicates archived
+            await PatientService.UpdateAsync(patient);
+            
+            SuccessMessage = "Patient archived successfully!";
+            await LoadPatients();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error archiving patient: {ex.Message}";
+            StateHasChanged();
+        }
+    }
+
+    private async Task RestorePatient(Patient patient)
+    {
+        try
+        {
+            // Restore by setting UpdatedAt back to CreatedAt
+            patient.UpdatedAt = patient.CreatedAt;
+            await PatientService.UpdateAsync(patient);
+            
+            SuccessMessage = "Patient restored successfully!";
+            await LoadPatients();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error restoring patient: {ex.Message}";
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeletePatientPermanent(Patient patient)
+    {
+        try
+        {
+            var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", 
+                $"Are you sure you want to permanently delete {patient.FirstName} {patient.LastName}? This action cannot be undone.");
+            
+            if (confirmed)
+            {
+                await PatientService.DeleteAsync(patient.PatientId);
+                
+                SuccessMessage = "Patient deleted permanently!";
+                await LoadPatients();
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error deleting patient: {ex.Message}";
+            StateHasChanged();
+        }
+    }
+}

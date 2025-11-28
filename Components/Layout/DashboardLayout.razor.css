@@ -1,0 +1,699 @@
+ .dashboard-layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f3faf9;
+}
+
+/* Home / dashboard icon */
+.sidebar-icon-home {
+    background-color: rgba(0, 160, 180, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M3.5 7.5 9 3l5.5 4.5v7H3.5z' stroke='%23ffffff' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M7.2 14.5v-3.2h3.6v3.2' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Patient / user silhouette */
+.sidebar-icon-patient {
+    background-color: rgba(37, 177, 120, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Ccircle cx='9' cy='6' r='2.6' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M4.2 14.4c.7-2.1 2.4-3.4 4.8-3.4 2.4 0 4.1 1.3 4.8 3.4' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Insurance / document icon */
+.sidebar-icon-insurance {
+    background-color: rgba(132, 115, 255, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Crect x='4' y='3' width='9.5' height='12' rx='1.4' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M6.5 7.2h5M6.5 9.5h3.6M6.5 11.8h2.4' stroke='%23ffffff' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Pharmacy / pill icon */
+.sidebar-icon-pharmacy {
+    background-color: rgba(255, 138, 76, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Crect x='3.2' y='8.2' width='5.4' height='7' rx='2.4' stroke='%23ffffff' stroke-width='1.4'/%3E%3Crect x='9.4' y='2.8' width='5.4' height='7' rx='2.4' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M9 9.4 12.5 6' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Reports / analytics icon */
+.sidebar-icon-reports {
+    background-color: rgba(0, 110, 190, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M4 10.8 7 7.8l3 3 3.8-4.2' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='4' cy='10.8' r='1.1' fill='%23ffffff'/%3E%3Ccircle cx='7' cy='7.8' r='1.1' fill='%23ffffff'/%3E%3Ccircle cx='10' cy='10.8' r='1.1' fill='%23ffffff'/%3E%3Ccircle cx='13.8' cy='6.6' r='1.1' fill='%23ffffff'/%3E%3C/svg%3E");
+}
+
+/* Nurse vitals icon */
+.sidebar-icon-vitals {
+    background-color: rgba(239, 113, 122, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M3 9.2h2.2l1.2-3.4 2.1 6 1.6-4.2L12 9.2h3' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Medication schedule icon */
+.sidebar-icon-medication {
+    background-color: rgba(246, 178, 84, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Ccircle cx='9' cy='9' r='5.2' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M9 5.2v3.3l2.1 1.3' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Notes icon */
+.sidebar-icon-notes {
+    background-color: rgba(155, 132, 233, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Crect x='4' y='3' width='9.5' height='12' rx='1.4' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M6.3 6.4h5.2M6.3 8.6h3.4M6.3 10.8h4.1' stroke='%23ffffff' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Request / mail icon */
+.sidebar-icon-request {
+    background-color: rgba(114, 191, 255, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Crect x='3' y='4.5' width='12' height='9' rx='1.4' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M4.2 6.2 9 9.4l4.8-3.2' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Appointments icon */
+.sidebar-icon-appointments {
+    background-color: rgba(0, 160, 180, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Crect x='3.2' y='4.2' width='11.6' height='10' rx='1.6' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M6.1 3v2.4M11.9 3v2.4M3.2 7.2h11.6' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Prescriptions icon (capsule) */
+.sidebar-icon-prescriptions {
+    background-color: rgba(255, 138, 76, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Crect x='3.4' y='7.4' width='5.4' height='7' rx='2.4' stroke='%23ffffff' stroke-width='1.4'/%3E%3Crect x='9.2' y='3.6' width='5.4' height='7' rx='2.4' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M8.2 10.8 11.8 7.2' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Laboratory results icon */
+.sidebar-icon-lab {
+    background-color: rgba(170, 132, 255, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M6.1 3.2h5.8M7.2 3.2v4.1L5 13.8c-.3.8.2 1.5 1 1.5h6c.8 0 1.3-.7 1-1.5L10.8 7.3V3.2' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Inventory / warehouse icon */
+.sidebar-icon-inventory {
+    background-color: rgba(0, 160, 140, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M3 7 9 3l6 4v7H3z' stroke='%23ffffff' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M6 10.2h6M6 12.8h3.4' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Stock reports icon */
+.sidebar-icon-stock {
+    background-color: rgba(0, 110, 190, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M4 12.8V8.4l2.6 1.6L9.4 6l2.4 3 2.2-1.4v5.2H4z' stroke='%23ffffff' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* User / people icons */
+.sidebar-icon-user {
+    background-color: rgba(37, 177, 120, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Ccircle cx='6.3' cy='6.2' r='2.3' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M3.4 12.6c.6-1.7 2-2.8 3.9-2.8 1.9 0 3.3 1.1 3.9 2.8' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3Ccircle cx='12.3' cy='6.6' r='1.8' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E");
+}
+
+.sidebar-icon-user-profile {
+    background-color: rgba(37, 177, 120, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Ccircle cx='9' cy='6' r='2.6' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M4.2 14.4c.7-2.1 2.4-3.4 4.8-3.4 2.4 0 4.1 1.3 4.8 3.4' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.sidebar-icon-role {
+    background-color: rgba(132, 115, 255, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Ccircle cx='9' cy='6' r='2.4' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M5 14.2c.6-1.9 2.1-3.1 4-3.1s3.4 1.2 4 3.1' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.sidebar-icon-permission {
+    background-color: rgba(255, 138, 76, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M9 3.2 4.5 5.1v4.2c0 3 2 5.3 4.5 5.7 2.5-.4 4.5-2.7 4.5-5.7V5.1z' stroke='%23ffffff' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='m7.1 9.1 1.4 1.5 2.4-2.7' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* System icons */
+.sidebar-icon-audit {
+    background-color: rgba(0, 160, 180, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Crect x='4' y='3' width='9.5' height='12' rx='1.4' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M6.2 7h5.1M6.2 9.2h3.3M6.2 11.4h4' stroke='%23ffffff' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.sidebar-icon-sync {
+    background-color: rgba(114, 191, 255, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M4.2 7A4.1 4.1 0 0 1 9 4.4l.3-.9M13.8 11a4.1 4.1 0 0 1-4.8 2.6l-.3.9' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3Cpath d='M5.4 4.4 9 3.5 8.1 7.1M9.9 10.9l-.9 3.6 3.6-.9' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.sidebar-icon-settings {
+    background-color: rgba(132, 115, 255, 0.35);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M9 5.2A3.8 3.8 0 1 0 9 12.8 3.8 3.8 0 0 0 9 5.2z' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M3.7 7.1 2.3 9l1.4 1.9M14.3 7.1 15.7 9l-1.4 1.9M7.1 3.7 9 2.3l1.9 1.4M7.1 14.3 9 15.7l1.9-1.4' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+ .dashboard-sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #c0f0ec 0%, #0f8b8d 45%, #0f7b80 100%);
+    color: #ffffff;
+    padding: 16px 16px 18px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+}
+
+ .sidebar-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    padding: 10px 8px 16px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #e4faf8 0%, rgba(4, 73, 75, 0.0) 100%);
+}
+
+.sidebar-logo-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.sidebar-logo-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #e0f5f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-logo-icon {
+    font-size: 24px;
+    color: #0f8b8d;
+}
+
+ .sidebar-app-name {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #04524f;
+}
+
+/* Sidebar sections stack with comfortable spacing */
+.sidebar-section {
+    margin-bottom: 14px;
+}
+
+.sidebar-section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    margin-bottom: 6px;
+}
+
+.sidebar-item {
+    width: 100%;
+    text-align: left;
+    padding: 8px 14px;
+    margin-bottom: 4px;
+    border-radius: 999px;
+    border: none;
+    background-color: transparent;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+/* Generic sidebar icon container */
+.sidebar-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    display: inline-block;
+    border-radius: 999px;
+    background-color: rgba(4, 73, 75, 0.28); /* default teal chip */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px 14px;
+}
+
+/* Health Records icon – clipboard with cross */
+.sidebar-icon-health {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Crect x='4' y='3.5' width='10' height='12' rx='1.5' stroke='%23ffffff' stroke-width='1.4'/%3E%3Crect x='7' y='2' width='4' height='2.8' rx='0.8' stroke='%23ffffff' stroke-width='1.4'/%3E%3Cpath d='M9 8v3M7.5 9.5h3' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Billing icon – card with peso sign */
+.sidebar-icon-billing {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Crect x='2.5' y='4' width='13' height='9' rx='1.5' stroke='%23ffffff' stroke-width='1.4'/%3E%3Crect x='2.5' y='6' width='13' height='2' fill='%23ffffff' fill-opacity='0.18'/%3E%3Cpath d='M7 11.8V8.4h1.8a1.3 1.3 0 1 1 0 2.6H7M6.4 7.4h3.1' stroke='%23ffffff' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.sidebar-item.active {
+    background-color: #0b6f70;
+    color: #7ECF7A;
+}
+
+.sidebar-item:hover {
+    background-color: #0b6f70;
+    transform: translateX(2px);
+}
+
+/* Expandable user menu item */
+.sidebar-item-expand {
+    justify-content: space-between;
+}
+
+.sidebar-chevron {
+    font-size: 11px;
+    opacity: 0.9;
+}
+
+/* Nested options under User (Role, Permission) */
+.sidebar-subitem {
+    width: 100%;
+    text-align: left;
+    padding: 6px 26px;
+    margin-bottom: 2px;
+    border-radius: 999px;
+    border: none;
+    background-color: rgba(4, 73, 75, 0.16);
+    color: #ffffff;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.15s ease, transform 0.12s ease;
+}
+
+.sidebar-subitem:hover {
+    background-color: rgba(4, 73, 75, 0.28);
+    transform: translateX(2px);
+}
+
+.sidebar-logout {
+    margin-top: auto;
+    width: 100%;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: none;
+    background-color: #0b4f50;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.12s ease;
+}
+
+.sidebar-logout:hover {
+    background-color: #083738;
+    transform: translateX(2px);
+}
+
+.dashboard-main {
+    flex: 1;
+    padding: 20px 26px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* Dark mode for the main dashboard area */
+.dashboard-main--dark {
+    background-color: #0f2224 !important;
+    color: #f5f7fa !important;
+}
+
+/* Make common dashboard content respect dark mode text color */
+.dashboard-main--dark .dashboard-page,
+.dashboard-main--dark .dashboard-header,
+.dashboard-main--dark .dashboard-card,
+.dashboard-main--dark .dashboard-activity,
+.dashboard-main--dark .dashboard-notification {
+    color: #f5f7fa;
+}
+
+.dashboard-main--dark .dashboard-header {
+    background-color: #102c30 !important;
+    border-bottom-color: #0b1c1f !important;
+}
+
+.dashboard-main--dark .dashboard-card,
+.dashboard-main--dark .dashboard-activity,
+.dashboard-main--dark .dashboard-notification {
+    background-color: #123036 !important;
+    color: #f5f7fa !important;
+}
+
+.dashboard-main--dark .activity-table th,
+.dashboard-main--dark .activity-table td {
+    color: #f5f7fa !important;
+}
+
+/* Dashboard page specific overrides (cards, notification, search, buttons) */
+.dashboard-main--dark .dashboard-notification {
+    border-radius: 12px;
+}
+
+.dashboard-main--dark .notification-button {
+    background-color: #0f8b8d !important;
+    color: #ffffff !important;
+}
+
+.dashboard-main--dark .notification-button:hover {
+    background-color: #0b6f70 !important;
+}
+
+.dashboard-main--dark .card-placeholder {
+    background-color: #10272b !important;
+    color: #c9d7dc !important;
+}
+
+/* Make generic panels and pages follow dark background */
+.dashboard-main--dark .dashboard-page,
+.dashboard-main--dark .pm-page {
+    background-color: transparent !important;
+}
+
+.dashboard-main--dark .pm-table-outer {
+    background-color: #10272b !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+/* Patient Management – overview and table */
+.dashboard-main--dark .pm-overview {
+    background-color: transparent;
+}
+
+.dashboard-main--dark .pm-section-title,
+.dashboard-main--dark .pm-show-entries,
+.dashboard-main--dark .pm-page-dots {
+    color: #f5f7fa;
+}
+
+.dashboard-main--dark .pm-show-entries select {
+    background-color: #123036;
+    color: #f5f7fa;
+    border-color: #26454b;
+}
+
+.dashboard-main--dark .pm-filter-pill {
+    background-color: #123036;
+    border-color: #26454b;
+    color: #f5f7fa;
+}
+
+.dashboard-main--dark .pm-filter-pill.active,
+.dashboard-main--dark .pm-filter-pill:hover {
+    background-color: #0f8b8d;
+    border-color: #0f8b8d;
+    color: #ffffff;
+}
+
+.dashboard-main--dark .pm-search-box {
+    border-color: #0f8b8d;
+    background-color: #10272b;
+}
+
+.dashboard-main--dark .pm-search-input {
+    background-color: transparent;
+    color: #f5f7fa;
+}
+
+.dashboard-main--dark .pm-table {
+    background-color: #10272b !important;
+}
+
+.dashboard-main--dark .pm-table thead {
+    background-color: #123b41 !important;
+}
+
+.dashboard-main--dark .pm-table tbody tr:nth-child(even) {
+    background-color: #10272b !important;
+}
+
+.dashboard-main--dark .pm-table th,
+.dashboard-main--dark .pm-table td {
+    color: #f5f7fa !important;
+}
+
+.dashboard-main--dark .pm-patient-email {
+    color: #c9d7dc;
+}
+
+.dashboard-main--dark .pm-view-btn {
+    background-color: transparent;
+    color: #7ecf7a;
+    border-color: #7ecf7a;
+}
+
+.dashboard-main--dark .pm-view-btn:hover {
+    background-color: rgba(126, 207, 122, 0.12);
+}
+
+.dashboard-main--dark .pm-pagination {
+    background: rgba(10, 32, 35, 0.96);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-main--dark .pm-page-btn,
+.dashboard-main--dark .pm-page-number {
+    background-color: #10272b;
+    border-color: #26454b;
+    color: #f5f7fa;
+}
+
+.dashboard-main--dark .pm-page-number.active {
+    background-color: #0f8b8d;
+    border-color: #0f8b8d;
+}
+
+.dashboard-main--dark .pm-page-btn:hover,
+.dashboard-main--dark .pm-page-number:hover {
+    background-color: #123b41;
+    border-color: #0f8b8d;
+}
+
+/* Patient Management – form */
+.dashboard-main--dark .pm-patient-form {
+    background-color: #10272b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-main--dark .pm-form-title,
+.dashboard-main--dark .pm-form-label {
+    color: #f5f7fa;
+}
+
+.dashboard-main--dark .pm-form-input {
+    background-color: #0b1c1f;
+    border-color: #3a555a;
+    color: #f5f7fa;
+}
+
+.dashboard-main--dark .pm-form-input:focus {
+    border-color: #7ecf7a;
+    box-shadow: 0 0 0 2px rgba(126, 207, 122, 0.25);
+}
+
+.dashboard-main--dark .pm-form-back {
+    background-color: transparent;
+    color: #7ecf7a;
+    border-color: #7ecf7a;
+}
+
+.dashboard-main--dark .pm-form-back:hover {
+    background-color: rgba(126, 207, 122, 0.12);
+}
+
+.dashboard-main--dark .pm-form-save {
+    background-color: #0f8b8d;
+    color: #ffffff;
+}
+
+.dashboard-main--dark .pm-form-save:hover {
+    background-color: #0b6f70;
+}
+
+.dashboard-main--dark .pm-form-delete {
+    background-color: #b45549;
+}
+
+/* Text size adjustments for accessibility (visible difference) */
+.dashboard-main--text-small {
+    font-size: 11px;
+}
+
+.dashboard-main--text-large {
+    font-size: 18px;
+}
+
+.dashboard-main--text-small .dashboard-title {
+    font-size: 24px;
+}
+
+.dashboard-main--text-large .dashboard-title {
+    font-size: 32px;
+}
+
+.dashboard-main--text-small .activity-table th,
+.dashboard-main--text-small .activity-table td,
+.dashboard-main--text-small .pm-table th,
+.dashboard-main--text-small .pm-table td {
+    font-size: 12px;
+}
+
+.dashboard-main--text-large .activity-table th,
+.dashboard-main--text-large .activity-table td,
+.dashboard-main--text-large .pm-table th,
+.dashboard-main--text-large .pm-table td {
+    font-size: 15px;
+}
+
+/* Settings modal */
+.settings-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 310px; /* align more closely with SYSTEM > Settings button */
+    padding-left: 260px; /* sidebar width */
+    box-sizing: border-box;
+    z-index: 20;
+}
+
+/* Keep Settings button visually active while settings window is open */
+.sidebar-item-settings-active {
+    background-color: #0b6f70;
+    color: #7ECF7A;
+}
+
+.settings-modal {
+    width: 360px;
+    max-width: 90vw;
+    background: linear-gradient(180deg, #0f8b8d 0%, #0f7b80 100%);
+    color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    padding: 14px 16px 18px;
+    box-sizing: border-box;
+}
+
+.settings-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.settings-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.settings-modal-close {
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.settings-modal-close:hover {
+    opacity: 0.8;
+}
+
+.settings-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.settings-item {
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: none;
+    background-color: rgba(4, 73, 75, 0.25);
+    color: #ffffff;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-item:hover {
+    background-color: rgba(4, 73, 75, 0.45);
+}
+
+.accessibility-modal {
+    width: 260px;
+    max-width: 80vw;
+    margin-left: 6px; /* bring it closer to the main settings window */
+    background: linear-gradient(180deg, #0f8b8d 0%, #0f7b80 100%); /* match Settings modal color */
+    color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    padding: 12px 14px 16px;
+    box-sizing: border-box;
+}
+
+.accessibility-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.accessibility-title {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.accessibility-close {
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.accessibility-close:hover {
+    opacity: 0.8;
+}
+
+.accessibility-section {
+    margin-top: 10px;
+}
+
+.accessibility-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.accessibility-options {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.accessibility-option {
+    width: 100%;
+    text-align: left;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgba(4, 73, 75, 0.25);
+    color: #ffffff;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.accessibility-option:hover {
+    background-color: rgba(4, 73, 75, 0.45);
+}
+
+/* Small radio-style indicator circle */
+.accessibility-radio {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-sizing: border-box;
+}
+
+.accessibility-radio--selected {
+    background-color: #ffffff;
+}

@@ -1,0 +1,162 @@
+.nv-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Reuse header style and keep it sticky */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    margin: -10px -16px 6px;
+    background-color: #f3faf9;
+    border-bottom: 1px solid #e0f0ee;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.dashboard-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dashboard-subtitle {
+    margin: 4px 0 0;
+    font-size: 14px;
+}
+
+.dashboard-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-user-email {
+    font-size: 13px;
+    color: #555;
+}
+
+.dashboard-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #40b6ae;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.dashboard-user-name {
+    font-weight: 600;
+}
+
+.nv-form-card {
+    margin-top: 10px;
+    padding: 20px 24px 28px;
+    border-radius: 16px;
+    background-color: #f6fbfb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.nv-form-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.nv-form-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nv-form-icon {
+    font-size: 20px;
+}
+
+.nv-form-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.nv-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px 32px;
+}
+
+.nv-form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nv-column-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.nv-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nv-label {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.nv-input,
+.nv-textarea {
+    border-radius: 10px;
+    border: 1px solid #9ba8ac;
+    padding: 8px 10px;
+    font-size: 13px;
+    outline: none;
+    background-color: #ffffff;
+}
+
+.nv-textarea {
+    min-height: 100px;
+    resize: none;
+}
+
+.nv-notes-section {
+    margin-top: 18px;
+}
+
+.nv-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nv-actions--single {
+    justify-content: flex-end;
+}
+
+.nv-back-btn {
+    min-width: 110px;
+    padding: 8px 20px;
+    border-radius: 999px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #0f8b8d;
+    color: #ffffff;
+}
+
+.nv-back-btn:hover {
+    background-color: #0b6f70;
+}

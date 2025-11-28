@@ -1,0 +1,244 @@
+@page "/admin-pharmacy-inventory"
+@layout Layout.DashboardLayout
+
+<div class="pm-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Pharmacy Inventory</h1>
+            <p class="dashboard-subtitle">Welcome back Admin!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">
+                👤
+            </div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    <section class="pm-overview">
+        <div class="pm-overview-header">
+            <h2 class="pm-section-title">Stocks Overview</h2>
+            <div class="pm-show-entries">
+                <span>Show</span>
+                <select>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>25</option>
+                </select>
+                <span>entries</span>
+            </div>
+        </div>
+
+        <div class="pm-filters-row">
+            <div class="pm-alpha-filter">
+                <button class="pm-filter-pill @(ShowLetters && ActiveLetter is null ? "active" : string.Empty)" @onclick="ToggleLetters">All</button>
+
+                @if (ShowLetters)
+                {
+                    @foreach (var letter in Alphabet)
+                    {
+                        <button class="pm-filter-pill @(ActiveLetter == letter ? "active" : string.Empty)"
+                                @onclick="() => SelectLetter(letter)">@letter</button>
+                    }
+                }
+            </div>
+
+            <div class="pm-search-row">
+                <div class="pm-search-box">
+                    <span class="pm-search-icon"></span>
+                    <input class="pm-search-input" placeholder="Search Medicine" />
+                </div>
+
+                <div class="pm-actions">
+                    <button class="activity-action-btn">Sort</button>
+                    <button class="activity-action-btn">Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pm-table-outer">
+            <div class="pm-table-wrapper">
+                <table class="pm-table">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Category</th>
+                            <th>Stock</th>
+                            <th>Value</th>
+                            <th>Trend</th>
+                            <th>Status</th>
+                            <th class="pm-col-action">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Stocks)
+                        {
+                            <tr>
+                                <td>@s.Name</td>
+                                <td>@s.Category</td>
+                                <td>@s.Stock</td>
+                                <td>@s.Value</td>
+                                <td>@s.Trend</td>
+                                <td>
+                                    <span class="ip-status-pill ip-status-@s.StatusKey">
+                                        <span class="ip-status-dot"></span>
+                                        <span>@s.StatusLabel</span>
+                                    </span>
+                                </td>
+                                <td class="pm-col-action">
+                                    <button class="pm-view-btn" aria-label="View stock item" @onclick="() => OpenItemDetails(s)">
+                                        <span class="pm-view-icon"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        @if (ShowItemDetailsPanel && SelectedStock is not null)
+        {
+            <div class="ap-itemdetails-overlay">
+                <div class="ap-itemdetails-panel">
+                    <div class="ap-itemdetails-header">
+                        <h2 class="ap-itemdetails-title">Item Details</h2>
+                        <div class="ap-itemdetails-name">@SelectedStock.Name</div>
+                    </div>
+
+                    <div class="ap-itemdetails-section">
+                        <div class="ap-itemdetails-section-title">Basic Information</div>
+                        <div class="ap-itemdetails-row">
+                            <span class="ap-itemdetails-label">Item Name:</span>
+                            <span class="ap-itemdetails-value">@SelectedStock.Name</span>
+                        </div>
+                        <div class="ap-itemdetails-row">
+                            <span class="ap-itemdetails-label">Category:</span>
+                            <span class="ap-itemdetails-value">@SelectedStock.Category</span>
+                        </div>
+                        <div class="ap-itemdetails-row">
+                            <span class="ap-itemdetails-label">Supplier:</span>
+                            <span class="ap-itemdetails-value">ACME Pharma Corp.</span>
+                        </div>
+                        <div class="ap-itemdetails-row">
+                            <span class="ap-itemdetails-label">Reorder Level:</span>
+                            <span class="ap-itemdetails-value">50 units</span>
+                        </div>
+                    </div>
+
+                    <div class="ap-itemdetails-section">
+                        <div class="ap-itemdetails-section-title">Recent Activity</div>
+                        <div class="ap-itemdetails-list">
+                            <div>11/15: OUT -10 (Prescription)</div>
+                            <div>11/14: OUT -15 (Prescription)</div>
+                            <div>11/13: OUT -12 (Prescription)</div>
+                            <div>11/10: IN +100 (Purchase)</div>
+                        </div>
+                    </div>
+
+                    <div class="ap-itemdetails-section">
+                        <div class="ap-itemdetails-section-title">Alerts &amp; Status</div>
+                        <div class="ap-itemdetails-row">
+                            <span class="ap-itemdetails-label">Stock Status:</span>
+                            <span class="ip-status-pill ip-status-@SelectedStock.StatusKey">
+                                <span class="ip-status-dot"></span>
+                                <span>@SelectedStock.StatusLabel</span>
+                            </span>
+                        </div>
+                        <div class="ap-itemdetails-row">
+                            <span class="ap-itemdetails-label">Expiry Alert:</span>
+                            <span class="ap-itemdetails-value">45 days remaining</span>
+                        </div>
+                        <div class="ap-itemdetails-row">
+                            <span class="ap-itemdetails-label">Monthly Usage:</span>
+                            <span class="ap-itemdetails-value">~1,200 units</span>
+                        </div>
+                    </div>
+
+                    <div class="ap-itemdetails-footer">
+                        <button type="button" class="ap-itemdetails-close" @onclick="CloseItemDetails">Close</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <button type="button" class="pm-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
+            <span>@(ShowPagination ? "›" : "‹")</span>
+        </button>
+
+        @if (ShowPagination)
+        {
+            <div class="pm-pagination">
+                <button class="pm-page-btn">Previous</button>
+                <button class="pm-page-number active">1</button>
+                <button class="pm-page-number">2</button>
+                <button class="pm-page-number">3</button>
+                <span class="pm-page-dots">...</span>
+                <button class="pm-page-number">8</button>
+                <button class="pm-page-btn">Next</button>
+            </div>
+        }
+    </section>
+</div>
+
+@code {
+    private bool ShowPagination { get; set; } = true;
+    private bool ShowLetters { get; set; }
+    private string? ActiveLetter { get; set; }
+
+    private bool ShowItemDetailsPanel { get; set; }
+    private StockRow? SelectedStock { get; set; }
+
+    private static readonly string[] Alphabet = new[]
+    {
+        "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
+    };
+
+    private record StockRow(
+        string Name,
+        string Category,
+        int Stock,
+        string Value,
+        string Trend,
+        string StatusKey,
+        string StatusLabel
+    );
+
+    private readonly List<StockRow> Stocks = new()
+    {
+        new StockRow("Paracetamol", "Pain Relief", 150, "₱750", "▼ -15%", "good", "Good"),
+        new StockRow("Amoxicillin", "Antibiotic", 25, "₱212", "▬ Stable", "low", "Low"),
+        new StockRow("Bandages", "First Aid", 2, "₱600", "▲ +5%", "critical", "Critical"),
+    };
+
+    private void ToggleLetters()
+    {
+        ShowLetters = !ShowLetters;
+        ActiveLetter = null;
+    }
+
+    private void SelectLetter(string letter)
+    {
+        ShowLetters = true;
+        ActiveLetter = letter;
+    }
+
+    private void TogglePagination()
+    {
+        ShowPagination = !ShowPagination;
+    }
+
+    private void OpenItemDetails(StockRow row)
+    {
+        SelectedStock = row;
+        ShowItemDetailsPanel = true;
+    }
+
+    private void CloseItemDetails()
+    {
+        ShowItemDetailsPanel = false;
+        SelectedStock = null;
+    }
+}

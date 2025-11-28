@@ -1,0 +1,138 @@
+@page "/nurse-dashboard"
+@layout Layout.DashboardLayout
+
+<div class="dashboard-page @(IsNotificationDismissed ? "dashboard-no-notification" : string.Empty)">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Dashboard</h1>
+            <p class="dashboard-subtitle">Welcome back Clinical Staff!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">nurse@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Clinical</span>
+        </div>
+    </header>
+
+    @if (IsNotificationDismissed)
+    {
+        <div class="dashboard-notification-toggle" @onclick="ShowNotificationBar">
+            <span class="notification-toggle-icon">▾</span>
+        </div>
+    }
+
+    @if (!IsNotificationDismissed)
+    {
+        <section class="dashboard-notification">
+            <div class="notification-header-row">
+                <div class="notification-title">Lease Notification</div>
+                <div class="notification-controls">
+                    @if (IsNotificationCollapsed)
+                    {
+                        <span class="notification-control-icon" @onclick="ShowNotification">▢</span>
+                    }
+                    else
+                    {
+                        <span class="notification-control-icon" @onclick="HideNotification">▭</span>
+                    }
+                    <span class="notification-control-icon" @onclick="ExitNotification">✕</span>
+                </div>
+            </div>
+
+            @if (!IsNotificationCollapsed)
+            {
+                <div class="notification-body">
+                    <div class="notification-icon">!</div>
+                    <div class="notification-text">
+                        <div>New medication order: Amoxicillin 500mg for Patient #88.</div>
+                        <button class="notification-button">Go to notification</button>
+                    </div>
+                </div>
+            }
+        </section>
+    }
+
+    <section class="dashboard-cards-row">
+        <div class="dashboard-card">
+            <h3>Patient Admission</h3>
+            <div class="card-placeholder">[Bar chart placeholder]</div>
+        </div>
+        <div class="dashboard-card">
+            <h3>Medication Compliance</h3>
+            <div class="card-placeholder">[Line chart placeholder]</div>
+        </div>
+        <div class="dashboard-card">
+            <h3>Vital Signs Status</h3>
+            <div class="card-placeholder">[Pie chart placeholder]</div>
+        </div>
+        <div class="dashboard-card">
+            <h3>Nursing Task Completion</h3>
+            <div class="card-placeholder">[Bar chart placeholder]</div>
+        </div>
+    </section>
+
+    <section class="dashboard-activity">
+        <div class="activity-header">
+            <h3>Recent Activity</h3>
+            <div class="activity-search-area">
+                <input class="activity-search" placeholder="Search activity..." />
+                <div class="activity-actions">
+                    <button class="activity-action-btn">Sort</button>
+                    <button class="activity-action-btn">Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="activity-table-wrapper">
+            <table class="activity-table">
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>User</th>
+                        <th>Date &amp; Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Updated vital signs for Patient #102</td>
+                        <td>Nurse</td>
+                        <td>10:24 AM</td>
+                    </tr>
+                    <tr>
+                        <td>Recorded medication administration for Patient #88</td>
+                        <td>Nurse</td>
+                        <td>10:15 AM</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private bool IsNotificationCollapsed { get; set; }
+    private bool IsNotificationDismissed { get; set; }
+
+    private void HideNotification()
+    {
+        IsNotificationCollapsed = true;
+    }
+
+    private void ShowNotification()
+    {
+        IsNotificationCollapsed = false;
+    }
+
+    private void ExitNotification()
+    {
+        IsNotificationDismissed = true;
+        IsNotificationCollapsed = false;
+    }
+
+    private void ShowNotificationBar()
+    {
+        IsNotificationDismissed = false;
+        IsNotificationCollapsed = false;
+    }
+}

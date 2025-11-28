@@ -1,0 +1,216 @@
+﻿@page "/"
+@page "/login"
+@layout Layout.EmptyLayout
+@using IT_13FinalProject.Services
+
+<!-- ===================== OVERALL PAGE WRAPPER ===================== -->
+<div class="login-page">
+
+    <!-- ===================== MAIN CONTENT CONTAINER ===================== -->
+    <div class="login-container">
+
+        <!-- ===================== LEFT: LOGIN CARD ===================== -->
+        <div class="login-card">
+
+            <!-- Inner wrapper so we can center everything inside the white panel -->
+            <div class="login-card-inner">
+
+                <!-- ========== LOGO AREA ========== -->
+                <div class="logo-placeholder">
+                    <img src="/images/Final_logo-removebg-preview.png" alt="MedFlow Logo" class="logo-image" />
+                </div>
+
+                <!-- ========== LOGIN TITLE (OPTIONAL) ========== -->
+                <h2 class="login-title">Sign in to MedFlow</h2>
+
+                <!-- ========== ERROR MESSAGE AREA ========== -->
+                <!-- Shown when the entered credentials are incorrect -->
+                @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+                {
+                    <div class="login-error-message">@ErrorMessage</div>
+                }
+
+                <!-- ========== LOGIN FORM ========== -->
+                <EditForm Model="this" OnValidSubmit="HandleLogin">
+                    <DataAnnotationsValidator />
+
+                    <!-- ----- USERNAME / EMAIL INPUT ROW ----- -->
+                    <div class="input-group">
+                        <!-- Input control for username/email -->
+                        <input class="input-field" @bind="UserName" placeholder="Username or Email" />
+
+                        <!-- Icon inside the pill input -->
+                        <span class="input-icon input-icon-user"></span>
+                    </div>
+
+                    <!-- ----- PASSWORD INPUT ROW ----- -->
+                    <div class="input-group">
+                        <!-- Input control for password -->
+                        <input class="input-field" @bind="Password" type="password" placeholder="Password" />
+
+                        <!-- Lock icon inside the pill input -->
+                        <span class="input-icon input-icon-lock"></span>
+                    </div>
+
+                    <!-- ========== LOGIN BUTTON ========== -->
+                    <button type="submit" class="login-button">LOGIN</button>
+                </EditForm>
+
+                <!-- ========== EXTRA LINKS AREA ========== -->
+                <div class="login-links">
+                    <a href="/forgot-password" class="login-link">Forgot your password?</a>
+                    <a href="/create-account" class="login-link">Create Account?</a>
+                </div>
+
+                <!-- ========== FOOTER TEXT ========== -->
+                <div class="login-footer-text">
+                    <span>Terms of Use.</span>
+                    <span>Privacy Policy.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== RIGHT: INFORMATION PANEL ===================== -->
+        <div class="info-panel">
+
+            <!-- Inner wrapper so we can center the text nicely in the green panel -->
+            <div class="info-panel-inner">
+                <!-- Big heading text, matching the design -->
+                <h1 class="info-title">Integrated Clinical and Revenue Cycle Management System</h1>
+
+                <!-- Description paragraph under the main title -->
+                <p class="info-description">
+                    MedFlow brings healthcare and transactions together in one smooth experience. Manage patient care,
+                    records, and payments with just a few clicks.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // ===================== BACKING FIELDS / PROPERTIES =====================
+    // Property bound to the username/email input
+    public string? UserName { get; set; }
+
+    // Property bound to the password input
+    public string? Password { get; set; }
+
+    // Holds a message when login fails (kept if you want to show inline text later)
+    public string? ErrorMessage { get; set; }
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    // JS runtime used to show simple alert dialogs (e.g., invalid credentials)
+    [Inject]
+    private IJSRuntime JsRuntime { get; set; } = default!;
+
+    [Inject]
+    private IAuthService AuthService { get; set; } = default!;
+
+    // ===================== EVENT HANDLERS =====================
+    // This method is called when the form is submitted successfully
+    private async Task HandleLogin()
+    {
+        // Clear any existing error message first
+        ErrorMessage = null;
+
+        try
+        {
+            // Use AuthService instead of UserAccountService for authentication
+            var userFromService = await AuthService.ValidateUserAsync(UserName ?? string.Empty, Password ?? string.Empty);
+
+            if (userFromService is not null)
+            {
+                if (string.Equals(userFromService.Role, "Admin", StringComparison.OrdinalIgnoreCase))
+                {
+                    Navigation.NavigateTo("/dashboard");
+                    return;
+                }
+
+                if (string.Equals(userFromService.Role, "Nurse", StringComparison.OrdinalIgnoreCase))
+                {
+                    Navigation.NavigateTo("/nurse-dashboard");
+                    return;
+                }
+
+                if (string.Equals(userFromService.Role, "Doctor", StringComparison.OrdinalIgnoreCase))
+                {
+                    Navigation.NavigateTo("/doctor-dashboard");
+                    return;
+                }
+
+                if (string.Equals(userFromService.Role, "Billing Staff", StringComparison.OrdinalIgnoreCase))
+                {
+                    Navigation.NavigateTo("/billing-dashboard");
+                    return;
+                }
+
+                if (string.Equals(userFromService.Role, "Inventory Staff", StringComparison.OrdinalIgnoreCase))
+                {
+                    Navigation.NavigateTo("/inventory-dashboard");
+                    return;
+                }
+            }
+
+            // Fallback to hard-coded credentials if database authentication fails
+            var isAdmin = string.Equals(UserName, "Admin", StringComparison.OrdinalIgnoreCase)
+                          && Password == "12345";
+
+            var isNurse = string.Equals(UserName, "Nurse", StringComparison.OrdinalIgnoreCase)
+                          && Password == "12345";
+
+            var isDoctor = string.Equals(UserName, "Doctor", StringComparison.OrdinalIgnoreCase)
+                           && Password == "12345";
+
+            var isBilling = string.Equals(UserName, "Billing", StringComparison.OrdinalIgnoreCase)
+                            && Password == "12345";
+
+            var isInventory = string.Equals(UserName, "Inventory", StringComparison.OrdinalIgnoreCase)
+                               && Password == "12345";
+
+            if (isAdmin)
+            {
+                Navigation.NavigateTo("/dashboard");
+                return;
+            }
+
+            if (isNurse)
+            {
+                Navigation.NavigateTo("/nurse-dashboard");
+                return;
+            }
+
+            if (isDoctor)
+            {
+                Navigation.NavigateTo("/doctor-dashboard");
+                return;
+            }
+
+            if (isBilling)
+            {
+                Navigation.NavigateTo("/billing-dashboard");
+                return;
+            }
+
+            if (isInventory)
+            {
+                Navigation.NavigateTo("/inventory-dashboard");
+                return;
+            }
+
+            // Show error message if no credentials match
+            ErrorMessage = "Invalid username or password. Please try again.";
+
+            // Optionally show alert as well
+            await JsRuntime.InvokeVoidAsync("alert", "Invalid Credentials!");
+        }
+        catch (Exception ex)
+        {
+            // Handle any errors during authentication
+            ErrorMessage = "An error occurred during login. Please try again.";
+            Console.WriteLine($"Login error: {ex.Message}");
+        }
+    }
+}

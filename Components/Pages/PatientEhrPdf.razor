@@ -1,0 +1,99 @@
+@page "/patient-ehr-print"
+@layout Layout.DashboardLayout
+
+<div class="ehr-page">
+    <!-- Header same layout as other dashboard pages -->
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Patient Health Records</h1>
+            <p class="dashboard-subtitle">Welcome back Admin!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
+        </div>
+    </header>
+
+    <!-- Tabs for different report types -->
+    <section class="ehr-tabs">
+        <button class="ehr-tab @(ActiveTab == ReportTab.MedicalReport ? "ehr-tab-active" : string.Empty)" @onclick="() => SetTab(ReportTab.MedicalReport)">Medical Reports</button>
+        <button class="ehr-tab @(ActiveTab == ReportTab.MedicalCertificate ? "ehr-tab-active" : string.Empty)" @onclick="() => SetTab(ReportTab.MedicalCertificate)">Medical Certificate</button>
+        <button class="ehr-tab @(ActiveTab == ReportTab.MedicalClearance ? "ehr-tab-active" : string.Empty)" @onclick="() => SetTab(ReportTab.MedicalClearance)">Medical Clearance</button>
+        <button class="ehr-tab @(ActiveTab == ReportTab.ReferralSlip ? "ehr-tab-active" : string.Empty)" @onclick="() => SetTab(ReportTab.ReferralSlip)">Referral Slip</button>
+    </section>
+
+    <!-- Scrollable PDF preview area -->
+    <section class="ehr-content">
+        <div class="ehr-pdf-container">
+            <iframe src="@CurrentPdfUrl" class="ehr-pdf-frame"></iframe>
+        </div>
+    </section>
+
+    <!-- Bottom actions -->
+    <section class="ehr-actions">
+        <div class="ehr-actions-left">
+            <button class="ehr-btn ehr-btn-secondary" @onclick="GoBack">Back</button>
+        </div>
+        <div class="ehr-actions-right">
+            <button class="ehr-btn ehr-btn-secondary" @onclick="DownloadPdf">
+                <span class="ehr-btn-icon">📥</span>
+                Download PDF file
+            </button>
+            <button class="ehr-btn ehr-btn-primary" @onclick="PrintPdf">
+                <span class="ehr-btn-icon">🖨️</span>
+                Print
+            </button>
+        </div>
+    </section>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    [Inject]
+    private IJSRuntime JsRuntime { get; set; } = default!;
+
+    private enum ReportTab
+    {
+        MedicalReport,
+        MedicalCertificate,
+        MedicalClearance,
+        ReferralSlip
+    }
+
+    private ReportTab ActiveTab { get; set; } = ReportTab.MedicalReport;
+
+    private string CurrentPdfUrl => ActiveTab switch
+    {
+        ReportTab.MedicalCertificate => "/pdfs/patient-medical-certificate.pdf",
+        ReportTab.MedicalClearance => "/pdfs/patient-medical-clearance.pdf",
+        ReportTab.ReferralSlip => "/pdfs/patient-referral-slip.pdf",
+        _ => "/pdfs/patient-medical-record.pdf"
+    };
+
+    private void GoBack()
+    {
+        // Return to the patient records detail page
+        Navigation.NavigateTo("/patient-records");
+    }
+
+    private void SetTab(ReportTab tab)
+    {
+        ActiveTab = tab;
+    }
+
+    private async Task DownloadPdf()
+    {
+        // Open the current PDF in a new tab so the user can download it
+        await JsRuntime.InvokeVoidAsync("open", CurrentPdfUrl, "_blank");
+    }
+
+    private async Task PrintPdf()
+    {
+        // Open the current PDF in a printable window; user can print from browser dialog
+        await JsRuntime.InvokeVoidAsync("open", CurrentPdfUrl, "_blank");
+    }
+}

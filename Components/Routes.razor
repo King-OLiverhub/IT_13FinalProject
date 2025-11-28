@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Components
+@using IT_13FinalProject.Components
+
+<ErrorBoundary>
+    <ChildContent>
+        <AppRouter />
+    </ChildContent>
+
+    <ErrorContent Context="error">
+        <div style="padding:0.5rem 1rem;background:#ffdddd;color:#900;font-size:12px;">
+            <strong>Router error:</strong> @error.Message
+        </div>
+    </ErrorContent>
+</ErrorBoundary>

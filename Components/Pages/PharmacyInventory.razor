@@ -1,0 +1,525 @@
+@page "/pharmacy-inventory"
+@layout Layout.DashboardLayout
+
+<div class="dashboard-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Pharmacy Inventory</h1>
+            <p class="dashboard-subtitle">Welcome back Pharmacist Staff!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">inventory@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Pharmacist</span>
+        </div>
+    </header>
+
+    <section class="pi-overview">
+        <div class="pi-overview-header">
+            <h2 class="pi-section-title">Stocks Overview</h2>
+            <div class="pi-show-entries">
+                <span>Show</span>
+                <select>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>25</option>
+                </select>
+                <span>entries</span>
+            </div>
+        </div>
+
+        <div class="pi-filters-row">
+            <div class="pi-alpha-filter">
+                <button class="pi-filter-pill @(ShowLetters && ActiveLetter is null ? "active" : string.Empty)" @onclick="ToggleLetters">All</button>
+
+                @if (ShowLetters)
+                {
+                    @foreach (var letter in Alphabet)
+                    {
+                        <button class="pi-filter-pill @(ActiveLetter == letter ? "active" : string.Empty)"
+                                @onclick="() => SelectLetter(letter)">@letter</button>
+                    }
+                }
+            </div>
+
+            <div class="pi-search-row">
+                <div class="pi-search-box">
+                    <span class="pi-search-icon"></span>
+                    <input class="pi-search-input" placeholder="Search Medicine" />
+                </div>
+
+                <div class="pi-actions">
+                    <button class="pi-action-btn">Sort</button>
+                    <button class="pi-action-btn">Filters</button>
+                    <button class="pi-stock-btn" @onclick="OpenAddItemPanel">+ Stocks</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pi-table-outer">
+            <div class="pi-table-wrapper">
+                <table class="pi-table">
+                    <thead>
+                        <tr>
+                            <th class="pi-col-name">Item Name</th>
+                            <th class="pi-col-category">Category</th>
+                            <th class="pi-col-stock">Stock</th>
+                            <th class="pi-col-price">Price</th>
+                            <th class="pi-col-exp">Expiration Date</th>
+                            <th class="pi-col-status">Status</th>
+                            <th class="pi-col-actions pi-actions-header">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Stocks)
+                        {
+                            <tr>
+                                <td class="pi-col-name">@s.Name</td>
+                                <td class="pi-col-category">@s.Category</td>
+                                <td class="pi-col-stock">@s.Stock</td>
+                                <td class="pi-col-price">@s.Price</td>
+                                <td class="pi-col-exp">@s.ExpirationDate</td>
+                                <td class="pi-col-status">
+                                    <span class="pi-status-pill pi-status-@s.StatusKey">
+                                        <span class="pi-status-dot"></span>
+                                        <span>@s.StatusLabel</span>
+                                    </span>
+                                </td>
+                                <td class="pi-actions-cell">
+                                    <div class="pi-actions-label-row">
+                                        <span>Edit</span>
+                                        <span>In</span>
+                                        <span>Out</span>
+                                    </div>
+                                    <div class="pi-actions-grid">
+                                        <button type="button" class="pi-edit-btn" aria-label="Edit stock" @onclick="OpenEditItemPanel">
+                                            <span class="pi-edit-icon"></span>
+                                        </button>
+                                        <button type="button" class="pi-inout-btn" aria-label="Stock in" @onclick="() => OpenStockInPanel(s)">
+                                            <span class="pi-in-icon"></span>
+                                        </button>
+                                        <button type="button" class="pi-inout-btn" aria-label="Stock out" @onclick="() => OpenStockOutPanel(s)">
+                                            <span class="pi-out-icon"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button type="button" class="pi-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
+            <span>@(ShowPagination ? "›" : "‹")</span>
+        </button>
+
+        @if (ShowPagination)
+        {
+            <div class="pi-pagination">
+                <button class="pi-page-btn">Previous</button>
+                <button class="pi-page-number active">1</button>
+                <button class="pi-page-number">2</button>
+                <button class="pi-page-number">3</button>
+                <span class="pi-page-dots">...</span>
+                <button class="pi-page-number">8</button>
+                <button class="pi-page-btn">Next</button>
+            </div>
+        }
+    </section>
+
+    @if (ShowAddItemPanel)
+    {
+        <div class="pi-add-overlay">
+            <div class="pi-add-panel">
+                <h2 class="pi-add-title">Add inventory Item</h2>
+
+                <div class="pi-add-section">
+                    <h3 class="pi-add-section-title">Basic Information</h3>
+                    <div class="pi-add-grid">
+                        <div class="pi-add-field">
+                            <label>Item Name:</label>
+                            <input />
+                        </div>
+                        <div class="pi-add-field">
+                            <label>Generic Name:</label>
+                            <input />
+                        </div>
+                        <div class="pi-add-field">
+                            <label>Brand Name:</label>
+                            <input />
+                        </div>
+                        <div class="pi-add-field">
+                            <label>Category:</label>
+                            <select>
+                                <option selected disabled>-- Select category --</option>
+                                <option>Medication</option>
+                                <option>Vaccines</option>
+                                <option>IV Fluids</option>
+                                <option>Injectables</option>
+                                <option>Topicals / Ointments</option>
+                                <option>Supplements / Vitamins</option>
+                                <option>Medical Supplies</option>
+                                <option>Laboratory Reagents</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="pi-add-field pi-add-field-full">
+                            <label>Description:</label>
+                            <input />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pi-add-section">
+                    <h3 class="pi-add-section-title">Inventory Details</h3>
+                    <div class="pi-add-grid">
+                        <div class="pi-add-field">
+                            <label>Stock Quantity:</label>
+                            <input />
+                        </div>
+                        <div class="pi-add-field">
+                            <label>Reorder Level:</label>
+                            <input />
+                        </div>
+                        <div class="pi-add-field">
+                            <label>Unit:</label>
+                            <select>
+                                <option selected disabled>-- Select unit --</option>
+                                <option>Tablet(s)</option>
+                                <option>Capsule(s)</option>
+                                <option>Vial(s)</option>
+                                <option>Ampoule(s)</option>
+                                <option>Bottle(s)</option>
+                                <option>mL</option>
+                                <option>L</option>
+                                <option>Tube(s)</option>
+                                <option>Pack(s)</option>
+                                <option>Box(es)</option>
+                            </select>
+                        </div>
+                        <div class="pi-add-field">
+                            <label>Unit Price:</label>
+                            <div class="pi-add-price">
+                                <span>₱</span>
+                                <input />
+                            </div>
+                        </div>
+                        <div class="pi-add-field">
+                            <label>Expiry Date:</label>
+                            <input type="date" />
+                        </div>
+                        <div class="pi-add-field">
+                            <label>Batch Number:</label>
+                            <input />
+                        </div>
+                        <div class="pi-add-field pi-add-field-full">
+                            <label>Supplier:</label>
+                            <input />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pi-add-section">
+                    <h3 class="pi-add-section-title">Inventory Details</h3>
+                    <div class="pi-add-grid">
+                        <div class="pi-add-field pi-add-field-full">
+                            <label>Storage Requirements:</label>
+                            <select>
+                                <option selected>Room temperature</option>
+                                <option>Refrigerated (2°C – 8°C)</option>
+                                <option>Frozen (&lt; -15°C)</option>
+                                <option>Protect from light</option>
+                                <option>Keep in original container</option>
+                            </select>
+                        </div>
+                        <div class="pi-add-field pi-add-field-full">
+                            <label>Prescription Required:</label>
+                            <div class="pi-add-radio-row">
+                                <label><input type="radio" name="rxRequired" /> Yes</label>
+                                <label><input type="radio" name="rxRequired" checked /> No</label>
+                            </div>
+                        </div>
+                        <div class="pi-add-field pi-add-field-full">
+                            <label>Barcode:</label>
+                            <input />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pi-add-actions">
+                    <button type="button" class="pi-add-cancel" @onclick="CloseAddItemPanel">Cancel</button>
+                    <button type="button" class="pi-add-save" @onclick="CloseAddItemPanel">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ShowEditItemPanel)
+    {
+        <div class="pi-add-overlay">
+            <div class="pi-edit-panel">
+                <h2 class="pi-edit-title">Edit Item</h2>
+
+                <div class="pi-edit-section">
+                    <h3 class="pi-edit-section-title">Basic Information</h3>
+                    <div class="pi-edit-grid">
+                        <div class="pi-edit-field">
+                            <label>Item Name:</label>
+                            <input />
+                        </div>
+                        <div class="pi-edit-field">
+                            <label>Category:</label>
+                            <select>
+                                <option selected disabled>-- Select category --</option>
+                                <option>Medication</option>
+                                <option>Vaccines</option>
+                                <option>IV Fluids</option>
+                                <option>Injectables</option>
+                                <option>Topicals / Ointments</option>
+                                <option>Supplements / Vitamins</option>
+                                <option>Medical Supplies</option>
+                                <option>Laboratory Reagents</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="pi-edit-field">
+                            <label>Unit Price:</label>
+                            <div class="pi-add-price">
+                                <span>₱</span>
+                                <input />
+                            </div>
+                        </div>
+                        <div class="pi-edit-field">
+                            <label>Expiry Date:</label>
+                            <input type="date" />
+                        </div>
+                        <div class="pi-edit-field">
+                            <label>Supplier:</label>
+                            <input />
+                        </div>
+                        <div class="pi-edit-field">
+                            <label>Unit:</label>
+                            <select>
+                                <option>Tablet(s)</option>
+                                <option>Capsule(s)</option>
+                                <option>Vial(s)</option>
+                                <option>Ampoule(s)</option>
+                                <option>Bottle(s)</option>
+                                <option>mL</option>
+                                <option>L</option>
+                                <option>Tube(s)</option>
+                                <option>Pack(s)</option>
+                                <option>Box(es)</option>
+                            </select>
+                        </div>
+                        <div class="pi-edit-field">
+                            <label>Reorder Level:</label>
+                            <input />
+                        </div>
+                        <div class="pi-edit-field">
+                            <label>Batch Number:</label>
+                            <input />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pi-edit-actions">
+                    <button type="button" class="pi-edit-cancel" @onclick="CloseEditItemPanel">Cancel</button>
+                    <button type="button" class="pi-edit-save" @onclick="CloseEditItemPanel">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ShowStockInPanel)
+    {
+        <div class="pi-add-overlay">
+            <div class="pi-stockin-panel">
+                <h2 class="pi-stockin-title">Stock In</h2>
+
+                <div class="pi-stockin-item-name">@SelectedStockName</div>
+
+                <div class="pi-stockin-grid">
+                    <div class="pi-stockin-field">
+                        <label>Current Stock:</label>
+                        <input />
+                    </div>
+                    <div class="pi-stockin-field">
+                        <label>Add Quantity:</label>
+                        <input />
+                    </div>
+                    <div class="pi-stockin-field">
+                        <label>Batch Number:</label>
+                        <input />
+                    </div>
+                    <div class="pi-stockin-field">
+                        <label>Expiry Date:</label>
+                        <input type="date" />
+                    </div>
+                    <div class="pi-stockin-field">
+                        <label>Supplier:</label>
+                        <input />
+                    </div>
+                </div>
+
+                <div class="pi-stockin-actions">
+                    <button type="button" class="pi-stockin-cancel" @onclick="CloseStockInPanel">Cancel</button>
+                    <button type="button" class="pi-stockin-add" @onclick="CloseStockInPanel">Add</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ShowStockOutPanel)
+    {
+        <div class="pi-add-overlay">
+            <div class="pi-stockout-panel">
+                <h2 class="pi-stockout-title">Stock Out</h2>
+
+                <div class="pi-stockout-item-name">@SelectedStockName</div>
+
+                <div class="pi-stockout-grid">
+                    <div class="pi-stockout-field">
+                        <label>Current Stock:</label>
+                        <input />
+                    </div>
+                    <div class="pi-stockout-field">
+                        <label>Deduct Quantity:</label>
+                        <input />
+                    </div>
+                    <div class="pi-stockout-field">
+                        <label>Reason:</label>
+                        <select @bind="StockOutReason">
+                            <option selected disabled value="">-- Select reason --</option>
+                            <option value="Prescription">Prescription Dispensing</option>
+                            <option value="Expired">Expired Stock</option>
+                            <option value="Damaged">Damaged</option>
+                            <option value="Audit">Adjustment / Audit</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    @if (StockOutReason == "Prescription")
+                    {
+                        <div class="pi-stockout-field">
+                            <label>Prescription #:</label>
+                            <input placeholder="RX-2024-001" @bind="StockOutPrescriptionNo" />
+                        </div>
+                    }
+                    else if (StockOutReason == "Other")
+                    {
+                        <div class="pi-stockout-field">
+                            <label>Notes:</label>
+                            <input placeholder="Damaged during handling" @bind="StockOutNotes" />
+                        </div>
+                    }
+                </div>
+
+                <div class="pi-stockout-actions">
+                    <button type="button" class="pi-stockout-cancel" @onclick="CloseStockOutPanel">Cancel</button>
+                    <button type="button" class="pi-stockout-deduct" @onclick="CloseStockOutPanel">Deduct</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private readonly char[] Alphabet =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+    private bool ShowLetters { get; set; }
+    private char? ActiveLetter { get; set; }
+
+    private record StockRow(
+        string Name,
+        string Category,
+        int Stock,
+        string Price,
+        string ExpirationDate,
+        string StatusKey,
+        string StatusLabel
+    );
+
+    private readonly StockRow[] Stocks = new[]
+    {
+        new StockRow("Paracetamol", "Pain Relief", 150, "₱5.00", "03/09/24", "good", "Good"),
+        new StockRow("Amoxicillin", "Antibiotic", 25, "₱8.50", "03/09/24", "low", "Low"),
+        new StockRow("Bandages", "First Aid", 2, "₱2.00", "03/09/24", "critical", "Critical"),
+    };
+
+    private bool ShowPagination { get; set; } = true;
+    private bool ShowAddItemPanel { get; set; }
+    private bool ShowEditItemPanel { get; set; }
+    private bool ShowStockInPanel { get; set; }
+    private bool ShowStockOutPanel { get; set; }
+
+    private string? SelectedStockName { get; set; }
+    private string? StockOutReason { get; set; }
+    private string? StockOutPrescriptionNo { get; set; }
+    private string? StockOutNotes { get; set; }
+
+    private void TogglePagination()
+    {
+        ShowPagination = !ShowPagination;
+    }
+
+    private void ToggleLetters()
+    {
+        ShowLetters = !ShowLetters;
+        ActiveLetter = null;
+    }
+
+    private void SelectLetter(char letter)
+    {
+        ShowLetters = true;
+        ActiveLetter = letter;
+    }
+
+    private void OpenAddItemPanel()
+    {
+        ShowAddItemPanel = true;
+    }
+
+    private void CloseAddItemPanel()
+    {
+        ShowAddItemPanel = false;
+    }
+
+    private void OpenEditItemPanel()
+    {
+        ShowEditItemPanel = true;
+    }
+
+    private void CloseEditItemPanel()
+    {
+        ShowEditItemPanel = false;
+    }
+
+    private void OpenStockInPanel(StockRow stock)
+    {
+        SelectedStockName = stock.Name;
+        ShowStockInPanel = true;
+    }
+
+    private void CloseStockInPanel()
+    {
+        ShowStockInPanel = false;
+    }
+
+    private void OpenStockOutPanel(StockRow stock)
+    {
+        SelectedStockName = stock.Name;
+        StockOutReason = null;
+        StockOutPrescriptionNo = null;
+        StockOutNotes = null;
+        ShowStockOutPanel = true;
+    }
+
+    private void CloseStockOutPanel()
+    {
+        ShowStockOutPanel = false;
+    }
+}
