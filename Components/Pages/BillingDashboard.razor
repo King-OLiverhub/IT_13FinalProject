@@ -79,22 +79,15 @@
                 </div>
             </div>
 
-            <button type="button" class="pm-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
-                <span>@(ShowPagination ? "▾" : "▴")</span>
-            </button>
-
-            @if (ShowPagination)
-            {
-                <div class="pm-pagination">
-                    <button class="pm-page-btn">Previous</button>
-                    <button class="pm-page-number active">1</button>
-                    <button class="pm-page-number">2</button>
-                    <button class="pm-page-number">3</button>
-                    <span class="pm-page-dots">...</span>
-                    <button class="pm-page-number">8</button>
-                    <button class="pm-page-btn">Next</button>
-                </div>
-            }
+            <div class="pm-pagination">
+                <button class="pm-page-btn">Previous</button>
+                <button class="pm-page-number active">1</button>
+                <button class="pm-page-number">2</button>
+                <button class="pm-page-number">3</button>
+                <span class="pm-page-dots">...</span>
+                <button class="pm-page-number">8</button>
+                <button class="pm-page-btn">Next</button>
+            </div>
         </section>
     }
     else
@@ -223,13 +216,7 @@
     private bool IsNotificationDismissed { get; set; }
     private bool IsOverviewMode { get; set; }
 
-    
-
     private record BillingRow(string PatientName, string PatientEmail, string AssessmentStatus, string DateOfVisit);
-
-    
-    
-    private bool ShowPagination { get; set; } = true;
 
     private readonly BillingRow[] Bills = new BillingRow[]
     {
@@ -274,11 +261,6 @@
     {
         IsNotificationDismissed = false;
         IsNotificationCollapsed = false;
-    }
-
-    private void TogglePagination()
-    {
-        ShowPagination = !ShowPagination;
     }
 
     private void ViewBill(BillingRow row)

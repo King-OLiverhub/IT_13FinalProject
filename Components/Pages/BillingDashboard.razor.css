@@ -77,7 +77,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 5px 16px;
     border: 2px solid #e9ecef;
     border-radius: 12px;
     background: #ffffff;
@@ -498,7 +498,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 5px 12px;
     border-radius: 10px;
     border: 2px solid #0f8b8d;
     background-color: #ffffff;
@@ -540,4 +540,44 @@
     background-color: #e9f6f5;
 }
 
+
+/* Centered sticky pagination for billing dashboard (reuse PM style) */
+.pm-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin: 12px auto;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    width: fit-content;
+    max-width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    position: sticky;
+    bottom: 10px;
+    z-index: 6;
+}
+
+.pm-page-btn,
+.pm-page-number {
+    min-width: 40px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #c9d9dd;
+    background-color: #ffffff;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.pm-page-number.active {
+    background-color: #0f8b8d;
+    color: #ffffff;
+    border-color: #0f8b8d;
+}
+
+.pm-page-dots {
+    font-size: 12px;
+}
 

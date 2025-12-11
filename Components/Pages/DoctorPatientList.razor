@@ -142,22 +142,15 @@
             </div>
         </div>
 
-        <button type="button" class="pm-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
-            <span>@(ShowPagination ? "›" : "‹")</span>
-        </button>
-
-        @if (ShowPagination)
-        {
-            <div class="pm-pagination">
-                <button class="pm-page-btn">Previous</button>
-                <button class="pm-page-number active">1</button>
-                <button class="pm-page-number">2</button>
-                <button class="pm-page-number">3</button>
-                <span class="pm-page-dots">...</span>
-                <button class="pm-page-number">8</button>
-                <button class="pm-page-btn">Next</button>
-            </div>
-        }
+        <div class="pm-pagination">
+            <button class="pm-page-btn">Previous</button>
+            <button class="pm-page-number active">1</button>
+            <button class="pm-page-number">2</button>
+            <button class="pm-page-number">3</button>
+            <span class="pm-page-dots">...</span>
+            <button class="pm-page-number">8</button>
+            <button class="pm-page-btn">Next</button>
+        </div>
     </section>
 </div>
 
@@ -273,7 +266,6 @@
     private List<Patient> Patients = new();
     private bool IsLoading = true;
     private string ErrorMessage = "";
-    private bool ShowPagination = true;
     
     // Modal properties
     private bool ShowAddModal = false;
@@ -331,11 +323,6 @@
         Navigation.NavigateTo("/doctor-consultation");
     }
 
-    private void TogglePagination()
-    {
-        ShowPagination = !ShowPagination;
-    }
-    
     // Modal methods
     private void ShowAddPatientModal()
     {

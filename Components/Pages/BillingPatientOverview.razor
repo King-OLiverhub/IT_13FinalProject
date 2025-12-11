@@ -130,22 +130,15 @@
         }
         </div>
 
-        <button type="button" class="pm-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
-            <span>@(ShowPagination ? "›" : "‹")</span>
-        </button>
-
-        @if (ShowPagination)
-        {
-            <div class="pm-pagination">
-                <button class="pm-page-btn">Previous</button>
-                <button class="pm-page-number active">1</button>
-                <button class="pm-page-number">2</button>
-                <button class="pm-page-number">3</button>
-                <span class="pm-page-dots">...</span>
-                <button class="pm-page-number">8</button>
-                <button class="pm-page-btn">Next</button>
-            </div>
-        }
+        <div class="pm-pagination">
+            <button class="pm-page-btn">Previous</button>
+            <button class="pm-page-number active">1</button>
+            <button class="pm-page-number">2</button>
+            <button class="pm-page-number">3</button>
+            <span class="pm-page-dots">...</span>
+            <button class="pm-page-number">8</button>
+            <button class="pm-page-btn">Next</button>
+        </div>
     </section>
 </div>
 
@@ -154,8 +147,6 @@
     private List<PatientBill> FilteredBills { get; set; } = new();
     private bool isLoading { get; set; } = true;
     private string? errorMessage { get; set; }
-
-    private bool ShowPagination { get; set; } = true;
     private bool ShowArchived { get; set; } = false;
     private string SearchTerm { get; set; } = string.Empty;
 
@@ -200,11 +191,6 @@
     private IEnumerable<PatientBill> GetOrderedRows()
     {
         return FilteredBills.OrderByDescending(b => b.CreatedAt);
-    }
-
-    private void TogglePagination()
-    {
-        ShowPagination = !ShowPagination;
     }
 
     private async Task SearchBills()

@@ -268,28 +268,19 @@
             </div>
         }
 
-        <button type="button" class="inv-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
-            <span>@(ShowPagination ? "›" : "‹")</span>
-        </button>
+        <div class="inv-pagination">
+            <button class="inv-page-btn" @onclick="() => GoToPage(CurrentPage - 1)" disabled="!HasPreviousPage">Previous</button>
 
-        @if (ShowPagination)
-        {
-            <div class="inv-pagination">
-                <button class="inv-page-btn" @onclick="() => GoToPage(CurrentPage - 1)" disabled="!HasPreviousPage">Previous</button>
-                @for (int i = 1; i <= TotalPages; i++)
-                {
-                    if (i == 1 || i == TotalPages || (i >= CurrentPage - 1 && i <= CurrentPage + 1))
-                    {
-                        <button class="inv-page-number @(i == CurrentPage ? "inv-page-number-active" : "")" @onclick="() => GoToPage(i)">@i</button>
-                    }
-                    else if (i == CurrentPage - 2 || i == CurrentPage + 2)
-                    {
-                        <span class="inv-page-dots">...</span>
-                    }
-                }
-                <button class="inv-page-btn" @onclick="() => GoToPage(CurrentPage + 1)" disabled="!HasNextPage">Next</button>
-            </div>
-        }
+            <button class="inv-page-number @(CurrentPage == 1 ? "inv-page-number-active" : string.Empty)" @onclick="() => GoToPage(1)">1</button>
+            <button class="inv-page-number @(CurrentPage == 2 ? "inv-page-number-active" : string.Empty)" @onclick="() => GoToPage(2)">2</button>
+            <button class="inv-page-number @(CurrentPage == 3 ? "inv-page-number-active" : string.Empty)" @onclick="() => GoToPage(3)">3</button>
+
+            <span class="inv-page-dots">...</span>
+
+            <button class="inv-page-number @(CurrentPage == 8 ? "inv-page-number-active" : string.Empty)" @onclick="() => GoToPage(8)">8</button>
+
+            <button class="inv-page-btn" @onclick="() => GoToPage(CurrentPage + 1)" disabled="!HasNextPage">Next</button>
+        </div>
     </section>
 </div>
 
@@ -317,16 +308,9 @@
     private bool HasPreviousPage => CurrentPage > 1;
     private bool HasNextPage => CurrentPage < TotalPages;
 
-    private bool ShowPagination { get; set; } = true;
-
     private PatientBill? SelectedRow { get; set; }
 
     private bool IsViewPanelOpen { get; set; }
-
-    private void TogglePagination()
-    {
-        ShowPagination = !ShowPagination;
-    }
 
     private void GoToRequest() => Navigation.NavigateTo("/billing-insurance-request");
 

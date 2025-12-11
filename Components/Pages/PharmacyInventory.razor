@@ -137,16 +137,16 @@
                                             else
                                             {
                                                 <button type="button" class="pi-edit-btn" aria-label="Edit stock" @onclick="() => OpenEditItemPanel(item)">
-                                                    <span class="pi-edit-icon">✏️</span>
+                                                    <span class="pi-edit-icon"></span>
                                                 </button>
                                                 <button type="button" class="pi-inout-btn" aria-label="Stock in" @onclick="() => OpenStockInPanel(item)">
-                                                    <span class="pi-in-icon">+</span>
+                                                    <span class="pi-in-icon"></span>
                                                 </button>
                                                 <button type="button" class="pi-inout-btn" aria-label="Stock out" @onclick="() => OpenStockOutPanel(item)">
-                                                    <span class="pi-out-icon">-</span>
+                                                    <span class="pi-out-icon"></span>
                                                 </button>
                                                 <button type="button" class="pi-archive-btn" aria-label="Archive item" @onclick="() => ArchiveItem(item.InventoryId)">
-                                                    <span class="pi-archive-icon">📁</span>
+                                                    <span class="pi-archive-icon"></span>
                                                 </button>
                                             }
                                         </div>
@@ -159,22 +159,15 @@
             </div>
         </div>
 
-        <button type="button" class="pi-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
-            <span>@(ShowPagination ? "›" : "‹")</span>
-        </button>
-
-        @if (ShowPagination)
-        {
-            <div class="pi-pagination">
-                <button class="pi-page-btn">Previous</button>
-                <button class="pi-page-number active">1</button>
-                <button class="pi-page-number">2</button>
-                <button class="pi-page-number">3</button>
-                <span class="pi-page-dots">...</span>
-                <button class="pi-page-number">8</button>
-                <button class="pi-page-btn">Next</button>
-            </div>
-        }
+        <div class="pi-pagination">
+            <button class="pi-page-btn">Previous</button>
+            <button class="pi-page-number active">1</button>
+            <button class="pi-page-number">2</button>
+            <button class="pi-page-number">3</button>
+            <span class="pi-page-dots">...</span>
+            <button class="pi-page-number">8</button>
+            <button class="pi-page-btn">Next</button>
+        </div>
     </section>
 
     @if (ShowAddItemPanel)
@@ -493,7 +486,6 @@
     private List<Models.PharmacyInventory> InventoryItems { get; set; } = new();
     private bool IsLoading = true;
     private string ErrorMessage = "";
-    private bool ShowPagination = true;
     private bool ShowAddItemPanel { get; set; }
     private bool ShowEditItemPanel { get; set; }
     private bool ShowStockInPanel { get; set; }
@@ -548,11 +540,6 @@
     {
         ShowArchived = showArchived;
         await LoadInventory();
-    }
-
-    private void TogglePagination()
-    {
-        ShowPagination = !ShowPagination;
     }
 
     private void OpenAddItemPanel()

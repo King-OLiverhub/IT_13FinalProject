@@ -32,14 +32,6 @@
         <section class="pm-overview">
             <div class="pm-overview-header">
                 <h2 class="pm-section-title">Patient Overview</h2>
-                <div class="pm-tabs">
-                    <button class="pm-tab @(ActiveTab == "patients" ? "active" : "")" @onclick="@(() => SetActiveTab("patients"))">
-                        Active Patients
-                    </button>
-                    <button class="pm-tab @(ActiveTab == "archived-patients" ? "active" : "")" @onclick="@(() => SetActiveTab("archived-patients"))">
-                        Archived Patients
-                    </button>
-                </div>
                 <div class="pm-show-entries">
                     <span>Show</span>
                     <select>
@@ -56,6 +48,15 @@
                     <div class="pm-search-box">
                         <span class="pm-search-icon"></span>
                         <input class="pm-search-input" placeholder="Search Patient" />
+                    </div>
+
+                    <div class="pm-tabs">
+                        <button class="pm-tab @(ActiveTab == "patients" ? "active" : "")" @onclick="@(() => SetActiveTab("patients"))">
+                            Active Patients
+                        </button>
+                        <button class="pm-tab @(ActiveTab == "archived-patients" ? "active" : "")" @onclick="@(() => SetActiveTab("archived-patients"))">
+                            Archived Patients
+                        </button>
                     </div>
 
                     <div class="pm-actions">
@@ -567,7 +568,7 @@
 
     private void TogglePagination()
     {
-        ShowPagination = !ShowPagination;
+       // Pagination remains always visible; no toggle button is used on this page.
     }
 
     private void SetActiveTab(string tab)
