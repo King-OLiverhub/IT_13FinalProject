@@ -10,14 +10,16 @@
 
         <div class="dashboard-user-info">
             <span class="dashboard-user-email">doc@gmail.com</span>
-            <div class="dashboard-user-avatar">DR</div>
+            <div class="dashboard-user-avatar">
+                👤
+            </div>
             <span class="dashboard-user-name">Clinical</span>
         </div>
     </header>
 
     <section class="pm-overview">
         <div class="pm-overview-header">
-            <h2 class="pm-section-title">Laboratory Results</h2>
+            <h2 class="pm-section-title">🧪 Laboratory Results</h2>
             <div class="pm-show-entries">
                 <span>Show</span>
                 <select @bind="PageSize">
@@ -52,19 +54,19 @@
                 {
                     <div class="nurse-note-card">
                         <div class="nurse-note-header">
-                            <span class="nurse-note-time">@lab.PatientName | @lab.Date</span>
+                            <span class="nurse-note-time">👤 @lab.PatientName | @lab.Date</span>
                         </div>
                         <div class="nurse-note-body">
                             <div class="nurse-note-item">
-                                <span class="nurse-note-icon nurse-note-icon-doc"></span>
+                                <span class="nurse-note-icon">📄</span>
                                 <span class="nurse-note-label">@lab.TestName</span>
                             </div>
                             <div class="nurse-note-item">
-                                <span class="nurse-note-icon nurse-note-icon-alert"></span>
-                                <span class="nurse-note-text">Status: Results Ready | Abnormal values</span>
+                                <span class="nurse-note-icon">⚠️</span>
+                                <span class="nurse-note-text">Status: Results Ready | ⚠️ Abnormal values</span>
                             </div>
                             <div class="nurse-note-item">
-                                <span class="nurse-note-icon nurse-note-icon-chart"></span>
+                                <span class="nurse-note-icon">📊</span>
                                 <span class="nurse-note-text">@lab.Summary</span>
                             </div>
                         </div>
@@ -83,25 +85,25 @@
                 {
                     <div class="nurse-note-card">
                         <div class="nurse-note-header">
-                            <span class="nurse-note-time">@lab.PatientName | @lab.Date</span>
+                            <span class="nurse-note-time">👤 @lab.PatientName | @lab.Date</span>
                         </div>
                         <div class="nurse-note-body">
                             <div class="nurse-note-item">
-                                <span class="nurse-note-icon nurse-note-icon-doc"></span>
+                                <span class="nurse-note-icon">📄</span>
                                 <span class="nurse-note-label">@lab.TestName</span>
                             </div>
                             <div class="nurse-note-item">
-                                <span class="nurse-note-icon nurse-note-icon-reviewed"></span>
+                                <span class="nurse-note-icon">✅</span>
                                 <span class="nurse-note-text">Status: Reviewed on @lab.ReviewDate</span>
                             </div>
                             <div class="nurse-note-item">
-                                <span class="nurse-note-icon nurse-note-icon-chart"></span>
+                                <span class="nurse-note-icon">📊</span>
                                 <span class="nurse-note-text">@lab.Summary</span>
                             </div>
                             @if (!string.IsNullOrEmpty(lab.Comment))
                             {
                                 <div class="nurse-note-item">
-                                    <span class="nurse-note-icon nurse-note-icon-note"></span>
+                                    <span class="nurse-note-icon">📝</span>
                                     <span class="nurse-note-text">Dr. Note: "@lab.Comment"</span>
                                 </div>
                             }

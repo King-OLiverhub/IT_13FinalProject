@@ -18,197 +18,195 @@
         </div>
     </header>
 
-    <section class="dr-card">
-        <div class="reports-content">
-            <!-- Report Configuration Card -->
-            <div class="config-card">
-                <div class="config-header">
-                    <i class="fas fa-clipboard-list"></i>
-                    <h2>Report Configuration</h2>
-                </div>
-                <p class="config-subtitle">Select date range and report type to generate reports</p>
+    <div class="reports-content">
+        <!-- Report Configuration Card -->
+        <div class="config-card">
+            <div class="config-header">
+                <i class="fas fa-clipboard-list"></i>
+                <h2>Report Configuration</h2>
+            </div>
+            <p class="config-subtitle">Select date range and report type to generate reports</p>
 
-                <div class="config-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Start Date</label>
-                            <div class="date-input-wrapper">
-                                <input type="date" class="date-input" @bind="startDate" />
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>End Date</label>
-                            <div class="date-input-wrapper">
-                                <input type="date" class="date-input" @bind="endDate" />
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Report type</label>
-                            <select class="report-select" @bind="selectedReportType">
-                                <option value="">Select report type</option>
-                                <option value="consultation">Consultation Summary</option>
-                                <option value="prescription">Prescription Analysis</option>
-                                <option value="diagnosis">Diagnosis Report</option>
-                                <option value="patient">Patient Treatment History</option>
-                            </select>
+            <div class="config-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <div class="date-input-wrapper">
+                            <input type="date" class="date-input" @bind="startDate" />
+                            <i class="fas fa-calendar-alt"></i>
                         </div>
                     </div>
 
-                    <div class="action-buttons">
-                        <button class="btn-action generate" @onclick="GenerateReport">
-                            <i class="fas fa-file-alt"></i>
-                            Generate Report
-                        </button>
-                        <button class="btn-action preview" @onclick="ShowPreview">
-                            <i class="fas fa-eye"></i>
-                            Preview
-                        </button>
-                        <button class="btn-action export">
-                            <i class="fas fa-file-pdf"></i>
-                            Export PDF
-                        </button>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <div class="date-input-wrapper">
+                            <input type="date" class="date-input" @bind="endDate" />
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Report type</label>
+                        <select class="report-select" @bind="selectedReportType">
+                            <option value="">Select report type</option>
+                            <option value="consultation">Consultation Summary</option>
+                            <option value="prescription">Prescription Analysis</option>
+                            <option value="diagnosis">Diagnosis Report</option>
+                            <option value="patient">Patient Treatment History</option>
+                        </select>
                     </div>
                 </div>
-            </div>
 
-            <!-- Clinical Reports Card -->
-            <div class="report-category-card">
-                <div class="category-header">
-                    <i class="fas fa-stethoscope"></i>
-                    <h3>Clinical Reports</h3>
-                </div>
-                <ul class="report-list">
-                    <li class="report-item">
-                        <input type="checkbox" checked>
-                        <span>Daily Consultation Summary</span>
-                    </li>
-                    <li class="report-item">
-                        <input type="checkbox" checked>
-                        <span>Patient Diagnosis Report</span>
-                    </li>
-                    <li class="report-item">
-                        <input type="checkbox" checked>
-                        <span>Treatment Outcome Analysis</span>
-                    </li>
-                    <li class="report-item">
-                        <input type="checkbox">
-                        <span>Clinical Case Studies</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Prescription Reports Card -->
-            <div class="report-category-card">
-                <div class="category-header">
-                    <i class="fas fa-prescription"></i>
-                    <h3>Prescription Reports</h3>
-                </div>
-                <ul class="report-list">
-                    <li class="report-item">
-                        <input type="checkbox" checked>
-                        <span>Medication Prescription Summary</span>
-                    </li>
-                    <li class="report-item">
-                        <input type="checkbox" checked>
-                        <span>Drug Usage Analysis</span>
-                    </li>
-                    <li class="report-item">
-                        <input type="checkbox">
-                        <span>Patient Medication History</span>
-                    </li>
-                    <li class="report-item">
-                        <input type="checkbox">
-                        <span>Prescription Compliance Report</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Patient Care Reports Card -->
-            <div class="report-category-card">
-                <div class="category-header">
-                    <i class="fas fa-user-md"></i>
-                    <h3>Patient Care Reports</h3>
-                </div>
-                <ul class="report-list">
-                    <li class="report-item">
-                        <input type="checkbox" checked>
-                        <span>Patient Treatment History</span>
-                    </li>
-                    <li class="report-item">
-                        <input type="checkbox" checked>
-                        <span>Follow-up Care Summary</span>
-                    </li>
-                    <li class="report-item">
-                        <input type="checkbox">
-                        <span>Patient Recovery Analysis</span>
-                    </li>
-                    <li class="report-item">
-                        <input type="checkbox">
-                        <span>Care Quality Metrics</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Quick Generate Card -->
-            <div class="quick-generate-card">
-                <div class="quick-header">
-                    <i class="fas fa-bolt"></i>
-                    <h3>Quick Generate</h3>
-                </div>
-                <div class="quick-tags">
-                    <span class="quick-link" @onclick='() => QuickGenerate("consultation")'>[Daily Consultation Summary]</span>
-                    <span class="quick-link" @onclick='() => QuickGenerate("prescription")'>[Medication Prescription Summary]</span>
-                    <span class="quick-link" @onclick='() => QuickGenerate("patient")'>[Patient Treatment History]</span>
+                <div class="action-buttons">
+                    <button class="btn-action generate" @onclick="GenerateReport">
+                        <i class="fas fa-file-alt"></i>
+                        Generate Report
+                    </button>
+                    <button class="btn-action preview" @onclick="ShowPreview">
+                        <i class="fas fa-eye"></i>
+                        Preview
+                    </button>
+                    <button class="btn-action export">
+                        <i class="fas fa-file-pdf"></i>
+                        Export PDF
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Preview Modal -->
-        @if (showPreviewModal)
-        {
-            <div class="modal-overlay" @onclick="HidePreview">
-                <div class="modal-panel" @onclick:stopPropagation="true">
-                    <div class="modal-header">
-                        <h2>DOCTOR CONSULTATION REPORT <span class="report-date">- Nov 15, 2024</span></h2>
-                        <button class="modal-close" @onclick="HidePreview">
-                            <i class="fas fa-times"></i>
-                        </button>
+        <!-- Clinical Reports Card -->
+        <div class="report-category-card">
+            <div class="category-header">
+                <i class="fas fa-stethoscope"></i>
+                <h3>Clinical Reports</h3>
+            </div>
+            <ul class="report-list">
+                <li class="report-item">
+                    <input type="checkbox" checked>
+                    <span>Daily Consultation Summary</span>
+                </li>
+                <li class="report-item">
+                    <input type="checkbox" checked>
+                    <span>Patient Diagnosis Report</span>
+                </li>
+                <li class="report-item">
+                    <input type="checkbox" checked>
+                    <span>Treatment Outcome Analysis</span>
+                </li>
+                <li class="report-item">
+                    <input type="checkbox">
+                    <span>Clinical Case Studies</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Prescription Reports Card -->
+        <div class="report-category-card">
+            <div class="category-header">
+                <i class="fas fa-prescription"></i>
+                <h3>Prescription Reports</h3>
+            </div>
+            <ul class="report-list">
+                <li class="report-item">
+                    <input type="checkbox" checked>
+                    <span>Medication Prescription Summary</span>
+                </li>
+                <li class="report-item">
+                    <input type="checkbox" checked>
+                    <span>Drug Usage Analysis</span>
+                </li>
+                <li class="report-item">
+                    <input type="checkbox">
+                    <span>Patient Medication History</span>
+                </li>
+                <li class="report-item">
+                    <input type="checkbox">
+                    <span>Prescription Compliance Report</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Patient Care Reports Card -->
+        <div class="report-category-card">
+            <div class="category-header">
+                <i class="fas fa-user-md"></i>
+                <h3>Patient Care Reports</h3>
+            </div>
+            <ul class="report-list">
+                <li class="report-item">
+                    <input type="checkbox" checked>
+                    <span>Patient Treatment History</span>
+                </li>
+                <li class="report-item">
+                    <input type="checkbox" checked>
+                    <span>Follow-up Care Summary</span>
+                </li>
+                <li class="report-item">
+                    <input type="checkbox">
+                    <span>Patient Recovery Analysis</span>
+                </li>
+                <li class="report-item">
+                    <input type="checkbox">
+                    <span>Care Quality Metrics</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Quick Generate Card -->
+        <div class="quick-generate-card">
+            <div class="quick-header">
+                <i class="fas fa-bolt"></i>
+                <h3>Quick Generate</h3>
+            </div>
+            <div class="quick-tags">
+                <span class="quick-link" @onclick='() => QuickGenerate("consultation")'>[Daily Consultation Summary]</span>
+                <span class="quick-link" @onclick='() => QuickGenerate("prescription")'>[Medication Prescription Summary]</span>
+                <span class="quick-link" @onclick='() => QuickGenerate("patient")'>[Patient Treatment History]</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    @if (showPreviewModal)
+    {
+        <div class="modal-overlay" @onclick="HidePreview">
+            <div class="modal-panel" @onclick:stopPropagation="true">
+                <div class="modal-header">
+                    <h2>DOCTOR CONSULTATION REPORT <span class="report-date">- Nov 15, 2024</span></h2>
+                    <button class="modal-close" @onclick="HidePreview">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="report-section">
+                        <h3>CONSULTATION SUMMARY:</h3>
+                        <div class="report-stats">
+                            <p>Total Patients Consulted: <strong>32 patients</strong></p>
+                            <p>New Patients: <strong>8 patients</strong></p>
+                            <p>Follow-up Visits: <strong>24 patients</strong></p>
+                            <p>Critical Cases: <strong>3 patients</strong></p>
+                        </div>
                     </div>
 
-                    <div class="modal-body">
-                        <div class="report-section">
-                            <h3>CONSULTATION SUMMARY:</h3>
-                            <div class="report-stats">
-                                <p>Total Patients Consulted: <strong>32 patients</strong></p>
-                                <p>New Patients: <strong>8 patients</strong></p>
-                                <p>Follow-up Visits: <strong>24 patients</strong></p>
-                                <p>Critical Cases: <strong>3 patients</strong></p>
-                            </div>
-                        </div>
-
-                        <div class="report-section">
-                            <h3>DIAGNOSIS BREAKDOWN:</h3>
-                            <ul class="report-list-items">
-                                <li>Respiratory Infections - 12 cases</li>
-                                <li>Hypertension - 8 cases</li>
-                                <li>Diabetes Management - 6 cases</li>
-                                <li>Gastrointestinal Issues - 4 cases</li>
-                                <li>Injuries & Trauma - 2 cases</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button class="btn-modal-close" @onclick="HidePreview">Closed</button>
+                    <div class="report-section">
+                        <h3>DIAGNOSIS BREAKDOWN:</h3>
+                        <ul class="report-list-items">
+                            <li>Respiratory Infections - 12 cases</li>
+                            <li>Hypertension - 8 cases</li>
+                            <li>Diabetes Management - 6 cases</li>
+                            <li>Gastrointestinal Issues - 4 cases</li>
+                            <li>Injuries & Trauma - 2 cases</li>
+                        </ul>
                     </div>
                 </div>
+
+                <div class="modal-footer">
+                    <button class="btn-modal-close" @onclick="HidePreview">Closed</button>
+                </div>
             </div>
-        }
-    </section>
+        </div>
+    }
 </div>
 
 @code {

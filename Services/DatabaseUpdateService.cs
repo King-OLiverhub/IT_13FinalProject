@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 using IT_13FinalProject.Data;
 
 namespace IT_13FinalProject.Services

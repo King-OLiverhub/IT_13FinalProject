@@ -31,8 +31,6 @@
 
         <div class="ip-filters-row">
             <div class="ip-alpha-filter">
-                <button class="ip-filter-pill false" >All</button>
-
                 @if (ShowLetters)
                 {
                     @foreach (var letter in Alphabet)
@@ -95,22 +93,15 @@
             </div>
         </div>
 
-        <button type="button" class="ip-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
-            <span>@(ShowPagination ? "›" : "‹")</span>
-        </button>
-
-        @if (ShowPagination)
-        {
-            <div class="ip-pagination">
-                <button class="ip-page-btn">Previous</button>
-                <button class="ip-page-number active">1</button>
-                <button class="ip-page-number">2</button>
-                <button class="ip-page-number">3</button>
-                <span class="ip-page-dots">...</span>
-                <button class="ip-page-number">8</button>
-                <button class="ip-page-btn">Next</button>
-            </div>
-        }
+        <div class="ip-pagination">
+            <button class="ip-page-btn">Previous</button>
+            <button class="ip-page-number active">1</button>
+            <button class="ip-page-number">2</button>
+            <button class="ip-page-number">3</button>
+            <span class="ip-page-dots">...</span>
+            <button class="ip-page-number">8</button>
+            <button class="ip-page-btn">Next</button>
+        </div>
     </section>
 
     @if (ShowPrescriptionPanel && SelectedPrescription is not null)
@@ -180,7 +171,6 @@
 </div>
 
 @code {
-    private bool ShowPagination { get; set; } = true;
     private bool ShowPrescriptionPanel { get; set; }
     private bool ShowLetters { get; set; } = false;
     private PrescriptionRow? SelectedPrescription { get; set; }
@@ -204,11 +194,6 @@
         new PrescriptionRow("Maria Santos", "Dr. Smith", "Amoxicillin", "Amoxicillin 250mg", "pending", "Pending", "2:15 PM"),
         new PrescriptionRow("Pedro Reyes", "Dr. Smith", "Paracetamol", "Paracetamol 500mg", "pending", "Pending", "3:00 PM"),
     };
-
-    private void TogglePagination()
-    {
-        ShowPagination = !ShowPagination;
-    }
 
     private void OpenPrescriptionPanel(PrescriptionRow row)
     {

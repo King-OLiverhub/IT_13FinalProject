@@ -75,22 +75,15 @@
             }
         </div>
 
-        <button type="button" class="inv-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
-            <span>@(ShowPagination ? "›" : "‹")</span>
-        </button>
-
-        @if (ShowPagination)
-        {
-            <div class="inv-pagination">
-                <button class="inv-page-btn">Previous</button>
-                <button class="inv-page-number inv-page-number-active">1</button>
-                <button class="inv-page-number">2</button>
-                <button class="inv-page-number">3</button>
-                <span class="inv-page-dots">...</span>
-                <button class="inv-page-number">8</button>
-                <button class="inv-page-btn">Next</button>
-            </div>
-        }
+        <div class="inv-pagination">
+            <button class="inv-page-btn">Previous</button>
+            <button class="inv-page-number inv-page-number-active">1</button>
+            <button class="inv-page-number">2</button>
+            <button class="inv-page-number">3</button>
+            <span class="inv-page-dots">...</span>
+            <button class="inv-page-number">8</button>
+            <button class="inv-page-btn">Next</button>
+        </div>
     </section>
 </div>
 
@@ -109,29 +102,16 @@
         new("Bronya Rand", "60,000 php", "03/01/24", "Paid"),
     };
 
-    private bool ShowPagination { get; set; } = true;
-
     private void GoToBills()
     {
-        Navigation.NavigateTo("/invoicing-overview");
+        Navigation.NavigateTo("/admin-invoicing-overview");
     }
 
     private void ViewReceipt(ReceiptRow receipt)
     {
         Navigation.NavigateTo("/admin-receipt-pdf");
     }
-
-    private void TogglePagination()
-    {
-        ShowPagination = !ShowPagination;
-    }
 }
-
-
-
-
-
-
 
 
 

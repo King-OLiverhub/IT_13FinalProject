@@ -11,7 +11,7 @@
     align-items: center;
     padding: 10px 16px;
     margin: -10px -16px 6px;
-    background-color: #d1f0ee;
+    background-color: #f3faf9;
     border-bottom: 1px solid #e0f0ee;
     position: sticky;
     top: 0;
@@ -149,30 +149,16 @@
     min-width: 110px;
     padding: 8px 20px;
     border-radius: 999px;
-    border: 1px solid #6c757d;
+    border: none;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    background-color: #ffffff;
-    color: #6c757d;
+    background-color: #0f8b8d;
+    color: #ffffff;
 }
 
 .nv-back-btn:hover {
-    background-color: #f8f9fa;
-    border-color: #5a6268;
+    background-color: #0b6f70;
 }
-/* Force all text within DoctorVitalsInfo page to be black */
-.nv-page,
-.nv-page h1,
-.nv-page h2,
-.nv-page h3,
-.nv-page p,
-.nv-page span,
-.nv-page label,
-.nv-page td,
-.nv-page th,
-.nv-page button,
-.nv-page input,
-.nv-page div {
-    color: #000000 !important;
-}
+
+

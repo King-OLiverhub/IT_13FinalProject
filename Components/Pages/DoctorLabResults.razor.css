@@ -1,3 +1,5 @@
+/* DoctorLabResults page styles - Complete CSS including all base styles */
+
 /* Main container */
 .nurse-notes-page {
     display: flex;
@@ -11,6 +13,7 @@
     align-items: center;
     padding: 10px 16px;
     margin: -10px -16px 6px;
+    background-color: #f3faf9;
     border-bottom: 1px solid #e0f0ee;
     position: sticky;
     top: 0;
@@ -111,7 +114,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 5px 12px;
     border-radius: 10px;
     border: 2px solid #0f8b8d;
     background-color: #ffffff;
@@ -229,38 +232,6 @@
     flex-shrink: 0;
 }
 
-.nurse-note-icon-doc,
-.nurse-note-icon-alert,
-.nurse-note-icon-chart,
-.nurse-note-icon-reviewed,
-.nurse-note-icon-note {
-	width: 16px;
-	height: 16px;
-	border-radius: 999px;
-	flex-shrink: 0;
-	background-color: #e5e7eb;
-}
-
-.nurse-note-icon-doc {
-	background-color: #0f8b8d;
-}
-
-.nurse-note-icon-alert {
-	background-color: #f97316;
-}
-
-.nurse-note-icon-chart {
-	background-color: #6366f1;
-}
-
-.nurse-note-icon-reviewed {
-	background-color: #22c55e;
-}
-
-.nurse-note-icon-note {
-	background-color: #facc15;
-}
-
 .nurse-note-label {
     font-weight: 600;
     color: #333;
@@ -352,20 +323,4 @@
     .pm-actions {
         flex-wrap: wrap;
     }
-}
-
-/* Force all text within DoctorLabResults page to be black */
-.nurse-notes-page,
-.nurse-notes-page h1,
-.nurse-notes-page h2,
-.nurse-notes-page h3,
-.nurse-notes-page p,
-.nurse-notes-page span,
-.nurse-notes-page label,
-.nurse-notes-page td,
-.nurse-notes-page th,
-.nurse-notes-page button,
-.nurse-notes-page input,
-.nurse-notes-page div {
-    color: #000000 !important;
 }

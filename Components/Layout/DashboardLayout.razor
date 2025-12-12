@@ -7,6 +7,7 @@
         </div>
         <span class="sidebar-app-name">MedFlow</span>
 
+        <div class="sidebar-nav-container">
         <nav class="sidebar-section">
             <div class="sidebar-section-title">MAIN</div>
             <button class="sidebar-item @(IsDashboardActive ? "active" : string.Empty)" @onclick="OnDashboardClick">
@@ -150,11 +151,6 @@
 
                 @if (CurrentRole == "Admin")
                 {
-                    <button class="sidebar-subitem @(IsCreateAccountActive ? "active" : string.Empty)" @onclick="OnCreateAccountClick">
-                        <span class="sidebar-icon sidebar-icon-user"></span>
-                        Create Account
-                    </button>
-
                     <button class="sidebar-subitem @(IsRolesAndPermissionsActive ? "active" : string.Empty)" @onclick="OnRolesAndPermissionsClick">
                         <span class="sidebar-icon sidebar-icon-role-permission"></span>
                         Role & Permission
@@ -181,6 +177,8 @@
                 Settings
             </button>
         </nav>
+
+        </div>
 
         <button class="sidebar-logout" @onclick="LogoutAsync">LOG OUT</button>
     </aside>
@@ -475,9 +473,6 @@
         
     private bool IsRolesAndPermissionsActive =>
         Navigation.Uri.Contains("/roles-permissions", StringComparison.OrdinalIgnoreCase);
-    
-    private bool IsCreateAccountActive =>
-        Navigation.Uri.Contains("/create-account", StringComparison.OrdinalIgnoreCase);
         
     private bool IsAuditLogsActive =>
         Navigation.Uri.Contains("/admin-audit-logs", StringComparison.OrdinalIgnoreCase);
@@ -565,8 +560,6 @@
     private void OnDoctorLabResultsClick() => Navigation.NavigateTo("/doctor-lab-results");
 
     private void OnDoctorReportsClick() => Navigation.NavigateTo("/doctor-reports");
-
-    private void OnCreateAccountClick() => Navigation.NavigateTo("/create-account");
 
   private void OnUserProfileClick()
 {

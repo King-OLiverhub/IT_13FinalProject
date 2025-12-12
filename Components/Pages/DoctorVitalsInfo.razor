@@ -1,4 +1,5 @@
-@page "/doctor-vitals-info/{patientId:int}"
+@page "/doctor-vitals-info"
+@page "/doctor-vitals-info/{patientId}"
 @layout Layout.DashboardLayout
 @using IT_13FinalProject.Models
 @using IT_13FinalProject.Data
@@ -17,7 +18,7 @@
 
         <div class="dashboard-user-info">
             <span class="dashboard-user-email">doctor@gmail.com</span>
-            <div class="dashboard-user-avatar">DR</div>
+            <div class="dashboard-user-avatar">👤</div>
             <span class="dashboard-user-name">Clinical</span>
         </div>
     </header>
@@ -49,7 +50,7 @@
         {
         <div class="nv-form-header-row">
             <div class="nv-form-title-wrap">
-                <span class="nv-form-icon">VS</span>
+                <span class="nv-form-icon">👤</span>
                 <h2 class="nv-form-title">Vital Sign Information</h2>
             </div>
         </div>
@@ -194,7 +195,7 @@
 
 @code {
     [Parameter]
-    public int patientId { get; set; }
+    public string? PatientId { get; set; }
 
     private VitalSign? vitalSign;
     private bool IsLoading = true;
@@ -213,8 +214,28 @@
             ErrorMessage = "";
             StateHasChanged();
 
-            // Use patient ID from the route parameter
-            Console.WriteLine($"DoctorVitalsInfo patientId from route: {patientId}");
+            // Get patient ID from parameter or query string
+            int patientId = 0;
+            if (!string.IsNullOrEmpty(PatientId))
+            {
+                patientId = int.Parse(PatientId);
+                Console.WriteLine($"Patient ID from parameter: {patientId}");
+            }
+            else
+            {
+                // Try to get from query string
+                var uri = new Uri(Navigation.Uri);
+                var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+                var patientIdParam = query["patientId"];
+                if (!string.IsNullOrEmpty(patientIdParam))
+                {
+                    patientId = int.Parse(patientIdParam);
+                    Console.WriteLine($"Patient ID from query string: {patientId}");
+                }
+            }
+
+            Console.WriteLine($"Final Patient ID: {patientId}");
+            Console.WriteLine($"Navigation URI: {Navigation.Uri}");
 
             if (patientId > 0)
             {

@@ -11,7 +11,7 @@
     align-items: center;
     padding: 10px 16px;
     margin: -10px -16px 6px;
-    background-color: transparent;
+    background-color: #f3faf9;
     border-bottom: 1px solid #e0f0ee;
     position: sticky;
     top: 0;
@@ -131,7 +131,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 5px 12px;
     border-radius: 10px;
     border: 2px solid #0f8b8d;
     background-color: #ffffff;
@@ -161,19 +161,16 @@
 }
 
 .pm-actions .activity-action-btn {
-    padding: 6px 10px;
+    padding: 6px 14px;
     border-radius: 999px;
-    border: 1px solid #c9d9dd;
+    border: 1px solid #0f8b8d;
     background-color: #ffffff;
     font-size: 12px;
     cursor: pointer;
-    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .pm-actions .activity-action-btn:hover {
     background-color: #e9f6f5;
-    border-color: #0FA4A4;
-    color: #0FA4A4;
 }
 
 .pm-table-outer {
@@ -205,11 +202,9 @@
     vertical-align: middle;
 }
 
-/* Force center alignment for Vital Signs and Actions columns */
+/* Force center alignment for the Vital Sign Monitoring column */
 .pm-table th.pm-col-vitals,
-.pm-table td.pm-col-vitals,
-.pm-table th.pm-col-actions,
-.pm-table td.pm-col-actions {
+.pm-table td.pm-col-vitals {
     text-align: center !important;
 }
 
@@ -250,78 +245,55 @@
 }
 
 .pm-view-btn {
-    width: 32px !important;
-    min-width: 32px !important;
-    height: 32px !important;
-    padding: 0 !important;
-    border-radius: 50% !important;
-    border: none;
-    background-color: #0FA4A4;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
+    color: #0f8b8d;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    box-shadow: 0 2px 6px rgba(15, 164, 164, 0.35);
-    transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    flex-shrink: 0;
 }
 
 .pm-view-icon {
     width: 14px;
     height: 14px;
     display: inline-block;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%23ffffff' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%23ffffff'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%230f8b8d' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%230f8b8d'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 14px 14px;
 }
 
-.pm-edit-icon,
-.pm-archive-icon {
-	width: 14px;
-	height: 14px;
-	display: inline-block;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: 14px 14px;
-}
-
-.pm-edit-icon {
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M11 2l3 3-8 8-3 0 0-3 8-8z' stroke='%23ffffff' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
-}
-
-.pm-archive-icon {
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M2 4h12v8H2V4z' stroke='%23ffffff' stroke-width='1.2' fill='none'/%3E%3Cpath d='M5 7h6' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E");
-}
-
 .pm-view-btn:hover {
-    background-color: #0C8B8B;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(15, 139, 141, 0.4);
+    background-color: #e9f6f5;
 }
 
 .pm-add-btn {
-    padding: 6px 14px !important;
-    min-width: 0 !important;
-    border-radius: 999px !important;
-    border: none;
-    background-color: #0FA4A4;
-    color: #ffffff;
+    padding: 4px 8px;      /* smaller, compact pill like nurse view */
+    border-radius: 999px;
+    border: 1px solid #0f8b8d;
+    background-color: transparent;
+    color: #0f8b8d;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 0.72rem;
     cursor: pointer;
-    margin: 0 auto; /* center inside the cell */
-    box-shadow: 0 2px 6px rgba(15, 164, 164, 0.35);
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    justify-content: center;
+    width: fit-content;
+    min-width: 0;
+    white-space: nowrap;
+    margin: 0 auto; /* center inside the cell */
 }
 
 .pm-add-btn:hover {
-    background-color: #0C8B8B;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(15, 139, 141, 0.4);
+    background-color: #e9f6f5;
 }
 
 /* Action buttons container */
@@ -332,245 +304,142 @@
     align-items: center;
 }
 
-/* Ensure action buttons stay compact and do not stretch across the cell */
-.pm-col-actions .pm-action-buttons button {
-	flex: 0 0 auto;
-	max-width: 36px;
-}
-
-/* Rounded icon action buttons, aligned with dashboard style */
+/* Match PharmacyInventory action button sizing/layout */
 .pm-edit-btn,
-.pm-archive-btn,
-.pm-delete-btn,
-.pm-update-btn {
-    width: 32px !important;
-    min-width: 32px !important;
-    height: 32px !important;
-    padding: 0 !important;
-    border-radius: 999px !important;
-    border: none;
+.pm-archive-btn {
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
-}
-
-.pm-edit-btn,
-.pm-update-btn {
-    background-color: #0FA4A4;
-    color: #ffffff;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 .pm-edit-btn:hover,
-.pm-update-btn:hover {
-    background-color: #0C8B8B;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(15, 139, 141, 0.35);
-}
-
-.pm-archive-btn {
-    background-color: #e2e8f0;
-    color: #0f172a;
-}
-
 .pm-archive-btn:hover {
-    background-color: #cbd5e1;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(148, 163, 184, 0.3);
+    background-color: #e9f6f5;
+}
+
+.pm-edit-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 11.5L3.5 9L9.5 3L12.5 6L6.5 12L4 12.5L3 11.5Z' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px 14px;
+}
+
+.pm-archive-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Crect x='2.5' y='4' width='11' height='9' rx='1.2' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3Cpath d='M3 4.5h10l-1-2H4l-1 2z' stroke='%230f8b8d' stroke-width='1.1' fill='none'/%3E%3Cpath d='M6 8h4' stroke='%230f8b8d' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px 14px;
 }
 
 .pm-delete-btn {
-    background-color: #fee2e2;
-    color: #b91c1c;
+    background-color: #e74c3c;
+    color: white;
 }
 
 .pm-delete-btn:hover {
-    background-color: #fecaca;
+    background-color: #c0392b;
     transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(248, 113, 113, 0.35);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
 }
 
-/* Modal buttons styled to match dashboard pill buttons */
+.pm-update-btn {
+    background-color: #27ae60;
+    color: white;
+}
+
+.pm-update-btn:hover {
+    background-color: #229954;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+}
+
+/* Modal buttons with modern styling */
 .pm-btn {
     padding: 8px 16px;
-    border-radius: 999px;
+    border-radius: 8px;
     border: none;
     font-weight: 500;
     font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .pm-btn-primary {
-    background-color: #0FA4A4;
-    color: #ffffff;
+    background-color: #0f8b8d;
+    color: white;
 }
 
 .pm-btn-primary:hover {
-    background-color: #0C8B8B;
+    background-color: #0b6f70;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(15, 139, 141, 0.35);
+    box-shadow: 0 4px 8px rgba(15, 139, 141, 0.3);
 }
 
 .pm-btn-secondary {
-    background-color: #f8fafc;
-    color: #64748b;
-    border: 1px solid #e2e8f0;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
 }
 
 .pm-btn-secondary:hover {
-    background-color: #e5e7eb;
-    color: #111827;
+    background-color: #e9ecef;
+    color: #495057;
     transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(148, 163, 184, 0.25);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .pm-back-btn {
     padding: 8px 16px;
-    border-radius: 999px;
-    border: 1px solid #e2e8f0;
-    background-color: #f8fafc;
-    color: #64748b;
+    border-radius: 8px;
+    border: 1px solid #6c757d;
+    background-color: #f8f9fa;
+    color: #6c757d;
     font-weight: 500;
     font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .pm-back-btn:hover {
-    background-color: #e5e7eb;
-    color: #111827;
+    background-color: #e9ecef;
+    color: #495057;
     transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(148, 163, 184, 0.25);
-}
-
-/* Shared modal styling for Add / Edit Patient */
-.pm-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.35);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    z-index: 20;
-}
-
-.pm-modal {
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    max-width: 720px;
-    width: 100%;
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.pm-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 18px;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.pm-modal-body {
-    padding: 16px 18px 18px;
-    overflow-y: auto;
-}
-
-.pm-modal-footer {
-    padding: 10px 18px 14px;
-    border-top: 1px solid #e5e7eb;
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-}
-
-.pm-modal-close {
-    width: 28px;
-    height: 28px;
-    border-radius: 999px;
-    border: none;
-    background-color: #f3f4f6;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-}
-
-.pm-modal-close:hover {
-    background-color: #e5e7eb;
-}
-
-/* Modal form layout for Add/Edit Patient */
-.pm-form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px 24px; /* row gap, column gap */
-}
-
-.pm-form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.pm-form-group label {
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.pm-form-input {
-    width: 100%;
-    padding: 6px 10px;
-    font-size: 13px;
-    border-radius: 999px;
-    border: 1px solid #0f8b8d;
-    outline: none;
-    box-sizing: border-box;
-}
-
-/* Full-width rows (e.g., Address) span both columns */
-.pm-form-group.pm-form-full {
-    grid-column: 1 / -1;
-}
-
-.pm-form-group.pm-form-full textarea.pm-form-input {
-    border-radius: 10px;
-    min-height: 60px;
-    resize: vertical;
-}
-
-@media (max-width: 900px) {
-    .pm-form-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .pm-pagination {
-    margin-top: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 6px;
-
-    position: fixed;
-    right: 80px;  /* move pill left so arrow at 24px is outside */
-    bottom: 20px;
-    padding: 0;
-    border-radius: 999px;
-    background: transparent; /* no background pill, just the buttons */
-    box-shadow: none;
+    gap: 4px;
+    margin: 12px auto;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    width: fit-content;
+    max-width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    position: sticky;
+    bottom: 10px;
+    z-index: 6;
 }
 
 .pm-pagination-toggle {
@@ -580,24 +449,21 @@
     width: 32px;
     height: 32px;
     border-radius: 999px;
-    border: 1px solid #e2e8f0;
-    background-color: #ffffff;
-    color: #64748b;
+    border: none;
+    background-color: transparent;
+    color: #222222;
     font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+    box-shadow: none;
     cursor: pointer;
     z-index: 6;
-    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .pm-pagination-toggle:hover {
-    background-color: #e9f6f5;
-    color: #0FA4A4;
-    border-color: #0FA4A4;
-    box-shadow: 0 6px 14px rgba(15, 164, 164, 0.35);
+    background-color: transparent;
+    color: #000000;
 }
 
 .pm-page-btn,
@@ -605,44 +471,26 @@
     min-width: 40px;
     padding: 6px 14px;
     border-radius: 999px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #c9d9dd;
     background-color: #ffffff;
     font-size: 12px;
     cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .pm-page-number.active {
-    background-color: #0FA4A4;
+    background-color: #0f8b8d;
     color: #ffffff;
-    border-color: #0FA4A4;
-    box-shadow: 0 4px 12px rgba(15, 164, 164, 0.35);
+    border-color: #0f8b8d;
 }
 
 .pm-page-btn:hover,
 .pm-page-number:hover {
-    background-color: #ffffff;
-    border-color: #e2e8f0;
-    color: #64748b;
+    background-color: #e9f6f5;
+    border-color: #0f8b8d;
 }
 
 .pm-page-dots {
     font-size: 12px;
-    color: #94a3b8;
 }
 
-/* Force all text within DoctorPatientList page to be black */
-.pm-page,
-.pm-page h1,
-.pm-page h2,
-.pm-page h3,
-.pm-page p,
-.pm-page span,
-.pm-page label,
-.pm-page td,
-.pm-page th,
-.pm-page button,
-.pm-page input,
-.pm-page div {
-    color: #000000 !important;
-}
+

@@ -15,6 +15,7 @@
     };
 
     private string selectedRole = "admin";
+    private bool showPermissionPanel = false; // Permission panel hidden by default
 
     private Dictionary<string, Dictionary<string, bool>> permissions = new()
     {
@@ -170,18 +171,27 @@
 
         roleStatus[role] = !roleStatus[role];
 
+        // If currently editing permissions for a disabled role, hide the panel
+        if (selectedRole == role && !roleStatus[role])
+        {
+            showPermissionPanel = false;
+        }
+
         // In future: This will control if the user can login
         // When disabled, users with this role won't be able to access their dashboard
     }
 
     private void SetPermissionForRole(string role)
     {
+        // Only allow setting permissions if the role is enabled
         if (!roleStatus[role])
         {
             return;
         }
 
+        // When "Set Permission" button is clicked, load that role's permissions
         selectedRole = role;
+        showPermissionPanel = true; // Show the permission panel
         StateHasChanged(); // Update the UI to show the new role badge
     }
 
@@ -197,11 +207,13 @@
     {
         // Save logic here - will save the permissions for the currently selected role
         Console.WriteLine($"Saving permissions for {selectedRole}");
+        showPermissionPanel = false; // Hide the panel after saving
     }
 
     private void CancelChanges()
     {
-        // Cancel logic here
+        // Cancel logic here - hide the panel without saving
+        showPermissionPanel = false;
     }
 
     private string GetRoleBadgeText()
@@ -235,7 +247,10 @@
         <!-- Admin Card -->
         <div class="role-card @(selectedRole == "admin" ? "active" : "")">
             <div class="role-icon admin">
-                <i class="fas fa-user-shield"></i>
+                <svg class="role-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M12 2l7 4v6c0 5-3.5 9.5-7 10-3.5-.5-7-5-7-10V6l7-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                    <path d="M9 12l2 2 4-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
             </div>
             <div class="card-content">
                 <h3>Admin</h3>
@@ -254,7 +269,12 @@
         <!-- Doctor Card -->
         <div class="role-card @(selectedRole == "doctor" ? "active" : "")">
             <div class="role-icon doctor">
-                <i class="fas fa-user-md"></i>
+                <svg class="role-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M10 4h4v4h-4z" fill="none" stroke="currentColor" stroke-width="2" />
+                    <path d="M12 8v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M8 10h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M7 19c1.2-2.6 3.1-4 5-4s3.8 1.4 5 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
             </div>
             <div class="card-content">
                 <h3>Doctor</h3>
@@ -273,7 +293,11 @@
         <!-- Nurse Card -->
         <div class="role-card @(selectedRole == "nurse" ? "active" : "")">
             <div class="role-icon nurse">
-                <i class="fas fa-user-nurse"></i>
+                <svg class="role-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M12 21s-6-3.8-6-9a4 4 0 0 1 6-3.5A4 4 0 0 1 18 12c0 5.2-6 9-6 9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                    <path d="M12 10v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M10 12h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
             </div>
             <div class="card-content">
                 <h3>Nurse</h3>
@@ -292,7 +316,12 @@
         <!-- Billing Card -->
         <div class="role-card @(selectedRole == "billing" ? "active" : "")">
             <div class="role-icon billing">
-                <i class="fas fa-file-invoice-dollar"></i>
+                <svg class="role-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M7 3h7l3 3v15H7V3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                    <path d="M14 3v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                    <path d="M9 11h6M9 14h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M12 18c1.1 0 2-.7 2-1.6 0-1.2-1.2-1.4-2-1.6-.8-.2-2-.4-2-1.6C10 12.7 10.9 12 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
             </div>
             <div class="card-content">
                 <h3>Billing</h3>
@@ -311,7 +340,11 @@
         <!-- Pharmacist Card -->
         <div class="role-card @(selectedRole == "pharmacist" ? "active" : "")">
             <div class="role-icon pharmacist">
-                <i class="fas fa-pills"></i>
+                <svg class="role-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M8 15l7-7a4 4 0 0 1 5.7 5.7l-2.7 2.7a4 4 0 0 1-5.7 0L8 15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                    <path d="M7 16l-2 2a4 4 0 0 1-5.7-5.7l2-2a4 4 0 0 1 5.7 0l.6.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                    <path d="M9.5 13.5l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
             </div>
             <div class="card-content">
                 <h3>Pharmacist</h3>
@@ -329,163 +362,166 @@
     </div>
 
     <!-- Permission Details Section -->
-    <div class="permission-section">
-        <div class="permission-header">
-            <h2>Permission</h2>
-            <span class="role-badge">@GetRoleBadgeText()</span>
-        </div>
+    @if (showPermissionPanel)
+    {
+        <div class="permission-section">
+            <div class="permission-header">
+                <h2>Permission</h2>
+                <span class="role-badge">@GetRoleBadgeText()</span>
+            </div>
 
-        <div class="permission-grid">
-            <!-- Patient Management Column -->
-            <div class="permission-category">
-                <h3>Patient management</h3>
-                <div class="permission-items">
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["addPatient"]"
-                               @onchange='_ => TogglePermission("addPatient")'>
-                        <span>Add Patient</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["viewPatient"]"
-                               @onchange='_ => TogglePermission("viewPatient")'>
-                        <span>View Patient</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["appointments"]"
-                               @onchange='_ => TogglePermission("appointments")'>
-                        <span>Appointments</span>
-                    </label>
+            <div class="permission-grid">
+                <!-- Patient Management Column -->
+                <div class="permission-category">
+                    <h3>Patient management</h3>
+                    <div class="permission-items">
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["addPatient"]"
+                                   @onchange='_ => TogglePermission("addPatient")'>
+                            <span>Add Patient</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["viewPatient"]"
+                                   @onchange='_ => TogglePermission("viewPatient")'>
+                            <span>View Patient</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["appointments"]"
+                                   @onchange='_ => TogglePermission("appointments")'>
+                            <span>Appointments</span>
+                        </label>
+                    </div>
+
+                    <h3>Medication Management</h3>
+                    <div class="permission-items">
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["addHealthRecord"]"
+                                   @onchange='_ => TogglePermission("addHealthRecord")'>
+                            <span>Add Health Record</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["viewVitalSigns"]"
+                                   @onchange='_ => TogglePermission("viewVitalSigns")'>
+                            <span>View Vital Signs Monitoring</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["medicationSchedule"]"
+                                   @onchange='_ => TogglePermission("medicationSchedule")'>
+                            <span>Medication Schedule</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["createPrescription"]"
+                                   @onchange='_ => TogglePermission("createPrescription")'>
+                            <span>Create Prescription</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["labResult"]"
+                                   @onchange='_ => TogglePermission("labResult")'>
+                            <span>Laboratory Result</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["viewHealthRecord"]"
+                                   @onchange='_ => TogglePermission("viewHealthRecord")'>
+                            <span>View Health Record</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["updateVitalSigns"]"
+                                   @onchange='_ => TogglePermission("updateVitalSigns")'>
+                            <span>Update Vital Signs Monitoring</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["viewPrescriptions"]"
+                                   @onchange='_ => TogglePermission("viewPrescriptions")'>
+                            <span>View Prescriptions</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["addMedicationNotes"]"
+                                   @onchange='_ => TogglePermission("addMedicationNotes")'>
+                            <span>Add Medication Notes</span>
+                        </label>
+                    </div>
                 </div>
 
-                <h3>Medication Management</h3>
-                <div class="permission-items">
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["addHealthRecord"]"
-                               @onchange='_ => TogglePermission("addHealthRecord")'>
-                        <span>Add Health Record</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["viewVitalSigns"]"
-                               @onchange='_ => TogglePermission("viewVitalSigns")'>
-                        <span>View Vital Signs Monitoring</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["medicationSchedule"]"
-                               @onchange='_ => TogglePermission("medicationSchedule")'>
-                        <span>Medication Schedule</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["createPrescription"]"
-                               @onchange='_ => TogglePermission("createPrescription")'>
-                        <span>Create Prescription</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["labResult"]"
-                               @onchange='_ => TogglePermission("labResult")'>
-                        <span>Laboratory Result</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["viewHealthRecord"]"
-                               @onchange='_ => TogglePermission("viewHealthRecord")'>
-                        <span>View Health Record</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["updateVitalSigns"]"
-                               @onchange='_ => TogglePermission("updateVitalSigns")'>
-                        <span>Update Vital Signs Monitoring</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["viewPrescriptions"]"
-                               @onchange='_ => TogglePermission("viewPrescriptions")'>
-                        <span>View Prescriptions</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["addMedicationNotes"]"
-                               @onchange='_ => TogglePermission("addMedicationNotes")'>
-                        <span>Add Medication Notes</span>
-                    </label>
+                <!-- Reports / Analytics and Transactions Column -->
+                <div class="permission-category">
+                    <h3>Reports / Analytics</h3>
+                    <div class="permission-items">
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["generateReports"]"
+                                   @onchange='_ => TogglePermission("generateReports")'>
+                            <span>Generate Reports</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["viewReports"]"
+                                   @onchange='_ => TogglePermission("viewReports")'>
+                            <span>View Reports</span>
+                        </label>
+                    </div>
+
+                    <h3>Transactions</h3>
+                    <div class="permission-items">
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["request"]"
+                                   @onchange='_ => TogglePermission("request")'>
+                            <span>Request</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["insuranceClaims"]"
+                                   @onchange='_ => TogglePermission("insuranceClaims")'>
+                            <span>Insurance & Claims</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["viewPharmacyInventory"]"
+                                   @onchange='_ => TogglePermission("viewPharmacyInventory")'>
+                            <span>View Pharmacy & Inventory</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["generateBillingInvoicing"]"
+                                   @onchange='_ => TogglePermission("generateBillingInvoicing")'>
+                            <span>Generate Billing & Invoicing</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["managePharmacyInventory"]"
+                                   @onchange='_ => TogglePermission("managePharmacyInventory")'>
+                            <span>Manage Pharmacy Inventory</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["viewBillingInvoicing"]"
+                                   @onchange='_ => TogglePermission("viewBillingInvoicing")'>
+                            <span>View Billing & Invoicing</span>
+                        </label>
+                    </div>
+
+                    <h3>System</h3>
+                    <div class="permission-items">
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["userProfile"]"
+                                   @onchange='_ => TogglePermission("userProfile")'>
+                            <span>User Profile</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["auditLogs"]"
+                                   @onchange='_ => TogglePermission("auditLogs")'>
+                            <span>Audit Logs</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["syncManagement"]"
+                                   @onchange='_ => TogglePermission("syncManagement")'>
+                            <span>Sync Management</span>
+                        </label>
+                        <label class="permission-checkbox">
+                            <input type="checkbox" checked="@permissions[selectedRole]["settings"]"
+                                   @onchange='_ => TogglePermission("settings")'>
+                            <span>Settings</span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
-            <!-- Reports / Analytics and Transactions Column -->
-            <div class="permission-category">
-                <h3>Reports / Analytics</h3>
-                <div class="permission-items">
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["generateReports"]"
-                               @onchange='_ => TogglePermission("generateReports")'>
-                        <span>Generate Reports</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["viewReports"]"
-                               @onchange='_ => TogglePermission("viewReports")'>
-                        <span>View Reports</span>
-                    </label>
-                </div>
-
-                <h3>Transactions</h3>
-                <div class="permission-items">
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["request"]"
-                               @onchange='_ => TogglePermission("request")'>
-                        <span>Request</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["insuranceClaims"]"
-                               @onchange='_ => TogglePermission("insuranceClaims")'>
-                        <span>Insurance & Claims</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["viewPharmacyInventory"]"
-                               @onchange='_ => TogglePermission("viewPharmacyInventory")'>
-                        <span>View Pharmacy & Inventory</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["generateBillingInvoicing"]"
-                               @onchange='_ => TogglePermission("generateBillingInvoicing")'>
-                        <span>Generate Billing & Invoicing</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["managePharmacyInventory"]"
-                               @onchange='_ => TogglePermission("managePharmacyInventory")'>
-                        <span>Manage Pharmacy Inventory</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["viewBillingInvoicing"]"
-                               @onchange='_ => TogglePermission("viewBillingInvoicing")'>
-                        <span>View Billing & Invoicing</span>
-                    </label>
-                </div>
-
-                <h3>System</h3>
-                <div class="permission-items">
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["userProfile"]"
-                               @onchange='_ => TogglePermission("userProfile")'>
-                        <span>User Profile</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["auditLogs"]"
-                               @onchange='_ => TogglePermission("auditLogs")'>
-                        <span>Audit Logs</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["syncManagement"]"
-                               @onchange='_ => TogglePermission("syncManagement")'>
-                        <span>Sync Management</span>
-                    </label>
-                    <label class="permission-checkbox">
-                        <input type="checkbox" checked="@permissions[selectedRole]["settings"]"
-                               @onchange='_ => TogglePermission("settings")'>
-                        <span>Settings</span>
-                    </label>
-                </div>
+            <div class="action-buttons">
+                <button class="btn-cancel" @onclick="CancelChanges">Cancel</button>
+                <button class="btn-save" @onclick="SavePermissions">Save</button>
             </div>
         </div>
-
-        <div class="action-buttons">
-            <button class="btn-cancel" @onclick="CancelChanges">Cancel</button>
-            <button class="btn-save" @onclick="SavePermissions">Save</button>
-        </div>
-    </div>
+    }
 </div>

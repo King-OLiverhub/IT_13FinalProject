@@ -24,6 +24,10 @@
 
     <section class="dc-card">
         <div class="dc-header-row">
+            <div class="dc-actions">
+                <button class="dc-back-btn" @onclick="GoBack">Back</button>
+                <button class="dc-save-btn" @onclick="UpdateHealthRecord" disabled="@IsSaving">@(IsSaving ? "Saving..." : "Update")</button>
+            </div>
             <h2 class="dc-title">Doctors HealthRecord Form</h2>
         </div>
 
@@ -108,6 +112,7 @@
                     <span class="dc-label">Follow-up Date</span>
                     <div class="dc-input-with-icon">
                         <input class="dc-input" type="date" @bind="HealthRecord.FollowUpDate" />
+                        <span class="dc-input-icon">📅</span>
                     </div>
                 </label>
 
@@ -136,6 +141,7 @@
                     <span class="dc-label">Date Approved</span>
                     <div class="dc-input-with-icon">
                         <input class="dc-input" type="date" @bind="HealthRecord.ApprovalDate" />
+                        <span class="dc-input-icon">📅</span>
                     </div>
                 </label>
             </div>
@@ -148,10 +154,9 @@
             </label>
         </div>
 
-        <!-- Bottom actions: Back / Update (replacing old Cancel / Update location) -->
-        <div class="dc-actions">
-            <button class="dc-back-btn" @onclick="GoBack">Back</button>
-            <button class="dc-save-btn" @onclick="UpdateHealthRecord" disabled="@IsSaving">@(IsSaving ? "Saving..." : "Update")</button>
+        <div class="dc-actions dc-actions--edit">
+            <button class="dc-btn dc-btn-delete">Cancel</button>
+            <button class="dc-btn dc-btn-update">Update</button>
         </div>
     </section>
 </div>

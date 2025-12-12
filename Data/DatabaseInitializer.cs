@@ -2,7 +2,7 @@ using IT_13FinalProject.Models;
 using IT_13FinalProject.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 
 namespace IT_13FinalProject.Data
 {

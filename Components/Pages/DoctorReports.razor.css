@@ -5,26 +5,17 @@
     gap: 16px;
 }
 
-.dr-card {
-    background-color: #ffffff;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    border: 1px solid #0FA4A4;  
-    margin: 24px 8px 16px; /* top, left/right, bottom */
-}
-
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 16px;
     margin: -10px -16px 6px;
+    background-color: #f3faf9;
     border-bottom: 1px solid #e0f0ee;
     position: sticky;
     top: 0;
     z-index: 5;
-    background-color: #ffffff; /* ensure header covers background under it */
 }
 
 .dashboard-title {
@@ -532,10 +523,8 @@
         transition: 0.15s;
     }
 
-    .quick-link:hover {
+        .quick-link:hover {
             text-decoration: underline;
             color: #111827;
-    }
-
-
+        }
 }

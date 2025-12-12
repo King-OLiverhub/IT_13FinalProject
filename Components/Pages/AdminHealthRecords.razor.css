@@ -134,7 +134,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 5px 12px;
     border-radius: 10px;
     border: 2px solid #0f8b8d;
     background-color: #ffffff;
@@ -238,31 +238,33 @@
 }
 
 .pm-view-btn {
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    border-radius: 50%;
-    border: none;
-    background-color: #0f8b8d;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
+    color: #0f8b8d;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+    flex-shrink: 0;
 }
 
 .pm-view-icon {
     width: 14px;
     height: 14px;
     display: inline-block;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%23ffffff' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%23ffffff'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%230f8b8d' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%230f8b8d'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 14px 14px;
 }
 
 .pm-view-btn:hover {
-    background-color: #0b6f70;
+    background-color: #e9f6f5;
 }
 
 /* Pagination reused, but we can keep it simple here */
@@ -270,14 +272,18 @@
     display: flex;
     justify-content: center;  /* ← This centers the pagination */
     align-items: center;
-    gap: 6px;
-    margin: 20px auto;       /* ← This also helps center it */
-    padding: 12px 16px;
-    border-radius: 8px;
+    gap: 4px;
+    margin: 12px auto;       /* ← This also helps center it */
+    padding: 8px 12px;
+    border-radius: 6px;
     background-color: #f8f9fa;
     border: 1px solid #e9ecef;
     width: fit-content;
     max-width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    position: sticky;
+    bottom: 10px;
+    z-index: 6;
 }
 
 .pm-pagination-toggle {

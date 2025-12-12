@@ -34,7 +34,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 5px 12px;
     border-radius: 14px;
     border: 1px solid #0f8b8d;
     background-color: #ffffff;
@@ -99,6 +99,24 @@
     border: 1px solid #0f8b8d;
     background: #ffffff;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.admin-app-select:checked {
+    background-color: #0f8b8d;
+    border-color: #0f8b8d;
+    color: #ffffff;
+}
+
+.admin-app-select:checked::after {
+    content: "\2713";
+    font-size: 12px;
+    line-height: 1;
 }
 
 .admin-company-name {
@@ -106,15 +124,16 @@
 }
 
 .admin-company-send {
-    width: 32px;
-    height: 32px;
+    padding: 4px 6px !important;  /* force narrow horizontal padding */
     border-radius: 8px;
     border: 1px solid #0f8b8d;
     background-color: #ffffff;
-    display: flex;
+    display: inline-flex;  /* shrink to fit icon */
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    width: auto;
+    min-width: 0;
 }
 
 .admin-company-send-icon {
@@ -244,7 +263,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 5px 12px;
     border-radius: 10px;
     border: 2px solid #0f8b8d;
     background-color: #ffffff;
@@ -299,7 +318,8 @@
 }
 
 .inv-row-columns-admin {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    /* Make the action column narrower so the eye / X / ✓ sit closer */
+    grid-template-columns: 1.4fr 1.1fr auto;
 }
 
 .inv-row-col {
@@ -323,53 +343,82 @@
 }
 
 .inv-view-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: none;
-    background-color: #0f8b8d;
-    color: #ffffff;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
+    color: #0f8b8d;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 .inv-view-icon {
     width: 14px;
     height: 14px;
     display: inline-block;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%23ffffff' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%23ffffff'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%230f8b8d' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%230f8b8d'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 14px 14px;
 }
 
 .inv-view-btn:hover {
-    background-color: #0b6f70;
+    background-color: #e9f6f5;
 }
 
-.inv-decision-buttons {
-    display: flex;
-    align-items: center;
+ .inv-decision-buttons {
+    display: inline-flex;        /* lay out Reject, Accept, View side by side */
+    align-items: flex-start;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 4px;                    /* small equal spacing between the three groups */
+    flex-wrap: nowrap;           /* keep all three groups on one horizontal line */
+}
+
+/* .inv-decision-label-row and .inv-decision-icons were removed as unused
+   to avoid empty ruleset lint warnings. */
+
+.inv-decision-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 52px;  /* keep Reject, Accept, View stacks same width on every row */
+}
+
+.inv-decision-label {
+    font-size: 10px;
+    color: #777;
 }
 
 .inv-decision-btn {
-    border: none;
-    background: transparent;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid transparent; /* color set per state (reject/accept) */
+    background-color: #ffffff;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 14px;
     line-height: 1;
 }
 
 .inv-decision-reject {
     color: #e55353;
+    border-color: #e55353;
 }
 
 .inv-decision-accept {
     color: #3bb273;
+    border-color: #3bb273;
 }
 
 .inv-reject-overlay {
@@ -638,11 +687,17 @@
 }
 
 .inv-view-doc-eye {
-    padding: 0;
-    border: none;
-    background: transparent;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
     font-size: 13px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .inv-view-doc-eye:disabled {
@@ -675,15 +730,20 @@
     border: 1px solid #e9ecef;   /* ← Border */
     width: fit-content;           /* ← Fit content width */
     max-width: 100%;              /* ← Responsive max width */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    position: sticky;
+    bottom: 10px;
+    z-index: 6;
 }
 
 .inv-page-btn,
 .inv-page-number {
-    padding: 3px 8px;
-    border-radius: 8px;
+    min-width: 40px;
+    padding: 6px 14px;
+    border-radius: 999px;
     border: 1px solid #c9d9dd;
     background-color: #ffffff;
-    font-size: 11px;
+    font-size: 12px;
     cursor: pointer;
 }
 

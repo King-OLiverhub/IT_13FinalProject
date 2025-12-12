@@ -10,12 +10,11 @@
     align-items: center;
     padding: 10px 16px;
     margin: -10px -16px 6px;
-    background-color: #ffffff;
-    border-bottom: none;
-    position: static;  
-    top: auto;        
-    z-index: auto;
-    box-shadow: none; 
+    background-color: #f3faf9;
+    border-bottom: 1px solid #e0f0ee;
+    position: sticky;
+    top: 0;
+    z-index: 5;
 }
 
 .dashboard-title {
@@ -62,7 +61,6 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     padding: 24px;
     margin-bottom: 16px;
-    border: 1px solid #0FA4A4;
 }
 
 .dc-header-row {
@@ -163,35 +161,22 @@
 }
 
 .dc-label {
+    display: block;
     font-size: 13px;
     font-weight: 600;
     color: #555;
     margin-bottom: 4px;
-    padding: 2px 6px;
 }
 
 .dc-value {
     font-size: 14px;
-    color: #555555;              
+    color: #333;
     background-color: #f8f9fa;
     padding: 8px 12px;
     border-radius: 6px;
-    border: 1px solid #d0d0d0;  
+    border: 1px solid #e9ecef;
     min-height: 20px;
     white-space: pre-wrap;
-}
-
-.dc-value--plain {
-    background-color: transparent;
-    border: 1px solid #d0d0d0;  
-    padding: 8px 12px;            
-    border-radius: 6px;
-    min-height: 20px;
-    white-space: pre-wrap;
-}
-
-.dc-notes-section .dc-field-view {
-    max-width: 420px;  
 }
 
 .dc-notes-section {
@@ -208,20 +193,4 @@
     .info-grid {
         grid-template-columns: 1fr;
     }
-}
-
-/* Force all text within DoctorConsult_HealthRecordView page to be black */
-.dc-page,
-.dc-page h1,
-.dc-page h2,
-.dc-page h3,
-.dc-page p,
-.dc-page span,
-.dc-page label,
-.dc-page td,
-.dc-page th,
-.dc-page button,
-.dc-page input,
-.dc-page div {
-    color: #000000 !important;
 }

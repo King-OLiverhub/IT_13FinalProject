@@ -17,7 +17,7 @@
 
         <div class="dashboard-user-info">
             <span class="dashboard-user-email">doctor@gmail.com</span>
-            <div class="dashboard-user-avatar">DR</div>
+            <div class="dashboard-user-avatar">👤</div>
             <span class="dashboard-user-name">Clinical</span>
         </div>
     </header>
@@ -40,7 +40,7 @@
         <section class="dc-card">
             <div class="dc-header-row">
                 <div class="dc-title-wrap">
-                    <span class="dc-title-icon">HR</span>
+                    <span class="dc-title-icon">👤</span>
                     <h2 class="dc-title">HealthRecord Details</h2>
                 </div>
                 <div class="dc-actions">
@@ -160,7 +160,7 @@
                     <h3 class="dc-section-title dc-section-title-spaced">Doctor Approval</h3>
 
                     <div class="dc-field-view">
-                        <span class="dc-label">Doctor Signature / Name</span>
+                        <span class="dc-label">Electronic Signature / Name</span>
                         <div class="dc-value">@(HealthRecord.DoctorSignature ?? "Not specified")</div>
                     </div>
 
@@ -168,11 +168,13 @@
                         <span class="dc-label">Date Approved</span>
                         <div class="dc-value">@(HealthRecord.ApprovalDate?.ToString("MM/dd/yyyy") ?? "Not specified")</div>
                     </div>
-                    
-                    <div class="dc-field-view">
-                        <span class="dc-label">Doctors Initial Remarks</span>
-                        <div class="dc-value">@(HealthRecord.DoctorInitialRemarks ?? "Not specified")</div>
-                    </div>
+                </div>
+            </div>
+
+            <div class="dc-notes-section">
+                <div class="dc-field-view">
+                    <span class="dc-label">Doctors Initial Remarks</span>
+                    <div class="dc-value">@(HealthRecord.DoctorInitialRemarks ?? "Not specified")</div>
                 </div>
             </div>
         </section>

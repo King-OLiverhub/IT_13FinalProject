@@ -10,7 +10,7 @@
     align-items: center;
     padding: 10px 16px;
     margin: -10px -16px 6px;
-    background-color: #d1f0ee;
+    background-color: #f3faf9;
     border-bottom: 1px solid #e0f0ee;
     position: sticky;
     top: 0;
@@ -207,22 +207,6 @@
     .dc-grid {
         grid-template-columns: 1fr;
     }
-}
-
-/* Force all text within DoctorConsultForm_PatientList page to be black */
-.dc-page,
-.dc-page h1,
-.dc-page h2,
-.dc-page h3,
-.dc-page p,
-.dc-page span,
-.dc-page label,
-.dc-page td,
-.dc-page th,
-.dc-page button,
-.dc-page input,
-.dc-page div {
-    color: #000000 !important;
 }
 
 

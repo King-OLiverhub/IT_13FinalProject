@@ -10,8 +10,8 @@
     align-items: center;
     padding: 10px 16px;
     margin: -10px -16px 6px;
-    background-color: transparent;
-    border-bottom:none;
+    background-color: #f3faf9;
+    border-bottom: 1px solid #e0f0ee;
     position: sticky;
     top: 0;
     z-index: 5;
@@ -164,7 +164,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 5px 12px;
     border-radius: 10px;
     border: 2px solid #0f8b8d;
     background-color: #ffffff;
@@ -332,32 +332,36 @@
 
 .ip-pagination-toggle:hover {
     background-color: transparent;
-    color: #000000;
+    cursor: pointer;
+    z-index: 6;
 }
 
 .ip-pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 6px;
-    margin-top: 32px;
-
-    position: fixed;
-    right: 80px;
-    bottom: 20px;
-    padding: 0;
-    border-radius: 999px;
-    background: transparent;
-    box-shadow: none;
+    gap: 4px;
+    margin: 12px auto;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    width: fit-content;
+    max-width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    position: sticky;
+    bottom: 10px;
+    z-index: 6;
 }
 
 .ip-page-btn,
 .ip-page-number {
-    padding: 3px 8px;
-    border-radius: 8px;
+    min-width: 40px;
+    padding: 6px 14px;
+    border-radius: 999px;
     border: 1px solid #c9d9dd;
     background-color: #ffffff;
-    font-size: 11px;
+    font-size: 12px;
     cursor: pointer;
 }
 
@@ -411,7 +415,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 5px 12px;
     border-radius: 10px;
     border: 2px solid #0f8b8d;
     background-color: #ffffff;
@@ -548,22 +552,6 @@
     border: none;
     background-color: #0f8b8d;
     color: #ffffff;
-}
-
-/* Force all text within DoctorPrescriptions page to be black */
-.dashboard-page,
-.dashboard-page h1,
-.dashboard-page h2,
-.dashboard-page h3,
-.dashboard-page p,
-.dashboard-page span,
-.dashboard-page label,
-.dashboard-page td,
-.dashboard-page th,
-.dashboard-page button,
-.dashboard-page input,
-.dashboard-page div {
-    color: #000000 !important;
 }
 
 

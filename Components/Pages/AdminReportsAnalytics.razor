@@ -1,4 +1,3 @@
-@page "/admin-reports-analytics"
 @layout Layout.DashboardLayout
 
 <div class="ara-page">
@@ -80,9 +79,12 @@
 
         <div class="ara-quick-stats">
             <div class="ara-card-header">
-                <div>
-                    <div class="ara-card-title">Quick Stats</div>
-                    <div class="ara-card-subtitle">Key performance indicators</div>
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-quickstats"></span>
+                    <div>
+                        <div class="ara-card-title">Quick Stats</div>
+                        <div class="ara-card-subtitle">Key performance indicators</div>
+                    </div>
                 </div>
             </div>
 
@@ -162,7 +164,10 @@
 
         <div class="ara-dept-categories">
             <div class="ara-card-header">
-                <div class="ara-card-title">Department Analytics</div>
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-deptgrid"></span>
+                    <div class="ara-card-title">Department Analytics</div>
+                </div>
             </div>
             <div class="ara-deptcat-grid">
                 <div class="ara-deptcat-card">
@@ -263,13 +268,3 @@
 
     private void SetExceptionTab() => SetTab("exception");
 }
-
-
-
-
-
-
-
-
-
-

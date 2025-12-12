@@ -2,7 +2,6 @@
 @layout Layout.DashboardLayout
 @using IT_13FinalProject.Models
 @using IT_13FinalProject.Data
-@using System.Linq
 @using Microsoft.EntityFrameworkCore
 
 @inject ApplicationDbContext DbContext
@@ -30,10 +29,10 @@
             <h2 class="pm-section-title">Patient List</h2>
             <div class="pm-show-entries">
                 <span>Show</span>
-                <select @bind="PageSize">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="25">25</option>
+                <select>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>25</option>
                 </select>
                 <span>entries</span>
             </div>
@@ -67,8 +66,8 @@
                             <th class="pm-col-date">Date of Visit</th>
                             <th class="pm-col-action">Patient Info</th>
                             <th class="pm-col-vitals">Vital Signs</th>
-                            <th class="pm-col-vitals">Health Records</th>
                             <th class="pm-col-actions">Actions</th>
+                            <th class="pm-col-vitals">Health Records</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,7 +98,7 @@
                         }
                         else
                         {
-                            @foreach (var patient in PagedPatients)
+                            @foreach (var patient in Patients)
                             {
                                 <tr>
                                     <td>
@@ -122,18 +121,18 @@
                                             <span class="pm-view-icon"></span>
                                         </button>
                                     </td>
-                                    <td class="pm-col-vitals">
-                                        <button class="pm-add-btn" @onclick="() => GoToHealthRecords(patient.PatientId)">+ Add</button>
-                                    </td>
                                     <td class="pm-col-actions">
                                         <div class="pm-action-buttons">
                                             <button class="pm-edit-btn" @onclick="() => ShowEditPatientModal(patient)" title="Edit Patient">
-                                                <span class="pm-edit-icon"></span>
+                                                <span class="pm-edit-icon" aria-hidden="true"></span>
                                             </button>
                                             <button class="pm-archive-btn" @onclick="() => ArchivePatient(patient.PatientId)" title="Archive Patient">
-                                                <span class="pm-archive-icon"></span>
+                                                <span class="pm-archive-icon" aria-hidden="true"></span>
                                             </button>
                                         </div>
+                                    </td>
+                                    <td class="pm-col-vitals">
+                                        <button class="pm-add-btn" @onclick="() => GoToHealthRecords(patient.PatientId.ToString())">+ Add</button>
                                     </td>
                                 </tr>
                             }
@@ -143,26 +142,15 @@
             </div>
         </div>
 
-        <button type="button" class="pm-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
-            <span>@(ShowPagination ? "›" : "‹")</span>
-        </button>
-
-        @if (ShowPagination)
-        {
-            <div class="pm-pagination">
-                <button class="pm-page-btn" @onclick="PreviousPage" disabled="@(CurrentPage <= 1 || TotalPages <= 1)">Previous</button>
-
-                @for (var pageNumber = 1; pageNumber <= TotalPages; pageNumber++)
-                {
-                    <button class="pm-page-number @(pageNumber == CurrentPage ? "active" : string.Empty)"
-                            @onclick="() => GoToPage(pageNumber)">
-                        @pageNumber
-                    </button>
-                }
-
-                <button class="pm-page-btn" @onclick="NextPage" disabled="@(CurrentPage >= TotalPages || TotalPages <= 1)">Next</button>
-            </div>
-        }
+        <div class="pm-pagination">
+            <button class="pm-page-btn">Previous</button>
+            <button class="pm-page-number active">1</button>
+            <button class="pm-page-number">2</button>
+            <button class="pm-page-number">3</button>
+            <span class="pm-page-dots">...</span>
+            <button class="pm-page-number">8</button>
+            <button class="pm-page-btn">Next</button>
+        </div>
     </section>
 </div>
 
@@ -278,30 +266,6 @@
     private List<Patient> Patients = new();
     private bool IsLoading = true;
     private string ErrorMessage = "";
-    private bool ShowPagination = true;
-
-    private int CurrentPage { get; set; } = 1;
-    private int _pageSize = 5;
-    private int PageSize
-    {
-        get => _pageSize;
-        set
-        {
-            _pageSize = value;
-            CurrentPage = 1;
-        }
-    }
-
-    private int TotalPages => PageSize <= 0 || Patients.Count == 0
-        ? 0
-        : (int)Math.Ceiling(Patients.Count / (double)PageSize);
-
-    private IEnumerable<Patient> PagedPatients =>
-        TotalPages == 0
-            ? Enumerable.Empty<Patient>()
-            : Patients
-                .Skip((CurrentPage - 1) * PageSize)
-                .Take(PageSize);
     
     // Modal properties
     private bool ShowAddModal = false;
@@ -354,58 +318,11 @@
         Navigation.NavigateTo($"/doctor-vitals-info/{patientId}");
     }
 
-    private async Task GoToHealthRecords(int patientId)
+    private void GoToHealthRecords(string patientId)
     {
-        try
-        {
-            // Require at least one non-archived vital sign before starting a consultation
-            var hasVitals = await DbContext.VitalSigns
-                .AnyAsync(vs => vs.PatientId == patientId && !vs.IsArchived);
-
-            if (!hasVitals)
-            {
-                ErrorMessage = "Cannot begin consultation. Nurse assessment (vital signs) is missing for this patient.";
-                await JsRuntime.InvokeVoidAsync("alert", ErrorMessage);
-                return;
-            }
-
-            Navigation.NavigateTo($"/doctor-consultation?patientId={patientId}");
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = $"Error checking vital signs: {ex.Message}";
-            await JsRuntime.InvokeVoidAsync("alert", ErrorMessage);
-        }
+        Navigation.NavigateTo("/doctor-consultation");
     }
 
-    private void TogglePagination()
-    {
-        ShowPagination = !ShowPagination;
-    }
-
-    private void GoToPage(int page)
-    {
-        if (TotalPages == 0)
-        {
-            return;
-        }
-
-        if (page < 1)
-        {
-            page = 1;
-        }
-        else if (page > TotalPages)
-        {
-            page = TotalPages;
-        }
-
-        CurrentPage = page;
-    }
-
-    private void PreviousPage() => GoToPage(CurrentPage - 1);
-
-    private void NextPage() => GoToPage(CurrentPage + 1);
-    
     // Modal methods
     private void ShowAddPatientModal()
     {

@@ -126,7 +126,7 @@
     flex: 1;
     display: flex;
     align-items: center;
-    border-radius: 999px;
+    border-radius: 10px;
     border: 1px solid #0f8b8d;
     background-color: #ffffff;
     padding: 4px 10px;
@@ -192,7 +192,7 @@
 
 .inv-row-columns {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
     gap: 8px;
 }
 
@@ -217,30 +217,33 @@
 }
 
 .inv-view-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: none;
-    background-color: #0f8b8d;
-    color: #ffffff;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
+    color: #0f8b8d;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 .inv-view-icon {
     width: 14px;
     height: 14px;
     display: inline-block;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%23ffffff' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%23ffffff'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%230f8b8d' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%230f8b8d'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 14px 14px;
 }
 
 .inv-view-btn:hover {
-    background-color: #0b6f70;
+    background-color: #e9f6f5;
 }
 
 /* Pagination bottom - match nurse vitals style */
@@ -256,15 +259,20 @@
     border: 1px solid #e9ecef;
     width: fit-content;
     max-width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    position: sticky;
+    bottom: 10px;
+    z-index: 6;
 }
 
 .inv-page-btn,
 .inv-page-number {
-    padding: 2px 6px;
-    border-radius: 8px;
+    min-width: 40px;
+    padding: 6px 14px;
+    border-radius: 999px;
     border: 1px solid #c9d9dd;
     background-color: #ffffff;
-    font-size: 10px;
+    font-size: 12px;
     cursor: pointer;
 }
 

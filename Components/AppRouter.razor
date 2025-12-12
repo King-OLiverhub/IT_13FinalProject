@@ -220,7 +220,7 @@ else if (path == "admin-receipt-pdf")
 else if (path == "receipt-pdf")
 {
     <DashboardLayout>
-        <AdminReceiptPdf />
+        <ReceiptPdf />
     </DashboardLayout>
 }
 else if (path == "nurse-patient-list")
@@ -293,22 +293,16 @@ else if (path == "doctor-patient-profile")
 }
 else if (path == "doctor-vitals-info")
 {
-    // doctor-vitals-info without an ID is not valid; redirect to login or a safe page
-    <Login />
+    <DashboardLayout>
+        <DoctorVitalsInfo />
+    </DashboardLayout>
 }
 else if (path.StartsWith("doctor-vitals-info/"))
 {
-    var idString = path.Substring("doctor-vitals-info/".Length);
-    if (int.TryParse(idString, out int id))
-    {
-        <DashboardLayout>
-            <DoctorVitalsInfo patientId="@id" />
-        </DashboardLayout>
-    }
-    else
-    {
-        <Login />
-    }
+    var patientId = path.Substring("doctor-vitals-info/".Length);
+    <DashboardLayout>
+        <DoctorVitalsInfo PatientId="@patientId" />
+    </DashboardLayout>
 }
 else if (path == "doctor-consultation")
 {
@@ -321,20 +315,6 @@ else if (path == "doctor-consultation-edit")
     <DashboardLayout>
         <DoctorConsultEdit />
     </DashboardLayout>
-}
-else if (path.StartsWith("doctor-consultation-edit/"))
-{
-    var idString = path.Substring("doctor-consultation-edit/".Length);
-    if (int.TryParse(idString, out int id))
-    {
-        <DashboardLayout>
-            <DoctorConsultEdit ConsultationId="@id" />
-        </DashboardLayout>
-    }
-    else
-    {
-        <Login />
-    }
 }
 else if (path.StartsWith("doctor-consultation-view/"))
 {

@@ -19,7 +19,7 @@
 
         <div class="dashboard-user-info">
             <span class="dashboard-user-email">doctor@gmail.com</span>
-            <div class="dashboard-user-avatar">DR</div>
+            <div class="dashboard-user-avatar">👤</div>
             <span class="dashboard-user-name">Clinical</span>
         </div>
     </header>
@@ -27,7 +27,7 @@
     <section class="dc-card">
         <div class="dc-header-row">
             <div class="dc-title-wrap">
-                <span class="dc-title-icon">HR</span>
+                <span class="dc-title-icon">👤</span>
                 <h2 class="dc-title">Doctors HealthRecord Form</h2>
             </div>
         </div>
@@ -187,30 +187,6 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadPatients();
-
-        // Try to pre-select a patient if patientId is passed as a query parameter
-        try
-        {
-            var uri = new Uri(Navigation.Uri);
-            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-            var patientIdParam = query["patientId"];
-
-            if (!string.IsNullOrWhiteSpace(patientIdParam) && int.TryParse(patientIdParam, out var pid))
-            {
-                foreach (var patient in Patients)
-                {
-                    if (patient.PatientId == pid)
-                    {
-                        SelectedPatientId = pid;
-                        break;
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error parsing patientId from query string: {ex.Message}");
-        }
     }
     
     private async Task LoadPatients()
@@ -257,51 +233,13 @@
                 return;
             }
             
-            if (string.IsNullOrWhiteSpace(HealthRecord.ChiefComplaint))
-            {
-                ErrorMessage = "Chief complaint is required.";
-                await JsRuntime.InvokeVoidAsync("alert", ErrorMessage);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(HealthRecord.SubjectiveFindings))
-            {
-                ErrorMessage = "Subjective findings are required.";
-                await JsRuntime.InvokeVoidAsync("alert", ErrorMessage);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(HealthRecord.ObjectiveFindings))
-            {
-                ErrorMessage = "Objective findings are required.";
-                await JsRuntime.InvokeVoidAsync("alert", ErrorMessage);
-                return;
-            }
-            
             if (string.IsNullOrWhiteSpace(HealthRecord.AssessmentDiagnosis))
             {
                 ErrorMessage = "Assessment/Diagnosis is required.";
                 await JsRuntime.InvokeVoidAsync("alert", ErrorMessage);
                 return;
             }
-
-            // Ensure a sensible default visit status
-            if (string.IsNullOrWhiteSpace(HealthRecord.VisitStatus))
-            {
-                HealthRecord.VisitStatus = "New";
-            }
-
-            // Require at least one non-archived vital sign before saving a consultation
-            var hasVitals = await DbContext.VitalSigns
-                .AnyAsync(vs => vs.PatientId == SelectedPatientId && !vs.IsArchived);
-
-            if (!hasVitals)
-            {
-                ErrorMessage = "Cannot save consultation. Nurse vital signs are missing for this patient.";
-                await JsRuntime.InvokeVoidAsync("alert", ErrorMessage);
-                return;
-            }
-
+            
             // Set the patient ID
             HealthRecord.PatientId = SelectedPatientId;
             
@@ -353,9 +291,6 @@
             {
                 Console.WriteLine($"Failed to save health record to local: {ex.Message}");
             }
-            
-            // Simple audit log for consultation creation
-            Console.WriteLine($"[AUDIT] ConsultationCreated: RecordId={HealthRecord.RecordId}, PatientId={HealthRecord.PatientId}, DoctorId={HealthRecord.DoctorId}, Time={DateTime.UtcNow:O}");
             
             await JsRuntime.InvokeVoidAsync("alert", "HealthRecord saved successfully!");
             Navigation.NavigateTo("/doctor-health-records");

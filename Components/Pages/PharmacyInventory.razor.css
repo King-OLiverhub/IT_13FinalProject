@@ -131,9 +131,9 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 5px 12px;
     border-radius: 10px;
-    border: 2px solid #0f8b8d;
+    border: 1px solid #0f8b8d;
     background-color: #ffffff;
 }
 
@@ -248,7 +248,7 @@
 }
 
 .pi-col-actions {
-    width: 180px;
+    width: 100px;
     text-align: center;
 }
 
@@ -257,7 +257,11 @@
     padding-bottom: 8px;
 }
 
-.pi-actions-header {
+.pi-table td.pi-actions-cell {
+    text-align: center;
+}
+
+.pi-table th.pi-actions-header {
     text-align: center;
 }
 
@@ -283,12 +287,18 @@
 }
 
 .pi-edit-btn {
-    width: 24px;
-    height: 24px;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
     border-radius: 6px;
     border: 1px solid #0f8b8d;
     background-color: #ffffff;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 .pi-edit-icon {
@@ -303,17 +313,24 @@
 
 .pi-inout-group {
     display: inline-flex;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #0f8b8d;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .pi-inout-btn {
-    padding: 2px 8px;
-    border: none;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #0f8b8d;
     background-color: #ffffff;
     font-size: 11px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 .pi-in-icon,
@@ -371,26 +388,31 @@
 }
 
 .pi-archive-btn {
-    width: 24px;
-    height: 24px;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
     border-radius: 6px;
-    border: 1px solid #6c757d;
+    border: 1px solid #0f8b8d;
     background-color: #ffffff;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 .pi-archive-icon {
     display: inline-block;
     width: 14px;
     height: 14px;
-    font-size: 12px;
-    text-align: center;
-    line-height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Crect x='2.5' y='4' width='11' height='9' rx='1.2' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3Cpath d='M3 4.5h10l-1-2H4l-1 2z' stroke='%230f8b8d' stroke-width='1.1' fill='none'/%3E%3Cpath d='M6 8h4' stroke='%230f8b8d' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px 14px;
 }
 
-.pi-inout-btn + .pi-inout-btn {
-    border-left: 1px solid #0f8b8d;
-}
+/* No special border between In/Out; each button has its own full border. */
 
 .pi-status-pill {
     display: inline-flex;
@@ -457,27 +479,30 @@
 
 .pi-pagination {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
-    gap: 6px;
-    margin-top: 32px;
-
-    position: fixed;
-    right: 80px;
-    bottom: 20px;
-    padding: 0;
-    border-radius: 999px;
-    background: transparent;
-    box-shadow: none;
+    gap: 4px;
+    margin: 12px auto;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    width: fit-content;
+    max-width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    position: sticky;
+    bottom: 10px;
+    z-index: 6;
 }
 
 .pi-page-btn,
 .pi-page-number {
-    padding: 3px 8px;
-    border-radius: 8px;
+    min-width: 40px;
+    padding: 6px 14px;
+    border-radius: 999px;
     border: 1px solid #c9d9dd;
     background-color: #ffffff;
-    font-size: 11px;
+    font-size: 12px;
     cursor: pointer;
 }
 

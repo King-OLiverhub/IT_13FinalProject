@@ -75,14 +75,14 @@
     cursor: pointer;
 }
 
-.ara-tab.active {
-    background-color: #0f8b8d;
-    color: #ffffff;
-}
+    .ara-tab.active {
+        background-color: #0f8b8d;
+        color: #ffffff;
+    }
 
-.ara-tab:not(.active):hover {
-    background-color: #d0ecee;
-}
+    .ara-tab:not(.active):hover {
+        background-color: #d0ecee;
+    }
 
 .ara-main {
     display: flex;
@@ -134,22 +134,29 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 18px 18px;
 }
 
-.ara-icon-report::before {
-    content: "Chart";
+.ara-icon-report {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Crect x='2' y='4' width='14' height='12' rx='1.5' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Cpath d='M5 11l2-2 3 2 5-4' stroke='%230f8b8d' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='5' cy='11' r='1' fill='%230f8b8d'/%3E%3Ccircle cx='7' cy='9' r='1' fill='%230f8b8d'/%3E%3Ccircle cx='10' cy='11' r='1' fill='%230f8b8d'/%3E%3Ccircle cx='15' cy='7' r='1' fill='%230f8b8d'/%3E%3C/svg%3E");
 }
 
-.ara-icon-quickreports::before {
-    content: "Trend";
+.ara-icon-quickreports {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Crect x='2' y='3' width='14' height='13' rx='1.5' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='4' y='10' width='2' height='4' fill='%230f8b8d'/%3E%3Crect x='8' y='7' width='2' height='7' fill='%230f8b8d'/%3E%3Crect x='12' y='5' width='2' height='9' fill='%230f8b8d'/%3E%3C/svg%3E");
 }
 
-.ara-icon-deptgrid::before {
-    content: "Hospital";
+.ara-icon-deptgrid {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Crect x='2' y='2' width='6' height='6' rx='1' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='10' y='2' width='6' height='6' rx='1' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='2' y='10' width='6' height='6' rx='1' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='10' y='10' width='6' height='6' rx='1' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3C/svg%3E");
 }
 
-.ara-icon-recent::before {
-    content: "Time";
+.ara-icon-recent {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='7' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Cpath d='M9 5v4l3 2' stroke='%230f8b8d' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.ara-icon-quickstats {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Crect x='2' y='2' width='4' height='4' rx='0.8' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='8' y='2' width='4' height='4' rx='0.8' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='14' y='2' width='2' height='4' rx='0.8' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='2' y='8' width='4' height='4' rx='0.8' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='8' y='8' width='4' height='4' rx='0.8' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='14' y='8' width='2' height='4' rx='0.8' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='2' y='14' width='4' height='2' rx='0.8' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='8' y='14' width='4' height='2' rx='0.8' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Crect x='14' y='14' width='2' height='2' rx='0.8' fill='none' stroke='%230f8b8d' stroke-width='1.2'/%3E%3C/svg%3E");
 }
 
 .ara-config-grid {
@@ -169,25 +176,25 @@
     position: relative;
 }
 
-.ara-input-with-icon input {
-    width: 100%;
-    padding: 7px 30px 7px 10px;
-    border-radius: 10px;
-    border: 1px solid #c9d9dd;
-    font-size: 13px;
-}
+    .ara-input-with-icon input {
+        width: 100%;
+        padding: 7px 30px 7px 10px;
+        border-radius: 10px;
+        border: 1px solid #c9d9dd;
+        font-size: 13px;
+    }
 
-.ara-input-with-icon .ara-select {
-    width: 100%;
-    padding: 7px 30px 7px 10px;
-    border-radius: 10px;
-    border: 1px solid #c9d9dd;
-    font-size: 13px;
-    background-color: #ffffff;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-}
+    .ara-input-with-icon .ara-select {
+        width: 100%;
+        padding: 7px 30px 7px 10px;
+        border-radius: 10px;
+        border: 1px solid #c9d9dd;
+        font-size: 13px;
+        background-color: #ffffff;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
 
 .ara-input-icon {
     position: absolute;
@@ -342,9 +349,9 @@
     font-size: 12px;
 }
 
-.ara-quickreports-row:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-}
+    .ara-quickreports-row:hover {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
 
 .ara-quickreports-preview {
     display: inline-flex;
@@ -485,9 +492,9 @@
     cursor: pointer;
 }
 
-.ara-link-button:hover {
-    background-color: #e6f4f4;
-}
+    .ara-link-button:hover {
+        background-color: #e6f4f4;
+    }
 
 @media (max-width: 1100px) {
     .ara-config-grid,
@@ -506,5 +513,3 @@
         grid-template-columns: minmax(0, 1fr);
     }
 }
-
-

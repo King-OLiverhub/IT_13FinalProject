@@ -10,12 +10,11 @@
     align-items: center;
     padding: 10px 16px;
     margin: -10px -16px 6px;
-    background-color: #ffffff;
-    border-bottom: none;
-    position: static;  
-    top: auto;       
-    z-index: auto;
-    box-shadow: none; 
+    background-color: #f3faf9;
+    border-bottom: 1px solid #e0f0ee;
+    position: sticky;
+    top: 0;
+    z-index: 5;
 }
 
 .dashboard-title {
@@ -62,7 +61,6 @@
     border-radius: 16px;
     background-color: #f6fbfb;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    border: 1px solid #0FA4A4; 
 }
 
 .dc-header-row {
@@ -106,6 +104,16 @@
     margin-bottom: 4px;
 }
 
+.dc-section-title-spaced {
+    margin-top: 16px;
+}
+
+.dc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .dc-label {
     font-size: 12px;
     font-weight: 600;
@@ -113,17 +121,25 @@
 
 .dc-input {
     border-radius: 10px;
+    border: 1px solid #9ba8ac;
     padding: 8px 10px;
     font-size: 13px;
     outline: none;
-    background-color: #f8f9fa;
+    background-color: #ffffff;
     width: 100%;
     box-sizing: border-box;
 }
+
 .dc-input-multi {
     min-height: 72px;
     resize: none;
     overflow: hidden;
+}
+
+.dc-input:focus,
+.dc-input-multi:focus {
+    border-color: #0f8b8d;
+    box-shadow: 0 0 0 2px rgba(15, 139, 141, 0.2);
 }
 
 .dc-input-with-icon {
@@ -153,72 +169,42 @@
     gap: 12px;
 }
 
-.dc-back-btn,
-.dc-save-btn {
+.dc-actions--edit {
+    justify-content: flex-end;
+}
+
+.dc-btn {
     min-width: 120px;
     padding: 8px 20px;
     border-radius: 999px;
-    border: 1px solid transparent;
+    border: none;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
 }
 
-.dc-back-btn {
-    background-color: #ffffff;
-    color: #000000;
-    border-color: #d0d0d0;
-}
-
-.dc-back-btn:hover {
-    background-color: #475569;
+.dc-btn-delete {
+    background-color: #b3544b;
     color: #ffffff;
-    border-color: #0b6f70;
 }
 
-.dc-save-btn {
+.dc-btn-delete:hover {
+    background-color: #943f37;
+}
+
+.dc-btn-update {
     background-color: #0f8b8d;
     color: #ffffff;
-    border-color: #0f8b8d;
 }
 
-.dc-save-btn:hover {
+.dc-btn-update:hover {
     background-color: #0b6f70;
-    border-color: #0b6f70;
 }
-
-
-/* Ensure ALL form controls on this page share the same 1px teal border */
-.dc-page input,
-.dc-page textarea,
-.dc-page select {
-    border: 1px solid #d0d0d0 !important;
-    border-radius: 10px;
-    box-shadow: none;
-    background-color: #f8f9fa;
-}
-
 
 @media (max-width: 1000px) {
     .dc-grid {
         grid-template-columns: 1fr;
     }
-}
-
-/* Force all text within DoctorConsultEdit page to be black */
-.dc-page,
-.dc-page h1,
-.dc-page h2,
-.dc-page h3,
-.dc-page p,
-.dc-page span,
-.dc-page label,
-.dc-page td,
-.dc-page th,
-.dc-page button,
-.dc-page input,
-.dc-page div {
-    color: #000000 !important;
 }
 
 

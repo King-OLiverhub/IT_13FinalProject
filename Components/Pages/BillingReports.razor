@@ -1,239 +1,270 @@
-﻿@page "/billing-reports"
-@layout DashboardLayout
-@using IT_13FinalProject.Services
+﻿@layout Layout.DashboardLayout
 
-<PageTitle>Reports</PageTitle>
-
-<div class="dashboard-page billing-reports-page">
+<div class="ara-page">
     <header class="dashboard-header">
         <div>
-            <h1 class="dashboard-title">Reports</h1>
-            <p class="dashboard-subtitle">Welcome back Billing Staff!</p>
+            <h1 class="dashboard-title">Reports and Analytics</h1>
+            <p class="dashboard-subtitle">Welcome back Admin!</p>
         </div>
 
         <div class="dashboard-user-info">
-            <span class="dashboard-user-email">billing@gmail.com</span>
-            <div class="dashboard-user-avatar">B</div>
-            <span class="dashboard-user-name">Billing Staff</span>
+            <span class="dashboard-user-email">admin@gmail.com</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">Admin</span>
         </div>
     </header>
 
-    <div class="reports-content">
-        <!-- Report Configuration Card -->
-        <div class="config-card">
-            <div class="config-header">
-                <i class="fas fa-clipboard-list"></i>
-                <h2>Report Configuration</h2>
+    <section class="ara-tabs-row">
+        <button class="ara-tab @(ActiveTab == "analytical" ? "active" : string.Empty)" @onclick="SetAnalyticalTab">Analytical Trend Reports</button>
+        <button class="ara-tab @(ActiveTab == "descriptive" ? "active" : string.Empty)" @onclick="SetDescriptiveTab">Basic Descriptive Reports</button>
+        <button class="ara-tab @(ActiveTab == "exception" ? "active" : string.Empty)" @onclick="SetExceptionTab">Revenue Exception Reports</button>
+    </section>
+
+    <section class="ara-main">
+        <div class="ara-report-config">
+            <div class="ara-card-header">
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-report"></span>
+                    <div>
+                        <div class="ara-card-title">Report Configuration</div>
+                        <div class="ara-card-subtitle">@ReportSubtitle</div>
+                    </div>
+                </div>
             </div>
-            <p class="config-subtitle">Select date range and report type to generate reports</p>
 
-            <div class="config-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Start Date</label>
-                        <div class="date-input-wrapper">
-                            <input type="date" class="date-input" @bind="startDate" />
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
+            <div class="ara-config-grid">
+                <div class="ara-config-field">
+                    <label>Start Date</label>
+                    <div class="ara-input-with-icon">
+                        <input type="date" />
                     </div>
-
-                    <div class="form-group">
-                        <label>End Date</label>
-                        <div class="date-input-wrapper">
-                            <input type="date" class="date-input" @bind="endDate" />
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
+                </div>
+                <div class="ara-config-field">
+                    <label>End Date</label>
+                    <div class="ara-input-with-icon">
+                        <input type="date" />
                     </div>
-
-                    <div class="form-group">
-                        <label>Report type</label>
-                        <select class="report-select" @bind="selectedReportType">
-                            <option value="">Select report type</option>
-                            <option value="revenue">Revenue Summary Report</option>
-                            <option value="payments">Payment Reports</option>
-                            <option value="insurance">Insurance Claims Report</option>
-                            <option value="unpaid">Unpaid Bills Report</option>
+                </div>
+                <div class="ara-config-field">
+                    <label>Report type</label>
+                    <div class="ara-input-with-icon">
+                        <select class="ara-select">
+                            <option value="" selected disabled>Select report</option>
+                            <option>Monthly Revenue</option>
+                            <option>Patient Visit summary</option>
+                            <option>Low Stock Alert</option>
+                            <option>Billing Collection</option>
+                            <option>Staff Activity summary</option>
                         </select>
+                        <span class="ara-input-icon ara-icon-dropdown"></span>
                     </div>
                 </div>
+            </div>
 
-                <div class="action-buttons">
-                    <button class="btn-action generate" @onclick="GenerateReport">
-                        <i class="fas fa-file-alt"></i>
-                        Generate Report
-                    </button>
-                    <button class="btn-action preview" @onclick="ShowPreview">
-                        <i class="fas fa-eye"></i>
-                        Preview
-                    </button>
-                    <button class="btn-action export">
-                        <i class="fas fa-file-pdf"></i>
-                        Export PDF
-                    </button>
+            <div class="ara-config-actions">
+                <button class="ara-btn-primary">
+                    <span class="ara-btn-icon ara-icon-generate"></span>
+                    <span>Generate Report</span>
+                </button>
+                <button class="ara-btn-outline">
+                    <span class="ara-btn-icon ara-icon-preview"></span>
+                    <span>Preview</span>
+                </button>
+                <button class="ara-btn-secondary">
+                    <span class="ara-btn-icon ara-icon-export"></span>
+                    <span>Export PDF</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="ara-quick-stats">
+            <div class="ara-card-header">
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-quickstats"></span>
+                    <div>
+                        <div class="ara-card-title">Quick Stats</div>
+                        <div class="ara-card-subtitle">Key performance indicators</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ara-quick-stats-grid">
+                <div class="ara-stat-card">
+                    <div class="ara-stat-icon ara-icon-revenue"></div>
+                    <div class="ara-stat-label">Total Revenue</div>
+                    <div class="ara-stat-value">₱147,000</div>
+                    <div class="ara-stat-caption">This month</div>
+                </div>
+                <div class="ara-stat-card">
+                    <div class="ara-stat-icon ara-icon-visits"></div>
+                    <div class="ara-stat-label">Monthly Visits</div>
+                    <div class="ara-stat-value">170</div>
+                    <div class="ara-stat-caption">Unique patients</div>
+                </div>
+                <div class="ara-stat-card">
+                    <div class="ara-stat-icon ara-icon-patients"></div>
+                    <div class="ara-stat-label">Active Patients</div>
+                    <div class="ara-stat-value">280</div>
+                    <div class="ara-stat-caption">57% female / 43% male</div>
+                </div>
+                <div class="ara-stat-card">
+                    <div class="ara-stat-icon ara-icon-alert"></div>
+                    <div class="ara-stat-label">Low Stock Items</div>
+                    <div class="ara-stat-value">5</div>
+                    <div class="ara-stat-caption">Inventory alerts</div>
                 </div>
             </div>
         </div>
 
-        <!-- Revenue Reports Card -->
-        <div class="report-category-card">
-            <div class="category-header">
-                <i class="fas fa-dollar-sign"></i>
-                <h3>Revenue Reports</h3>
-            </div>
-            <ul class="report-list">
-                <li class="report-item">
-                    <input type="checkbox" checked>
-                    <span>Daily Revenue Summary</span>
-                </li>
-                <li class="report-item">
-                    <input type="checkbox" checked>
-                    <span>Monthly Revenue Analysis</span>
-                </li>
-                <li class="report-item">
-                    <input type="checkbox" checked>
-                    <span>Service Revenue Breakdown</span>
-                </li>
-                <li class="report-item">
-                    <input type="checkbox">
-                    <span>Department Revenue Comparison</span>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Payment Reports Card -->
-        <div class="report-category-card">
-            <div class="category-header">
-                <i class="fas fa-credit-card"></i>
-                <h3>Payment Reports</h3>
-            </div>
-            <ul class="report-list">
-                <li class="report-item">
-                    <input type="checkbox" checked>
-                    <span>Payment Method Analysis</span>
-                </li>
-                <li class="report-item">
-                    <input type="checkbox" checked>
-                    <span>Cash Transaction Report</span>
-                </li>
-                <li class="report-item">
-                    <input type="checkbox">
-                    <span>Credit Card Payment Summary</span>
-                </li>
-                <li class="report-item">
-                    <input type="checkbox">
-                    <span>Online Payment Report</span>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Insurance Reports Card -->
-        <div class="report-category-card">
-            <div class="category-header">
-                <i class="fas fa-shield-alt"></i>
-                <h3>Insurance Reports</h3>
-            </div>
-            <ul class="report-list">
-                <li class="report-item">
-                    <input type="checkbox" checked>
-                    <span>Insurance Claims Status</span>
-                </li>
-                <li class="report-item">
-                    <input type="checkbox" checked>
-                    <span>Rejected Claims Analysis</span>
-                </li>
-                <li class="report-item">
-                    <input type="checkbox">
-                    <span>Insurance Provider Performance</span>
-                </li>
-                <li class="report-item">
-                    <input type="checkbox">
-                    <span>Pending Claims Report</span>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Quick Generate Card -->
-        <div class="quick-generate-card">
-            <div class="quick-header">
-                <i class="fas fa-bolt"></i>
-                <h3>Quick Generate</h3>
-            </div>
-            <div class="quick-tags">
-                <span class="quick-link" @onclick='() => QuickGenerate("revenue")'>[Daily Revenue Summary]</span>
-                <span class="quick-link" @onclick='() => QuickGenerate("payments")'>[Payment Method Analysis]</span>
-                <span class="quick-link" @onclick='() => QuickGenerate("insurance")'>[Insurance Claims Status]</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Preview Modal -->
-    @if (showPreviewModal)
-    {
-        <div class="modal-overlay" @onclick="HidePreview">
-            <div class="modal-panel" @onclick:stopPropagation="true">
-                <div class="modal-header">
-                    <h2>BILLING REVENUE REPORT <span class="report-date">- Nov 15, 2024</span></h2>
-                    <button class="modal-close" @onclick="HidePreview">
-                        <i class="fas fa-times"></i>
-                    </button>
+        <div class="ara-quick-reports">
+            <div class="ara-card-header">
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-quickreports"></span>
+                    <div class="ara-card-title">Quick Reports</div>
                 </div>
+                <button class="ara-link-button">View All</button>
+            </div>
 
-                <div class="modal-body">
-                    <div class="report-section">
-                        <h3>REVENUE SUMMARY:</h3>
-                        <div class="report-stats">
-                            <p>Total Revenue Today: <strong>$12,450.00</strong></p>
-                            <p>Cash Payments: <strong>$5,200.00</strong></p>
-                            <p>Credit Card Payments: <strong>$4,800.00</strong></p>
-                            <p>Insurance Claims: <strong>$2,450.00</strong></p>
+            <div class="ara-quickreports-list">
+                @foreach (var qr in QuickReports)
+                {
+                    <div class="ara-quickreports-row">
+                        <div class="ara-quickreports-name">@qr.Name</div>
+                        <div class="ara-quickreports-preview">
+                            <span class="ara-quickreports-icon"></span>
+                            <span class="ara-quickreports-label">[Chart Preview]</span>
                         </div>
                     </div>
+                }
+            </div>
+        </div>
 
-                    <div class="report-section">
-                        <h3>PAYMENT BREAKDOWN:</h3>
-                        <ul class="report-list-items">
-                            <li>Consultation Fees - $3,200.00</li>
-                            <li>Laboratory Services - $2,800.00</li>
-                            <li>Medication Sales - $1,950.00</li>
-                            <li>Imaging Services - $2,100.00</li>
-                            <li>Emergency Services - $2,400.00</li>
-                        </ul>
-                    </div>
+        <div class="ara-dept-analytics">
+            <div class="ara-card-header">
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-deptgrid"></span>
+                    <div class="ara-card-title">Department Analytics</div>
                 </div>
+            </div>
 
-                <div class="modal-footer">
-                    <button class="btn-modal-close" @onclick="HidePreview">Closed</button>
+            <div class="ara-dept-grid">
+                @foreach (var d in DepartmentRevenue)
+                {
+                    <div class="ara-dept-card">
+                        <div class="ara-dept-name">@d.Name</div>
+                        <div class="ara-dept-value">@d.Amount</div>
+                        <div class="ara-dept-percent">@d.Percent%</div>
+                        <div class="ara-dept-bar">
+                            <div class="ara-dept-bar-fill" style="width:@d.Percent%"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="ara-dept-categories">
+            <div class="ara-card-header">
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-deptgrid"></span>
+                    <div class="ara-card-title">Department Analytics</div>
+                </div>
+            </div>
+            <div class="ara-deptcat-grid">
+                <div class="ara-deptcat-card">
+                    <div class="ara-deptcat-icon ara-icon-financial"></div>
+                    <div class="ara-deptcat-title">Financial</div>
+                    <div class="ara-deptcat-line">Revenue Reports</div>
+                    <div class="ara-deptcat-line">Billing Analytics</div>
+                    <div class="ara-deptcat-line">Expense Tracking</div>
+                    <div class="ara-deptcat-view">View</div>
+                </div>
+                <div class="ara-deptcat-card">
+                    <div class="ara-deptcat-icon ara-icon-operational"></div>
+                    <div class="ara-deptcat-title">Operational</div>
+                    <div class="ara-deptcat-line">Patient Reports</div>
+                    <div class="ara-deptcat-line">Visit Analytics</div>
+                    <div class="ara-deptcat-line">Staff Performance</div>
+                    <div class="ara-deptcat-view">View</div>
+                </div>
+                <div class="ara-deptcat-card">
+                    <div class="ara-deptcat-icon ara-icon-inventory"></div>
+                    <div class="ara-deptcat-title">Inventory</div>
+                    <div class="ara-deptcat-line">Stock Reports</div>
+                    <div class="ara-deptcat-line">Usage</div>
+                    <div class="ara-deptcat-line">Expiry</div>
+                    <div class="ara-deptcat-view">View</div>
                 </div>
             </div>
         </div>
-    }
+
+        <div class="ara-recent-reports">
+            <div class="ara-card-header">
+                <div class="ara-card-title-row">
+                    <span class="ara-card-icon ara-icon-recent"></span>
+                    <div class="ara-card-title">Recently Generated</div>
+                </div>
+                <button class="ara-link-button">Generate new</button>
+            </div>
+
+            <div class="ara-recent-list">
+                @foreach (var r in RecentReports)
+                {
+                    <div class="ara-recent-row">
+                        <div class="ara-recent-name">@r.Name</div>
+                        <div class="ara-recent-time">@r.GeneratedAt</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
 </div>
 
 @code {
-    private DateTime startDate = DateTime.Today;
-    private DateTime endDate = DateTime.Today;
-    private string selectedReportType = "";
-    private bool showPreviewModal = false;
+    private string ActiveTab { get; set; } = "analytical";
 
-    private void GenerateReport()
+    private string ReportSubtitle => ActiveTab switch
     {
-        // Implement report generation logic
-        Console.WriteLine($"Generating report: {selectedReportType}");
+        "descriptive" => "Select filters to generate basic descriptive reports",
+        "exception" => "Highlight outliers and revenue exceptions for review",
+        _ => "Select date range and report type to generate analytics"
+    };
+
+    private record QuickReport(string Name);
+    private record DeptRevenue(string Name, string Amount, int Percent);
+    private record RecentReport(string Name, string GeneratedAt);
+
+    private readonly List<QuickReport> QuickReports = new()
+    {
+        new("Revenue Trend (Monthly)"),
+        new("Patient Demographics"),
+        new("Department Performance"),
+        new("Inventory Status"),
+    };
+
+    private readonly List<DeptRevenue> DepartmentRevenue = new()
+    {
+        new("Inpatient", "₱65,000", 45),
+        new("Outpatient", "₱45,000", 31),
+        new("Pharmacy", "₱25,000", 17),
+        new("Laboratory", "₱25,000", 8),
+    };
+
+    private readonly List<RecentReport> RecentReports = new()
+    {
+        new("Monthly Revenue Report - Nov 2024", "[11/15 2:30 PM]"),
+        new("Patient Demographics - Q4 2024", "[11/14 10:15 AM]"),
+        new("Inventory Audit Report", "[11/13 3:45 PM]"),
+        new("Staff Performance - October", "[11/12 9:20 AM]"),
+    };
+
+    private void SetTab(string key)
+    {
+        ActiveTab = key;
     }
 
-    private void ShowPreview()
-    {
-        showPreviewModal = true;
-    }
+    private void SetAnalyticalTab() => SetTab("analytical");
 
-    private void HidePreview()
-    {
-        showPreviewModal = false;
-    }
+    private void SetDescriptiveTab() => SetTab("descriptive");
 
-    private void QuickGenerate(string reportType)
-    {
-        selectedReportType = reportType;
-        GenerateReport();
-    }
+    private void SetExceptionTab() => SetTab("exception");
 }
