@@ -75,6 +75,30 @@
     gap: 8px;
 }
 
+.pm-tab-container {
+    display: flex;
+    gap: 8px;
+}
+
+.pm-tab-btn {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.pm-tab-btn:hover {
+    background-color: #e9f6f5;
+}
+
+.pm-tab-btn.active {
+    background-color: #0f8b8d;
+    border-color: #0f8b8d;
+    color: #ffffff;
+}
+
 .pm-show-entries {
     display: none; /* hide 'Show entries' control for doctor health records */
 }
@@ -128,7 +152,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 5px 5px;
     border-radius: 10px;
     border: 2px solid #0f8b8d;
     background-color: #ffffff;
@@ -193,7 +217,7 @@
 
 .pm-table th,
 .pm-table td {
-    padding: 10px 14px;
+    padding: 10px 6px;
     font-size: 13px;
     text-align: left;
     vertical-align: middle;
@@ -226,8 +250,12 @@
 }
 
 .pm-col-action {
-    width: 80px;
+    width: 56px;
     text-align: center;
+}
+
+.pm-col-actions {
+    width: 96px;
 }
 
 .pm-patient-name {
@@ -241,27 +269,29 @@
 }
 
 .pm-view-btn {
-    width: 14px;
-    height: 14px;
-    padding: 0;
-    border-radius: 50%;
-    border: none;
-    background-color: #0f8b8d;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
+    color: #0f8b8d;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+    flex-shrink: 0;
 }
 
 .pm-view-icon {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
     display: inline-block;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%23ffffff' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%23ffffff'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%230f8b8d' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%230f8b8d'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 18px 18px;
+    background-size: 14px 14px;
 }
 
 .pm-edit-icon,
@@ -277,11 +307,11 @@
 }
 
 .pm-edit-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M11 2l3 3-8 8-3 0 0-3 8-8z' stroke='%23ffffff' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 11.5L3.5 9L9.5 3L12.5 6L6.5 12L4 12.5L3 11.5Z' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
 }
 
 .pm-archive-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M2 4h12v8H2V4z' stroke='%23ffffff' stroke-width='1.2' fill='none'/%3E%3Cpath d='M5 7h6' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Crect x='2.5' y='4' width='11' height='9' rx='1.2' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3Cpath d='M3 4.5h10l-1-2H4l-1 2z' stroke='%230f8b8d' stroke-width='1.1' fill='none'/%3E%3Cpath d='M6 8h4' stroke='%230f8b8d' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 .pm-restore-icon {
@@ -294,14 +324,9 @@
 
 .pm-action-buttons {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     justify-content: center;
     align-items: center;
-}
-
-.pm-col-actions .pm-action-buttons button {
-    flex: 0 0 auto;
-    max-width: 36px;
 }
 
 .pm-edit-btn,
@@ -309,45 +334,40 @@
 .pm-delete-btn,
 .pm-update-btn,
 .pm-restore-btn {
-    width: 32px;
-    min-width: 32px;
-    height: 32px;
-    padding: 0;
-    border-radius: 999px;
-    border: none;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
+    margin: 0;
+    flex-shrink: 0;
 }
 
 .pm-edit-btn,
 .pm-update-btn,
 .pm-restore-btn {
-    background-color: #0FA4A4;
-    color: #ffffff;
+    background-color: #ffffff;
+    color: #0f8b8d;
 }
 
 .pm-edit-btn:hover,
 .pm-update-btn:hover,
 .pm-restore-btn:hover {
-    background-color: #0C8B8B;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(15, 139, 141, 0.35);
+    background-color: #e9f6f5;
 }
 
 .pm-archive-btn {
-    background-color: #64748b;
-    color: #ffffff;
+    background-color: #ffffff;
+    color: #0f8b8d;
 }
 
 .pm-archive-btn:hover {
-    background-color: #475569;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.35);
+    background-color: #e9f6f5;
 }
 
 .pm-delete-btn {
@@ -362,23 +382,25 @@
 }
 
 .pm-view-btn:hover {
-    background-color: #0b6f70;
+    background-color: #e9f6f5;
 }
 
 .pm-pagination {
-    margin-top: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 6px;
-
-    position: fixed;
-    right: 80px;  /* move pill left so arrow at 24px is outside */
-    bottom: 20px;
-    padding: 0;
-    border-radius: 999px;
-    background: transparent; /* no background pill, just the buttons */
-    box-shadow: none;
+    gap: 4px;
+    margin: 12px auto;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    width: fit-content;
+    max-width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    position: sticky;
+    bottom: 10px;
+    z-index: 6;
 }
 
 .pm-pagination-toggle {

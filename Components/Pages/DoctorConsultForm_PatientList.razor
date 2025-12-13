@@ -1,4 +1,5 @@
 @page "/doctor-consultation"
+@page "/doctor-consultation/{patientId:int}"
 @layout Layout.DashboardLayout
 @using IT_13FinalProject.Models
 @using IT_13FinalProject.Data
@@ -32,18 +33,62 @@
             </div>
         </div>
 
-        <!-- Patient Selection -->
-        <div class="dc-patient-section">
-            <label class="dc-field">
-                <span class="dc-label">Select Patient</span>
-                <select class="dc-input" @bind="SelectedPatientId">
-                    <option value="">Select a patient</option>
-                    @foreach (var patient in Patients)
-                    {
-                        <option value="@patient.PatientId">@patient.FirstName @patient.LastName (@patient.Email)</option>
-                    }
-                </select>
-            </label>
+        <div class="dc-summary-grid">
+            <div class="dc-summary-card">
+                <h3 class="dc-summary-title">Patient Information</h3>
+                <div class="dc-summary-list">
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">Name:</span>
+                        <span class="dc-summary-value">@(SelectedPatient == null ? "-" : $"{SelectedPatient.FirstName} {SelectedPatient.LastName}")</span>
+                    </div>
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">Patient Id:</span>
+                        <span class="dc-summary-value">@(SelectedPatient == null ? "-" : SelectedPatient.PatientId.ToString())</span>
+                    </div>
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">Age:</span>
+                        <span class="dc-summary-value">@(SelectedPatientAgeText)</span>
+                    </div>
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">Gender:</span>
+                        <span class="dc-summary-value">@(SelectedPatient == null ? "-" : (string.IsNullOrWhiteSpace(SelectedPatient.Gender) ? "-" : SelectedPatient.Gender))</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dc-summary-card">
+                <h3 class="dc-summary-title">Vital Signs</h3>
+                <div class="dc-summary-list">
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">Blood Pressure:</span>
+                        <span class="dc-summary-value">@(LatestVitalSign?.BloodPressure ?? "-")</span>
+                    </div>
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">Heart Rate:</span>
+                        <span class="dc-summary-value">@(LatestVitalSign?.HeartRate?.ToString() ?? "-")</span>
+                    </div>
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">Temperature:</span>
+                        <span class="dc-summary-value">@(LatestVitalSign?.Temperature?.ToString() ?? "-")</span>
+                    </div>
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">Oxygen Saturation:</span>
+                        <span class="dc-summary-value">@(LatestVitalSign?.OxygenSaturation?.ToString() ?? "-")</span>
+                    </div>
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">Weight:</span>
+                        <span class="dc-summary-value">@(LatestVitalSign?.Weight?.ToString() ?? "-")</span>
+                    </div>
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">Height:</span>
+                        <span class="dc-summary-value">@(LatestVitalSign?.Height?.ToString() ?? "-")</span>
+                    </div>
+                    <div class="dc-summary-row">
+                        <span class="dc-summary-label">BMI:</span>
+                        <span class="dc-summary-value">@(LatestVitalSign?.BodyMassIndex?.ToString() ?? "-")</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="dc-grid">
@@ -177,16 +222,47 @@
 </div>
 
 @code {
+    [Parameter]
+    public int? patientId { get; set; }
+
     private Models.HealthRecord HealthRecord { get; set; } = new Models.HealthRecord();
     private List<Patient> Patients { get; set; } = new List<Patient>();
     private int SelectedPatientId { get; set; }
+    private VitalSign? LatestVitalSign { get; set; }
     private bool IsSaving { get; set; } = false;
     private string ErrorMessage { get; set; } = "";
     private bool IsLoading { get; set; } = true;
+
+    private Patient? SelectedPatient =>
+        SelectedPatientId == 0
+            ? null
+            : Patients.FirstOrDefault(p => p.PatientId == SelectedPatientId);
     
     protected override async Task OnInitializedAsync()
     {
         await LoadPatients();
+
+        if (patientId.HasValue)
+        {
+            SelectedPatientId = patientId.Value;
+            await LoadLatestVitalSign();
+        }
+    }
+
+    private string SelectedPatientAgeText
+    {
+        get
+        {
+            if (SelectedPatient?.DateOfBirth == null)
+                return "-";
+
+            var dob = SelectedPatient.DateOfBirth.Value;
+            var today = DateTime.Today;
+            var age = today.Year - dob.Year;
+            if (dob.Date > today.AddYears(-age))
+                age--;
+            return age < 0 ? "-" : age.ToString();
+        }
     }
     
     private async Task LoadPatients()
@@ -207,6 +283,22 @@
         {
             IsLoading = false;
             StateHasChanged();
+        }
+    }
+
+    private async Task LoadLatestVitalSign()
+    {
+        try
+        {
+            LatestVitalSign = await DbContext.VitalSigns
+                .Where(vs => vs.PatientId == SelectedPatientId && vs.IsArchived == false)
+                .OrderByDescending(vs => vs.RecordedDate)
+                .FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading vital signs: {ex.Message}");
+            LatestVitalSign = null;
         }
     }
     
@@ -293,7 +385,7 @@
             }
             
             await JsRuntime.InvokeVoidAsync("alert", "HealthRecord saved successfully!");
-            Navigation.NavigateTo("/doctor-health-records");
+            Navigation.NavigateTo("/doctor-patient-list?tab=assisted");
         }
         catch (Exception ex)
         {
@@ -318,7 +410,7 @@
     
     private void GoBack()
     {
-        Navigation.NavigateTo("/doctor-health-records");
+        Navigation.NavigateTo("/doctor-patient-list");
     }
 }
 

@@ -204,7 +204,7 @@
                 </div>
 
                 <div class="settings-modal-body">
-                    <button class="settings-item">
+                    <button class="settings-item" @onclick="GoToNotification">
                         <span class="sidebar-icon sidebar-icon-request"></span>
                         Notification
                     </button>
@@ -623,6 +623,13 @@ private string GetCurrentRoleFromUrl()
     {
         IsSettingsOpen = false;
         IsAccessibilityOpen = false;
+    }
+
+    private void GoToNotification()
+    {
+        IsSettingsOpen = false;
+        IsAccessibilityOpen = false;
+        Navigation.NavigateTo("/notification");
     }
 
     private void ToggleAccessibilityPanel()

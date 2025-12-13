@@ -18,6 +18,44 @@
         </div>
     </header>
 
+    @if (IsNotificationDismissed)
+    {
+        <div class="dashboard-notification-toggle" @onclick="ShowNotificationBar">
+            <span class="notification-toggle-icon">▾</span>
+        </div>
+    }
+
+    @if (!IsNotificationDismissed)
+    {
+        <section class="dashboard-notification">
+            <div class="notification-header-row">
+                <div class="notification-title">Lease Notification</div>
+                <div class="notification-controls">
+                    @if (IsNotificationCollapsed)
+                    {
+                        <span class="notification-control-icon" @onclick="ShowNotification">▢</span>
+                    }
+                    else
+                    {
+                        <span class="notification-control-icon" @onclick="HideNotification">▭</span>
+                    }
+                    <span class="notification-control-icon" @onclick="ExitNotification">✕</span>
+                </div>
+            </div>
+
+            @if (!IsNotificationCollapsed)
+            {
+                <div class="notification-body">
+                    <div class="notification-icon">!</div>
+                    <div class="notification-text">
+                        <div>Low stock alert: Paracetamol 500mg is below reorder level.</div>
+                        <button class="notification-button" @onclick="GoToNotification">Go to notification</button>
+                    </div>
+                </div>
+            }
+        </section>
+    }
+
     <!-- TOP STAT CARDS -->
     <section class="stats-cards-row">
         <div class="stat-card">
@@ -148,6 +186,8 @@
 </div>
 
 @code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
     private bool IsNotificationCollapsed { get; set; }
     private bool IsNotificationDismissed { get; set; }
 
@@ -171,5 +211,10 @@
     {
         IsNotificationDismissed = false;
         IsNotificationCollapsed = false;
+    }
+
+    private void GoToNotification()
+    {
+        Navigation.NavigateTo("/notification?role=inventory");
     }
 }

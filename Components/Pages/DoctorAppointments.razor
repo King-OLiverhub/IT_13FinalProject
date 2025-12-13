@@ -1,6 +1,15 @@
 @page "/doctor-appointments"
 @layout Layout.DashboardLayout
 
+@inject NavigationManager Navigation
+
+@using IT_13FinalProject.Models
+@using IT_13FinalProject.Data
+@using Microsoft.EntityFrameworkCore
+
+@inject ApplicationDbContext DbContext
+
+
 <div class="nurse-notes-page">
     <header class="dashboard-header">
         <div>
@@ -348,8 +357,12 @@
     private string SearchTerm { get; set; } = string.Empty;
     private int PageSize { get; set; } = 10;
 
+    private List<Patient> Patients = new();
+
     private bool ShowNewAppointment { get; set; } = false;
     private bool ShowReschedule { get; set; } = false;
+
+    private string? ReturnUrl { get; set; }
 
     private Appointment NewAppointment = new();
     private Appointment ReschedulingAppointment = new();
@@ -443,6 +456,73 @@
         }
     };
 
+    protected override void OnInitialized()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (string.IsNullOrWhiteSpace(uri.Query))
+            return;
+
+        var query = ParseQueryString(uri.Query);
+
+        if (query.TryGetValue("returnUrl", out var returnUrl) && !string.IsNullOrWhiteSpace(returnUrl))
+        {
+            ReturnUrl = returnUrl;
+        }
+
+        if (query.TryGetValue("openNew", out var openNew) && openNew == "1")
+        {
+            query.TryGetValue("patientName", out var patientName);
+
+            NewAppointment = new();
+            NewAppointmentPatientSearch = patientName ?? "";
+            ShowNewAppointmentPatientDropdown = false;
+            ShowNewAppointment = true;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Patients = await DbContext.Patients.AsNoTracking().ToListAsync();
+        }
+        catch
+        {
+            Patients = new();
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    private static Dictionary<string, string?> ParseQueryString(string query)
+    {
+        var result = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+
+        if (string.IsNullOrWhiteSpace(query))
+            return result;
+
+        var q = query;
+        if (q.StartsWith("?"))
+            q = q[1..];
+
+        var pairs = q.Split('&', StringSplitOptions.RemoveEmptyEntries);
+        foreach (var pair in pairs)
+        {
+            var idx = pair.IndexOf('=');
+            if (idx < 0)
+            {
+                result[Uri.UnescapeDataString(pair)] = "";
+                continue;
+            }
+
+            var key = Uri.UnescapeDataString(pair[..idx]);
+            var value = Uri.UnescapeDataString(pair[(idx + 1)..]);
+            result[key] = value;
+        }
+
+        return result;
+    }
+
     private IEnumerable<Appointment> TodayAppointments =>
         AllAppointments.Where(a => a.Date == DateTime.Today.ToShortDateString());
 
@@ -461,6 +541,11 @@
     {
         ShowNewAppointment = false;
         ShowNewAppointmentPatientDropdown = false;
+
+        if (!string.IsNullOrWhiteSpace(ReturnUrl))
+        {
+            Navigation.NavigateTo(ReturnUrl);
+        }
     }
 
     private void SaveNewAppointment()
@@ -468,6 +553,11 @@
         // Add save logic here
         ShowNewAppointment = false;
         ShowNewAppointmentPatientDropdown = false;
+
+        if (!string.IsNullOrWhiteSpace(ReturnUrl))
+        {
+            Navigation.NavigateTo(ReturnUrl);
+        }
     }
 
     private void ShowRescheduleModal(Appointment appt)
@@ -535,6 +625,30 @@
 
     private void StartConsult(Appointment appt)
     {
-        // Add start consult logic here
+        var patientId = FindPatientIdByAppointment(appt);
+        if (patientId is null)
+        {
+            Navigation.NavigateTo("/doctor-consultation");
+            return;
+        }
+
+        Navigation.NavigateTo($"/doctor-consultation/{patientId.Value}");
+    }
+
+    private int? FindPatientIdByAppointment(Appointment appt)
+    {
+        if (Patients.Count == 0)
+            return null;
+
+        var apptName = (appt.PatientName ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(apptName))
+            return null;
+
+        var exact = Patients.FirstOrDefault(p => ($"{p.FirstName} {p.LastName}").Equals(apptName, StringComparison.OrdinalIgnoreCase));
+        if (exact is not null)
+            return exact.PatientId;
+
+        var contains = Patients.FirstOrDefault(p => apptName.Contains($"{p.FirstName} {p.LastName}", StringComparison.OrdinalIgnoreCase));
+        return contains?.PatientId;
     }
 }

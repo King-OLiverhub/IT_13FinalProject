@@ -1,0 +1,229 @@
+@page "/notification"
+@page "/{role}-notification"
+@layout Layout.DashboardLayout
+
+@using System.Globalization
+
+<div class="dashboard-page notification-page">
+    <header class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Notification</h1>
+            <p class="dashboard-subtitle">Welcome back @(CurrentRole == "Billing" ? "Billing Staff" : CurrentRole == "Inventory" ? "Pharmacist Staff" : CurrentRole + " Staff")!</p>
+        </div>
+
+        <div class="dashboard-user-info">
+            <span class="dashboard-user-email">@UserEmail</span>
+            <div class="dashboard-user-avatar">👤</div>
+            <span class="dashboard-user-name">@(CurrentRole == "Inventory" ? "Pharmacist" : CurrentRole)</span>
+        </div>
+    </header>
+
+
+
+
+    <div class="page-heading">
+        <span class="bell-icon">🔔</span>
+        <span class="heading-text">Notification</span>
+    </div>
+
+    <section class="notification-filters">
+        <div class="filters-left">
+            <span class="filter-label">NOTIFICATIONS FOR:</span>
+            <span class="filter-role">[@CurrentRole.ToUpper()]</span>
+            <span class="crown-icon">👑</span>
+        </div>
+        <div class="filters-right">
+            <button class="filter-option" @onclick="() => SetFilter(FilterType.All)" disabled="@(CurrentFilter == FilterType.All)">All</button>
+            <button class="filter-option" @onclick="() => SetFilter(FilterType.Unread)" disabled="@(CurrentFilter == FilterType.Unread)">Unread</button>
+            <button class="filter-option" @onclick="() => SetFilter(FilterType.Priority)" disabled="@(CurrentFilter == FilterType.Priority)">Priority</button>
+            <button class="mark-all-btn" @onclick="MarkAllRead">Mark All Read</button>
+        </div>
+    </section>
+
+    <section class="notification-list">
+        @foreach (var n in GetFilteredNotifications())
+        {
+            <div class="notification-card @(n.IsRead ? "read" : "unread") @(n.IsPriority ? "priority" : string.Empty)">
+                <div class="card-left">
+                    <span class="card-time">@n.TimeAgo</span>
+                    <span class="card-separator">|</span>
+                    <span class="card-type">@n.Type</span>
+                </div>
+                <div class="card-right">
+                    <span class="card-status">@(n.IsRead ? "Read" : "Unread")</span>
+                    <span class="status-icon">@(n.IsRead ? "✔" : "✖")</span>
+                    <button class="mark-read-btn" @onclick="() => ToggleRead(n)">@((n.IsRead ? "Mark Unread" : "Mark Read"))</button>
+                </div>
+                <div class="card-body">
+                    @n.Description
+                </div>
+                <div class="card-actions">
+                    <button class="details-btn">View Details</button>
+                </div>
+            </div>
+        }
+    </section>
+
+    <button class="back-btn" @onclick="GoBack">Back</button>
+</div>
+
+@code {
+    [Parameter]
+    public string? role { get; set; }
+
+    private string CurrentRole { get; set; } = "Admin";
+    private string UserEmail { get; set; } = "admin@gmail.com";
+
+    private enum FilterType { All, Unread, Priority }
+    private FilterType CurrentFilter { get; set; } = FilterType.All;
+
+    private List<NotificationItem> Notifications { get; set; } = new();
+
+    protected override void OnParametersSet()
+    {
+        // Determine role
+        if (!string.IsNullOrWhiteSpace(role))
+        {
+            // role parameter may include "doctor" from "doctor-notification"
+            CurrentRole = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(role.Split('-')[0]);
+        }
+        else
+        {
+            // Fallback: try to derive from URL segment
+            var uri = Navigation.Uri.ToLower();
+            if (uri.Contains("/nurse-")) CurrentRole = "Nurse";
+            else if (uri.Contains("/doctor-")) CurrentRole = "Doctor";
+            else if (uri.Contains("/billing-")) CurrentRole = "Billing";
+            else if (uri.Contains("/inventory-")) CurrentRole = "Inventory";
+            else CurrentRole = "Admin";
+        }
+
+        SetUserEmail();
+        LoadSampleData();
+    }
+
+    private void LoadSampleData()
+    {
+        Notifications.Clear();
+        switch (CurrentRole.ToLower())
+        {
+            case "doctor":
+                Notifications.AddRange(new[]
+                {
+                    new NotificationItem("2 mins ago", "Consultation", "New patient added to consultation queue: Juan Dela Cruz.", false, false),
+                    new NotificationItem("10 mins ago", "Lab Result", "Lab result ready for review: Patient #201 (CBC).", false, true),
+                    new NotificationItem("Today", "Appointment", "Upcoming appointment: Patient #88 at 2:30 PM.", false, false),
+                    new NotificationItem("Yesterday", "Prescription", "Prescription needs renewal: Patient #45 (Amoxicillin).", true, false),
+                });
+                break;
+            case "nurse":
+                Notifications.AddRange(new[]
+                {
+                    new NotificationItem("5 mins ago", "Medication", "Medication order: Amoxicillin 500mg for Patient #88.", false, true),
+                    new NotificationItem("Today", "Vitals", "Vitals due now: Patient #102 (BP, Temp, Pulse).", false, false),
+                    new NotificationItem("Today", "Ward", "New admission assigned: Patient #117 (Room 203).", false, false),
+                    new NotificationItem("Yesterday", "Shift", "Shift handover note updated by Nurse Staff #3.", true, false),
+                });
+                break;
+            case "billing":
+                Notifications.AddRange(new[]
+                {
+                    new NotificationItem("Just now", "Overdue Invoice", "Invoice INV-2045 is overdue by 7 days (Patient #122).", false, true),
+                    new NotificationItem("Today", "Payment", "Payment received: Invoice INV-1980 (₱1,850.00).", false, false),
+                    new NotificationItem("Today", "Insurance Claim", "Claim pending approval: Patient #45 (PhilHealth).", false, false),
+                    new NotificationItem("2 days ago", "Statement", "Monthly statement generated for Patient #88.", true, false),
+                });
+                break;
+            case "inventory":
+                Notifications.AddRange(new[]
+                {
+                    new NotificationItem("Today", "Low Stock", "Low stock: Paracetamol 500mg — 15 units remaining.", false, true),
+                    new NotificationItem("Today", "Reorder", "Reorder needed: Cetirizine 10mg reached reorder point.", false, false),
+                    new NotificationItem("Today", "Delivery", "Delivery received: Amoxicillin 500mg (+100 units).", true, false),
+                    new NotificationItem("Yesterday", "Expiry", "Expiring soon: Ibuprofen 200mg (expires in 30 days).", false, false),
+                });
+                break;
+            default:
+                Notifications.AddRange(new[]
+                {
+                    new NotificationItem("Today", "System", "System maintenance scheduled tonight at 11:00 PM.", false, true),
+                    new NotificationItem("Today", "Users", "New user account created: Nurse Staff #12.", false, false),
+                    new NotificationItem("Yesterday", "Audit", "Audit log exported successfully (Admin-Audit-2025-12-14).", true, false),
+                    new NotificationItem("2 days ago", "Permissions", "Role permissions updated: Billing Staff (added Reports access).", true, false),
+                });
+                break;
+        }
+    }
+
+    private void SetUserEmail()
+    {
+        UserEmail = CurrentRole switch
+        {
+            "Doctor" => "doctor@gmail.com",
+            "Nurse" => "nurse@gmail.com",
+            "Billing" => "billing@gmail.com",
+            "Inventory" => "inventory@gmail.com",
+            _ => "admin@gmail.com"
+        };
+    }
+
+    private IEnumerable<NotificationItem> GetFilteredNotifications()
+    {
+        return CurrentFilter switch
+        {
+            FilterType.Unread => Notifications.Where(n => !n.IsRead),
+            FilterType.Priority => Notifications.Where(n => n.IsPriority),
+            _ => Notifications
+        };
+    }
+
+    private void SetFilter(FilterType filter)
+    {
+        CurrentFilter = filter;
+    }
+
+    private void MarkAllRead()
+    {
+        foreach (var n in Notifications)
+        {
+            n.IsRead = true;
+        }
+    }
+
+    private void ToggleRead(NotificationItem n)
+    {
+        n.IsRead = !n.IsRead;
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo(CurrentRole switch
+        {
+            "Doctor" => "/doctor-dashboard",
+            "Nurse" => "/nurse-dashboard",
+            "Billing" => "/billing-dashboard",
+            "Inventory" => "/inventory-dashboard",
+            _ => "/admin-dashboard"
+        });
+    }
+
+    private class NotificationItem
+    {
+        public NotificationItem(string timeAgo, string type, string description, bool isRead, bool isPriority)
+        {
+            TimeAgo = timeAgo;
+            Type = type;
+            Description = description;
+            IsRead = isRead;
+            IsPriority = isPriority;
+        }
+
+        public string TimeAgo { get; }
+        public string Type { get; }
+        public string Description { get; }
+        public bool IsPriority { get; }
+        public bool IsRead { get; set; }
+    }
+
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+}

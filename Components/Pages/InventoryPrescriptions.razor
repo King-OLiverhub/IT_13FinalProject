@@ -18,6 +18,14 @@
     <section class="ip-overview">
         <div class="ip-overview-header">
             <h2 class="ip-section-title">Prescription Overview</h2>
+            <div class="ip-tab-container">
+                <button class="ip-tab-btn @(ShowArchived ? "" : "active")" @onclick="() => SetArchiveView(false)">
+                    Active Records
+                </button>
+                <button class="ip-tab-btn @(ShowArchived ? "active" : "")" @onclick="() => SetArchiveView(true)">
+                    Archived Records
+                </button>
+            </div>
             <div class="ip-show-entries">
                 <span>Show</span>
                 <select>
@@ -68,7 +76,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var p in Prescriptions)
+                        @foreach (var p in FilteredPrescriptions)
                         {
                             <tr>
                                 <td>@p.Patient</td>
@@ -82,9 +90,14 @@
                                 </td>
                                 <td>@p.Time</td>
                                 <td class="ip-actions-cell">
-                                    <button type="button" class="ip-view-btn" aria-label="View prescription" @onclick="() => OpenPrescriptionPanel(p)">
-                                        <span class="ip-view-icon"></span>
-                                    </button>
+                                    <div class="ip-action-buttons">
+                                        <button type="button" class="ip-view-btn" aria-label="View prescription" @onclick="() => OpenPrescriptionPanel(p)">
+                                            <span class="ip-view-icon"></span>
+                                        </button>
+                                        <button type="button" class="ip-archive-btn" aria-label="Archive prescription" @onclick="() => ArchivePrescription(p)">
+                                            <span class="ip-archive-icon"></span>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -173,6 +186,7 @@
 @code {
     private bool ShowPrescriptionPanel { get; set; }
     private bool ShowLetters { get; set; } = false;
+    private bool ShowArchived { get; set; }
     private PrescriptionRow? SelectedPrescription { get; set; }
     
     private readonly char[] Alphabet =
@@ -185,15 +199,24 @@
         string Items,
         string StatusKey,
         string StatusLabel,
-        string Time
+        string Time,
+        bool IsArchived
     );
 
     private readonly PrescriptionRow[] Prescriptions = new[]
     {
-        new PrescriptionRow("Juan Dela Cruz", "Dr. Lee", "Amoxicillin", "Amoxicillin 500mg", "active", "Active", "2:30 PM"),
-        new PrescriptionRow("Maria Santos", "Dr. Smith", "Amoxicillin", "Amoxicillin 250mg", "pending", "Pending", "2:15 PM"),
-        new PrescriptionRow("Pedro Reyes", "Dr. Smith", "Paracetamol", "Paracetamol 500mg", "pending", "Pending", "3:00 PM"),
+        new PrescriptionRow("Juan Dela Cruz", "Dr. Lee", "Amoxicillin", "Amoxicillin 500mg", "active", "Active", "2:30 PM", false),
+        new PrescriptionRow("Maria Santos", "Dr. Smith", "Amoxicillin", "Amoxicillin 250mg", "pending", "Pending", "2:15 PM", false),
+        new PrescriptionRow("Pedro Reyes", "Dr. Smith", "Paracetamol", "Paracetamol 500mg", "pending", "Pending", "3:00 PM", true),
     };
+
+    private IEnumerable<PrescriptionRow> FilteredPrescriptions =>
+        Prescriptions.Where(p => p.IsArchived == ShowArchived);
+
+    private void SetArchiveView(bool showArchived)
+    {
+        ShowArchived = showArchived;
+    }
 
     private void OpenPrescriptionPanel(PrescriptionRow row)
     {
@@ -205,6 +228,11 @@
     {
         ShowPrescriptionPanel = false;
         SelectedPrescription = null;
+    }
+
+    private void ArchivePrescription(PrescriptionRow row)
+    {
+        Console.WriteLine($"Archive clicked for prescription: {row.Patient} - {row.Items}");
     }
 }
 

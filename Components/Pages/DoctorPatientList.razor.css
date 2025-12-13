@@ -95,6 +95,30 @@
     gap: 10px;
 }
 
+.pm-tab-container {
+    display: flex;
+    gap: 8px;
+}
+
+.pm-tab-btn {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.pm-tab-btn:hover {
+    background-color: #e9f6f5;
+}
+
+.pm-tab-btn.active {
+    background-color: #0f8b8d;
+    border-color: #0f8b8d;
+    color: #ffffff;
+}
+
 .pm-alpha-filter {
     display: flex;
     flex-wrap: wrap;
@@ -196,7 +220,7 @@
 
 .pm-table th,
 .pm-table td {
-    padding: 10px 14px;
+    padding: 10px 6px;
     font-size: 13px;
     text-align: left;
     vertical-align: middle;
@@ -205,6 +229,12 @@
 /* Force center alignment for the Vital Sign Monitoring column */
 .pm-table th.pm-col-vitals,
 .pm-table td.pm-col-vitals {
+    text-align: center !important;
+}
+
+/* Center align the Actions column header and its button(s) */
+.pm-table th.pm-col-actions,
+.pm-table td.pm-col-actions {
     text-align: center !important;
 }
 
@@ -226,12 +256,21 @@
 }
 
 .pm-col-action {
-    width: 90px;
-    text-align: right;
+    width: 48px;
+    text-align: center;
 }
 
 .pm-col-vitals {
-    width: 160px;
+    width: 56px;
+    text-align: center;
+}
+
+.pm-col-actions {
+    width: 56px;
+}
+
+.pm-col-appointment {
+    width: 56px;
     text-align: center;
 }
 
@@ -299,14 +338,23 @@
 /* Action buttons container */
 .pm-action-buttons {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     justify-content: flex-end;
     align-items: center;
 }
 
+.pm-col-actions .pm-action-buttons {
+    justify-content: center;
+}
+
+.pm-col-appointment .pm-action-buttons {
+    justify-content: center;
+}
+
 /* Match PharmacyInventory action button sizing/layout */
 .pm-edit-btn,
-.pm-archive-btn {
+.pm-archive-btn,
+.pm-appointment-btn {
     min-width: 26px;
     height: auto;
     padding: 4px 8px;
@@ -322,7 +370,8 @@
 }
 
 .pm-edit-btn:hover,
-.pm-archive-btn:hover {
+.pm-archive-btn:hover,
+.pm-appointment-btn:hover {
     background-color: #e9f6f5;
 }
 
@@ -341,6 +390,16 @@
     width: 14px;
     height: 14px;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Crect x='2.5' y='4' width='11' height='9' rx='1.2' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3Cpath d='M3 4.5h10l-1-2H4l-1 2z' stroke='%230f8b8d' stroke-width='1.1' fill='none'/%3E%3Cpath d='M6 8h4' stroke='%230f8b8d' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px 14px;
+}
+
+.pm-appointment-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Crect x='2.2' y='3.2' width='11.6' height='10.6' rx='1.4' stroke='%230f8b8d' stroke-width='1.2'/%3E%3Cpath d='M2.2 6h11.6' stroke='%230f8b8d' stroke-width='1.2' stroke-linecap='round'/%3E%3Cpath d='M5 2.2v2.2M11 2.2v2.2' stroke='%230f8b8d' stroke-width='1.2' stroke-linecap='round'/%3E%3Cpath d='M5.2 8.4h2.2M9 8.4h2.2M5.2 10.8h2.2M9 10.8h2.2' stroke='%230f8b8d' stroke-width='1.1' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 14px 14px;

@@ -39,6 +39,11 @@
         </div>
 
         <div class="pm-filters-row">
+            <div class="pm-tab-container">
+                <button class="pm-tab-btn @(ActiveTab == PatientTab.New ? "active" : "")" @onclick="() => SetTab(PatientTab.New)">New</button>
+                <button class="pm-tab-btn @(ActiveTab == PatientTab.Assisted ? "active" : "")" @onclick="() => SetTab(PatientTab.Assisted)">Assisted</button>
+                <button class="pm-tab-btn @(ActiveTab == PatientTab.Archive ? "active" : "")" @onclick="() => SetTab(PatientTab.Archive)">Archive</button>
+            </div>
             <div class="pm-search-row">
                 <div class="pm-search-box">
                     <span class="pm-search-icon"></span>
@@ -46,9 +51,6 @@
                 </div>
 
                 <div class="pm-actions">
-                    <button class="pm-add-btn" @onclick="ShowAddPatientModal">
-                        <span class="pm-add-icon">+</span> Add Patient
-                    </button>
                     <button class="activity-action-btn">Sort</button>
                     <button class="activity-action-btn">Filters</button>
                 </div>
@@ -67,6 +69,7 @@
                             <th class="pm-col-action">Patient Info</th>
                             <th class="pm-col-vitals">Vital Signs</th>
                             <th class="pm-col-actions">Actions</th>
+                            <th class="pm-col-appointment">@(ActiveTab == PatientTab.New ? "Appointment" : "")</th>
                             <th class="pm-col-vitals">Health Records</th>
                         </tr>
                     </thead>
@@ -98,7 +101,7 @@
                         }
                         else
                         {
-                            @foreach (var patient in Patients)
+                            @foreach (var patient in FilteredPatients)
                             {
                                 <tr>
                                     <td>
@@ -112,27 +115,46 @@
                                     <td>Awaiting Consultation</td>
                                     <td class="pm-col-date">@(patient.CreatedAt?.ToString("MM/dd/yy") ?? "N/A")</td>
                                     <td class="pm-col-action">
-                                        <button class="pm-view-btn" aria-label="View patient info" @onclick="() => GoToPatientProfile(patient.PatientId.ToString())">
-                                            <span class="pm-view-icon"></span>
-                                        </button>
+                                        @if (ActiveTab == PatientTab.New || ActiveTab == PatientTab.Assisted)
+                                        {
+                                            <button class="pm-view-btn" aria-label="View patient info" @onclick="() => GoToPatientProfile(patient.PatientId.ToString())">
+                                                <span class="pm-view-icon"></span>
+                                            </button>
+                                        }
                                     </td>
                                     <td class="pm-col-vitals">
-                                        <button class="pm-view-btn" aria-label="View vital signs" @onclick="() => ViewVitals(patient.PatientId.ToString())">
-                                            <span class="pm-view-icon"></span>
-                                        </button>
+                                        @if (ActiveTab == PatientTab.New || ActiveTab == PatientTab.Assisted)
+                                        {
+                                            <button class="pm-view-btn" aria-label="View vital signs" @onclick="() => ViewVitals(patient.PatientId.ToString())">
+                                                <span class="pm-view-icon"></span>
+                                            </button>
+                                        }
                                     </td>
                                     <td class="pm-col-actions">
-                                        <div class="pm-action-buttons">
-                                            <button class="pm-edit-btn" @onclick="() => ShowEditPatientModal(patient)" title="Edit Patient">
-                                                <span class="pm-edit-icon" aria-hidden="true"></span>
-                                            </button>
-                                            <button class="pm-archive-btn" @onclick="() => ArchivePatient(patient.PatientId)" title="Archive Patient">
-                                                <span class="pm-archive-icon" aria-hidden="true"></span>
-                                            </button>
-                                        </div>
+                                        @if (ActiveTab == PatientTab.New || ActiveTab == PatientTab.Assisted)
+                                        {
+                                            <div class="pm-action-buttons">
+                                                <button class="pm-archive-btn" @onclick="() => ArchivePatient(patient.PatientId)" title="Archive Patient">
+                                                    <span class="pm-archive-icon" aria-hidden="true"></span>
+                                                </button>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td class="pm-col-appointment">
+                                        @if (ActiveTab == PatientTab.New)
+                                        {
+                                            <div class="pm-action-buttons">
+                                                <button class="pm-appointment-btn" @onclick="() => AddToAppointment(patient.PatientId)" title="Add to Appointment">
+                                                    <span class="pm-appointment-icon" aria-hidden="true"></span>
+                                                </button>
+                                            </div>
+                                        }
                                     </td>
                                     <td class="pm-col-vitals">
-                                        <button class="pm-add-btn" @onclick="() => GoToHealthRecords(patient.PatientId.ToString())">+ Add</button>
+                                        @if (ActiveTab == PatientTab.New)
+                                        {
+                                            <button class="pm-add-btn" @onclick="() => GoToHealthRecords(patient.PatientId.ToString())">+ Add</button>
+                                        }
                                     </td>
                                 </tr>
                             }
@@ -266,6 +288,16 @@
     private List<Patient> Patients = new();
     private bool IsLoading = true;
     private string ErrorMessage = "";
+
+    private enum PatientTab
+    {
+        New,
+        Assisted,
+        Archive
+    }
+
+    private PatientTab ActiveTab { get; set; } = PatientTab.New;
+    private List<int> AssistedPatientIds { get; set; } = new();
     
     // Modal properties
     private bool ShowAddModal = false;
@@ -277,6 +309,30 @@
     {
         await LoadPatients();
     }
+
+    private IEnumerable<Patient> FilteredPatients
+    {
+        get
+        {
+            if (ActiveTab == PatientTab.Archive)
+                return Patients;
+
+            if (ActiveTab == PatientTab.New)
+            {
+                // New: patients with no saved (non-archived) health record yet
+                return Patients.Where(p => !AssistedPatientIds.Contains(p.PatientId));
+            }
+
+            // Assisted: patients that already have a saved (non-archived) health record
+            return Patients.Where(p => AssistedPatientIds.Contains(p.PatientId));
+        }
+    }
+
+    private async Task SetTab(PatientTab tab)
+    {
+        ActiveTab = tab;
+        await LoadPatients();
+    }
     
     private async Task LoadPatients()
     {
@@ -286,10 +342,33 @@
             ErrorMessage = "";
             StateHasChanged();
             
-            Patients = await DbContext.Patients
-                .Where(p => p.IsArchived == false)
+            var query = DbContext.Patients.AsQueryable();
+
+            if (ActiveTab == PatientTab.Archive)
+            {
+                query = query.Where(p => p.IsArchived == true);
+            }
+            else
+            {
+                query = query.Where(p => p.IsArchived == false);
+            }
+
+            Patients = await query
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
+
+            if (ActiveTab != PatientTab.Archive)
+            {
+                AssistedPatientIds = await DbContext.HealthRecords
+                    .Where(hr => hr.IsArchived == false && hr.PatientId != null)
+                    .Select(hr => hr.PatientId!.Value)
+                    .Distinct()
+                    .ToListAsync();
+            }
+            else
+            {
+                AssistedPatientIds = new List<int>();
+            }
         }
         catch (Exception ex)
         {
@@ -320,7 +399,22 @@
 
     private void GoToHealthRecords(string patientId)
     {
-        Navigation.NavigateTo("/doctor-consultation");
+        Navigation.NavigateTo($"/doctor-consultation/{patientId}");
+    }
+
+    private async Task AddToAppointment(int patientId)
+    {
+        var patient = Patients.FirstOrDefault(p => p.PatientId == patientId);
+        if (patient is null)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Patient not found.");
+            return;
+        }
+
+        var patientName = $"{patient.FirstName} {patient.LastName}";
+        var returnUrl = $"/doctor-patient-list?tab={ActiveTab.ToString().ToLowerInvariant()}";
+        var url = $"/doctor-appointments?openNew=1&patientName={Uri.EscapeDataString(patientName)}&returnUrl={Uri.EscapeDataString(returnUrl)}";
+        Navigation.NavigateTo(url);
     }
 
     // Modal methods

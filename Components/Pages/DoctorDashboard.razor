@@ -46,7 +46,7 @@
                     <div class="notification-icon">!</div>
                     <div class="notification-text">
                         <div>New patient added to consultation queue: Juan Dela Cruz.</div>
-                        <button class="notification-button">Go to notification</button>
+                        <button class="notification-button" @onclick="GoToNotification">Go to notification</button>
                     </div>
                 </div>
             }
@@ -131,6 +131,9 @@
 </div>
 
 @code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
     private bool IsNotificationCollapsed { get; set; }
     private bool IsNotificationDismissed { get; set; }
 
@@ -154,6 +157,11 @@
     {
         IsNotificationDismissed = false;
         IsNotificationCollapsed = false;
+    }
+
+    private void GoToNotification()
+    {
+        Navigation.NavigateTo("/notification?role=doctor");
     }
 }
 

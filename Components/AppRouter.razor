@@ -310,6 +310,22 @@ else if (path == "doctor-consultation")
         <DoctorConsultForm_PatientList />
     </DashboardLayout>
 }
+else if (path.StartsWith("doctor-consultation/"))
+{
+    var patientIdString = path.Substring("doctor-consultation/".Length);
+    if (int.TryParse(patientIdString, out int patientId))
+    {
+        <DashboardLayout>
+            <DoctorConsultForm_PatientList patientId="@patientId" />
+        </DashboardLayout>
+    }
+    else
+    {
+        <DashboardLayout>
+            <DoctorConsultForm_PatientList />
+        </DashboardLayout>
+    }
+}
 else if (path == "doctor-consultation-edit")
 {
     <DashboardLayout>
@@ -358,6 +374,12 @@ else if (path == "doctor-reports")
 {
     <DashboardLayout>
         <DoctorReports />
+    </DashboardLayout>
+}
+else if (path == "notification")
+{
+    <DashboardLayout>
+        <Notification />
     </DashboardLayout>
 }
 else if (path.StartsWith("admin-patient-records/"))

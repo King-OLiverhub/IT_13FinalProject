@@ -123,7 +123,7 @@
                         <div class="notification-icon">!</div>
                         <div class="notification-text">
                             <div>Unpaid invoice detected: INV-2045 for Patient #122 is overdue by 7 days.</div>
-                            <button class="notification-button">Go to notification</button>
+                            <button class="notification-button" @onclick="GoToNotification">Go to notification</button>
                         </div>
                     </div>
                 }
@@ -261,6 +261,11 @@
     {
         IsNotificationDismissed = false;
         IsNotificationCollapsed = false;
+    }
+
+    private void GoToNotification()
+    {
+        Navigation.NavigateTo("/notification?role=billing");
     }
 
     private void ViewBill(BillingRow row)

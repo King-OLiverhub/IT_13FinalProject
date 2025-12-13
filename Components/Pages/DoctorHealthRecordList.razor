@@ -54,9 +54,6 @@
                 </div>
 
                 <div class="pm-actions">
-                    <button class="pm-add-btn" @onclick="GoToConsultationForm">
-                        <span class="pm-add-icon">+</span> Add Health Record
-                    </button>
                     <button class="activity-action-btn">Sort</button>
                     <button class="activity-action-btn">Filters</button>
                 </div>
@@ -170,24 +167,16 @@
             </div>
         </div>
 
-        <button type="button" class="pm-pagination-toggle" @onclick="TogglePagination" aria-label="Hide or show page buttons">
-            <span>@(ShowPagination ? "›" : "‹")</span>
-        </button>
-
-        @if (ShowPagination && TotalPages > 1)
+        @if (ShowPagination)
         {
-            <div class="pm-pagination">
-                <button class="pm-page-btn" @onclick="PreviousPage" disabled="@(CurrentPage <= 1)">Previous</button>
-
-                @for (var pageNumber = 1; pageNumber <= TotalPages; pageNumber++)
-                {
-                    <button class="pm-page-number @(pageNumber == CurrentPage ? "active" : string.Empty)"
-                            @onclick="() => GoToPage(pageNumber)">
-                        @pageNumber
-                    </button>
-                }
-
-                <button class="pm-page-btn" @onclick="NextPage" disabled="@(CurrentPage >= TotalPages)">Next</button>
+            <div class="pm-pagination pm-pagination-health-records">
+                <button class="pm-page-btn">Previous</button>
+                <button class="pm-page-number active">1</button>
+                <button class="pm-page-number">2</button>
+                <button class="pm-page-number">3</button>
+                <span class="pm-page-dots">...</span>
+                <button class="pm-page-number">8</button>
+                <button class="pm-page-btn">Next</button>
             </div>
         }
     </section>
