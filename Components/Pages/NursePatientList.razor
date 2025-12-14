@@ -37,6 +37,11 @@
         </div>
 
         <div class="pm-filters-row">
+            <div class="pm-tab-container">
+                <button class="pm-tab-btn @(ActiveTab == PatientTab.New ? "active" : "")" @onclick="() => SetTab(PatientTab.New)">New</button>
+                <button class="pm-tab-btn @(ActiveTab == PatientTab.Assisted ? "active" : "")" @onclick="() => SetTab(PatientTab.Assisted)">Assisted</button>
+                <button class="pm-tab-btn @(ActiveTab == PatientTab.Archive ? "active" : "")" @onclick="() => SetTab(PatientTab.Archive)">Archive</button>
+            </div>
             <div class="pm-search-row">
                 <div class="pm-search-box">
                     <span class="pm-search-icon"></span>
@@ -60,12 +65,12 @@
                             <th>Assessment Status</th>
                             <th class="pm-col-date">Date of Visit</th>
                             <th class="pm-col-action">Patient Info</th>
-                            <th class="pm-col-vitals">Vital Sign Monitoring</th>
                             <th class="pm-col-archive">Archive</th>
+                            <th class="pm-col-vitals">Vital Sign<br />Monitoring</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var p in ActiveLetter.HasValue ? GetOrderedPatients(ActiveLetter.Value) : Patients)
+                        @foreach (var p in ActiveLetter.HasValue ? GetOrderedPatients(ActiveLetter.Value) : FilteredPatients)
                         {
                             <tr>
                                 <td class="pm-col-name">
@@ -74,18 +79,26 @@
                                 <td class="pm-col-email">
                                     <div class="pm-patient-email">@p.Email</div>
                                 </td>
-                                <td>New Patient</td>
+                                <td>@(ActiveTab == PatientTab.Archive ? "Archived" : (ActiveTab == PatientTab.Assisted ? "Assisted" : "New Patient"))</td>
                                 <td class="pm-col-date">@(p.CreatedAt?.ToString("MM/dd/yy") ?? "Unknown")</td>
                                 <td class="pm-col-action">
                                     <button class="pm-view-btn" aria-label="View patient record" @onclick="() => GoToPatientProfile(p.PatientId.ToString())">
                                         <span class="pm-view-icon"></span>
                                     </button>
                                 </td>
-                                <td class="pm-col-vitals">
-                                    <button class="pm-add-btn" @onclick="() => GoToVitalsForm(p.PatientId.ToString())">+ Add</button>
-                                </td>
                                 <td class="pm-col-archive">
-                                    <button class="pm-archive-btn" @onclick="() => ArchivePatient(p.PatientId)">Archive</button>
+                                    @if (ActiveTab == PatientTab.New || ActiveTab == PatientTab.Assisted)
+                                    {
+                                        <button class="pm-archive-btn" @onclick="() => ArchivePatient(p.PatientId)" title="Archive Patient">
+                                            <span class="pm-archive-icon" aria-hidden="true"></span>
+                                        </button>
+                                    }
+                                </td>
+                                <td class="pm-col-vitals">
+                                    @if (ActiveTab == PatientTab.New)
+                                    {
+                                        <button class="pm-add-btn" @onclick="() => GoToVitalsForm(p.PatientId.ToString())">+ Add</button>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -110,7 +123,18 @@
     private bool ShowPagination { get; set; } = true;
     private bool ShowLetters { get; set; } = false;
     private char? ActiveLetter { get; set; }
-    
+
+    private enum PatientTab
+    {
+        New,
+        Assisted,
+        Archive
+    }
+
+    private PatientTab ActiveTab { get; set; } = PatientTab.New;
+
+    private List<int> VitalCompletedPatientIds { get; set; } = new();
+
     private readonly char[] Alphabet =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
 
@@ -121,15 +145,44 @@
         await LoadPatients();
     }
 
+    private async Task SetTab(PatientTab tab)
+    {
+        ActiveTab = tab;
+        await LoadPatients();
+    }
+
     private async Task LoadPatients()
     {
         try
         {
-            Patients = await DbContext.Patients
-                .Where(p => !p.IsArchived.HasValue || !p.IsArchived.Value) // Only load non-archived patients
+            var query = DbContext.Patients.AsQueryable();
+
+            if (ActiveTab == PatientTab.Archive)
+            {
+                query = query.Where(p => p.IsArchived.HasValue && p.IsArchived.Value);
+            }
+            else
+            {
+                query = query.Where(p => !p.IsArchived.HasValue || !p.IsArchived.Value);
+            }
+
+            Patients = await query
                 .OrderBy(p => p.LastName)
                 .ThenBy(p => p.FirstName)
                 .ToListAsync();
+
+            if (ActiveTab != PatientTab.Archive)
+            {
+                VitalCompletedPatientIds = await DbContext.VitalSigns
+                    .Where(v => v.IsArchived == false)
+                    .Select(v => v.PatientId)
+                    .Distinct()
+                    .ToListAsync();
+            }
+            else
+            {
+                VitalCompletedPatientIds = new List<int>();
+            }
             
             Console.WriteLine($"Loaded {Patients.Count} active patients");
             foreach (var p in Patients.Take(3))
@@ -147,18 +200,32 @@
     {
         if (string.IsNullOrEmpty(letter.ToString()))
         {
-            return Patients;
+            return FilteredPatients;
         }
 
         var upper = letter.ToString().ToUpper();
 
-        var startsWithLetter = Patients
+        var startsWithLetter = FilteredPatients
             .Where(p => (p.FirstName + " " + p.LastName).StartsWith(upper, StringComparison.OrdinalIgnoreCase));
 
-        var others = Patients
+        var others = FilteredPatients
             .Where(p => !(p.FirstName + " " + p.LastName).StartsWith(upper, StringComparison.OrdinalIgnoreCase));
 
         return startsWithLetter.Concat(others);
+    }
+
+    private IEnumerable<Patient> FilteredPatients
+    {
+        get
+        {
+            if (ActiveTab == PatientTab.Archive)
+                return Patients;
+
+            if (ActiveTab == PatientTab.New)
+                return Patients.Where(p => !VitalCompletedPatientIds.Contains(p.PatientId));
+
+            return Patients.Where(p => VitalCompletedPatientIds.Contains(p.PatientId));
+        }
     }
 
     private void TogglePagination()

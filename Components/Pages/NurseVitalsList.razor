@@ -122,22 +122,18 @@
                                         {
                                             <button class="pm-restore-btn" @onclick="() => ArchiveVitals(vs)" aria-label="Restore vital signs record">
                                                 <span class="pm-restore-icon"></span>
-                                                <span class="pm-btn-text">Restore</span>
                                             </button>
                                             <button class="pm-delete-btn" @onclick="() => DeleteVitals(vs)" aria-label="Delete vital signs record permanently">
                                                 <span class="pm-delete-icon"></span>
-                                                <span class="pm-btn-text">Delete</span>
                                             </button>
                                         }
                                         else
                                         {
-                                            <button class="pm-edit-btn" @onclick="() => EditVitals(vs)" aria-label="Edit vital signs record">
+                                            <button class="pm-edit-btn" @onclick="() => EditVitals(vs)" title="Edit" aria-label="Edit vital signs record">
                                                 <span class="pm-edit-icon"></span>
-                                                <span class="pm-btn-text">Edit</span>
                                             </button>
-                                            <button class="pm-archive-btn" @onclick="() => ArchiveVitals(vs)" aria-label="Archive vital signs record">
+                                            <button class="pm-archive-btn" @onclick="() => ArchiveVitals(vs)" title="Archive" aria-label="Archive vital signs record">
                                                 <span class="pm-archive-icon"></span>
-                                                <span class="pm-btn-text">Archive</span>
                                             </button>
                                         }
                                     </td>

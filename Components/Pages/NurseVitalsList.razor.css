@@ -227,7 +227,19 @@
 
 .pm-col-action {
     width: 100px;
-    text-align: right;
+    text-align: center;
+}
+
+.pm-table th.pm-col-action,
+.pm-table td.pm-col-action {
+    text-align: center !important;
+}
+
+.pm-table td.pm-col-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
 }
 
 .pm-patient-name {
@@ -244,43 +256,43 @@
 .pm-archive-btn,
 .pm-restore-btn,
 .pm-delete-btn {
-    padding: 6px 12px;
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
     border-radius: 6px;
-    border: none;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    font-weight: 500;
+    justify-content: center;
+    margin: 0;
+    flex-shrink: 0;
     transition: all 0.2s ease;
 }
 
 .pm-view-btn {
-    background-color: #0f8b8d;
-    color: white;
+    background-color: #ffffff;
 }
 
 .pm-view-btn:hover {
-    background-color: #0b6f70;
+    background-color: #e9f6f5;
 }
 
 .pm-edit-btn {
-    background-color: #2196F3;
-    color: white;
+    background-color: #ffffff;
 }
 
 .pm-edit-btn:hover {
-    background-color: #1976D2;
+    background-color: #e9f6f5;
 }
 
 .pm-archive-btn {
-    background-color: #f44336;
-    color: white;
+    background-color: #ffffff;
 }
 
 .pm-archive-btn:hover {
-    background-color: #d32f2f;
+    background-color: #e9f6f5;
 }
 
 .pm-restore-btn {
@@ -306,32 +318,32 @@
 .pm-archive-icon,
 .pm-restore-icon,
 .pm-delete-icon {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     display: inline-block;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 12px 12px;
+    background-size: 14px 14px;
 }
 
 .pm-view-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%23ffffff' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%23ffffff'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 8C2.5 5.7 4.9 4 8 4c3.1 0 5.5 1.7 6.5 4-1 2.3-3.4 4-6.5 4-3.1 0-5.5-1.7-6.5-4z' stroke='%230f8b8d' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%230f8b8d'/%3E%3C/svg%3E");
 }
 
 .pm-edit-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M11 2l3 3-8 8-3 0 0-3 8-8z' stroke='%23ffffff' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 11.5L3.5 9L9.5 3L12.5 6L6.5 12L4 12.5L3 11.5Z' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
 }
 
 .pm-archive-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M2 4h12v8H2V4z' stroke='%23ffffff' stroke-width='1.2' fill='none'/%3E%3Cpath d='M5 7h6' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Crect x='2.5' y='4' width='11' height='9' rx='1.2' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3Cpath d='M3 4.5h10l-1-2H4l-1 2z' stroke='%230f8b8d' stroke-width='1.1' fill='none'/%3E%3Cpath d='M6 8h4' stroke='%230f8b8d' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 .pm-restore-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M8 2v6l4.5 2.5' stroke='%23ffffff' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='8' cy='8' r='5' stroke='%23ffffff' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M8 2v6l4.5 2.5' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='8' cy='8' r='5' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
 }
 
 .pm-delete-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M2 4h12v10H2V4z' stroke='%23ffffff' stroke-width='1.2' fill='none'/%3E%3Cpath d='M5 7h6M5 10h6' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M2 4h12v10H2V4z' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3Cpath d='M5 7h6M5 10h6' stroke='%230f8b8d' stroke-width='1.2'/%3E%3C/svg%3E");
 }
 
 .pm-btn-text {

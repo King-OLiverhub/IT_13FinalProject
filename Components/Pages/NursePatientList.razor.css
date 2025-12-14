@@ -95,6 +95,30 @@
     gap: 10px;
 }
 
+.pm-tab-container {
+    display: flex;
+    gap: 8px;
+}
+
+.pm-tab-btn {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.pm-tab-btn:hover {
+    background-color: #e9f6f5;
+}
+
+.pm-tab-btn.active {
+    background-color: #0f8b8d;
+    border-color: #0f8b8d;
+    color: #ffffff;
+}
+
 .pm-alpha-filter {
     display: flex;
     flex-wrap: wrap;
@@ -193,7 +217,7 @@
 
 .pm-table th,
 .pm-table td {
-    padding: 10px 14px;
+    padding: 10px 10px;
     font-size: 13px;
     text-align: center;
     vertical-align: middle;
@@ -221,7 +245,7 @@
 }
 
 .pm-col-archive {
-    width: 100px;
+    width: 60px;
     text-align: center;
 }
 
@@ -245,12 +269,12 @@
 }
 
 .pm-col-action {
-    width: 80px;
+    width: 60px;
     text-align: center;
 }
 
 .pm-col-vitals {
-    width: 160px;
+    width: 90px;
     text-align: center;
 }
 
@@ -296,19 +320,54 @@
 }
 
 .pm-add-btn {
-    padding: 4px 12px;      /* match doctor PatientList compact pill */
+    padding: 4px 8px;
     border-radius: 999px;
-    border: none;
-    background-color: #0f8b8d;
-    color: #ffffff;
+    border: 1px solid #0f8b8d;
+    background-color: transparent;
+    color: #0f8b8d;
     font-weight: 600;
     font-size: 0.72rem;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-width: 0;
+    white-space: nowrap;
     margin: 0 auto; /* center inside the cell */
 }
 
 .pm-add-btn:hover {
-    background-color: #0b6f70;
+    background-color: #e9f6f5;
+}
+
+.pm-archive-btn {
+    min-width: 26px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #0f8b8d;
+    background-color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    flex-shrink: 0;
+}
+
+.pm-archive-btn:hover {
+    background-color: #e9f6f5;
+}
+
+.pm-archive-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Crect x='2.5' y='4' width='11' height='9' rx='1.2' stroke='%230f8b8d' stroke-width='1.2' fill='none'/%3E%3Cpath d='M3 4.5h10l-1-2H4l-1 2z' stroke='%230f8b8d' stroke-width='1.1' fill='none'/%3E%3Cpath d='M6 8h4' stroke='%230f8b8d' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px 14px;
 }
 
 .pm-pagination {
