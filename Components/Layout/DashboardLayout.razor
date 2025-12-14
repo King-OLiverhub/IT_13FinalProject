@@ -289,6 +289,35 @@
     {
         get
         {
+            // Allow role override via query string (used by Notification navigation)
+            // Example: /notification?role=doctor
+            try
+            {
+                var uriObj = new Uri(Navigation.Uri);
+                var query = uriObj.Query ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(query))
+                {
+                    var trimmed = query.TrimStart('?');
+                    foreach (var pair in trimmed.Split('&', StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        var kv = pair.Split('=', 2);
+                        if (kv.Length == 2 && kv[0].Equals("role", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var value = Uri.UnescapeDataString(kv[1]);
+                            if (!string.IsNullOrWhiteSpace(value))
+                            {
+                                var normalized = value.Split('-')[0].Trim();
+                                return char.ToUpper(normalized[0]) + normalized.Substring(1).ToLower();
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore malformed URI/query and continue with existing role detection
+            }
+
             // First check if we're on the user profile page with new format
             if (Navigation.Uri.Contains("/user-profile/role/", StringComparison.OrdinalIgnoreCase))
             {
@@ -629,7 +658,15 @@ private string GetCurrentRoleFromUrl()
     {
         IsSettingsOpen = false;
         IsAccessibilityOpen = false;
-        Navigation.NavigateTo("/notification");
+        var role = GetCurrentRoleFromUrl();
+        if (!string.IsNullOrWhiteSpace(role) && !role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+        {
+            Navigation.NavigateTo($"/notification?role={role.ToLowerInvariant()}");
+        }
+        else
+        {
+            Navigation.NavigateTo("/notification");
+        }
     }
 
     private void ToggleAccessibilityPanel()

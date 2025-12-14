@@ -82,14 +82,50 @@
     protected override void OnParametersSet()
     {
         // Determine role
-        if (!string.IsNullOrWhiteSpace(role))
+        var resolvedRole = string.Empty;
+
+        // 1) Prefer query string role (used by dashboard notification bar navigation)
+        // Example: /notification?role=doctor
+        try
         {
-            // role parameter may include "doctor" from "doctor-notification"
-            CurrentRole = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(role.Split('-')[0]);
+            var uriObj = new Uri(Navigation.Uri);
+            var query = uriObj.Query ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                var trimmed = query.TrimStart('?');
+                foreach (var pair in trimmed.Split('&', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var kv = pair.Split('=', 2);
+                    if (kv.Length == 2 && kv[0].Equals("role", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var value = Uri.UnescapeDataString(kv[1]);
+                        if (!string.IsNullOrWhiteSpace(value))
+                        {
+                            resolvedRole = value;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // ignore malformed query
+        }
+
+        // 2) Route parameter format: /{role}-notification
+        if (string.IsNullOrWhiteSpace(resolvedRole) && !string.IsNullOrWhiteSpace(role))
+        {
+            resolvedRole = role;
+        }
+
+        if (!string.IsNullOrWhiteSpace(resolvedRole))
+        {
+            CurrentRole = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(resolvedRole.Split('-')[0]);
         }
         else
         {
-            // Fallback: try to derive from URL segment
+            // 3) Fallback: try to derive from URL segment
             var uri = Navigation.Uri.ToLower();
             if (uri.Contains("/nurse-")) CurrentRole = "Nurse";
             else if (uri.Contains("/doctor-")) CurrentRole = "Doctor";

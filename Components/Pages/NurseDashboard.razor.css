@@ -214,7 +214,7 @@
 
 .activity-search {
     padding: 6px 10px;
-    border-radius: 999px;
+    border-radius: 10px;
     border: 1px solid #c9e3e1;
     font-size: 13px;
     min-width: 260px;
