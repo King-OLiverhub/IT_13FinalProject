@@ -35,6 +35,28 @@
             <h2 class="nv-form-title nv-form-title-center">Vital Signs Monitoring</h2>
         </div>
 
+        <div class="nv-patient-info">
+            <div class="nv-patient-info-title">Patient Information</div>
+            <div class="nv-patient-info-grid">
+                <div class="nv-patient-info-row">
+                    <span class="nv-patient-info-label">Name:</span>
+                    <span class="nv-patient-info-value">@PatientDisplayName</span>
+                </div>
+                <div class="nv-patient-info-row">
+                    <span class="nv-patient-info-label">Patient Id:</span>
+                    <span class="nv-patient-info-value">@PatientDisplayId</span>
+                </div>
+                <div class="nv-patient-info-row">
+                    <span class="nv-patient-info-label">Age:</span>
+                    <span class="nv-patient-info-value">@PatientDisplayAge</span>
+                </div>
+                <div class="nv-patient-info-row">
+                    <span class="nv-patient-info-label">Gender:</span>
+                    <span class="nv-patient-info-value">@PatientDisplayGender</span>
+                </div>
+            </div>
+        </div>
+
         <div class="nv-form-grid">
             <div class="nv-form-column">
                 <h3 class="nv-column-title">Medical History</h3>
@@ -187,6 +209,32 @@
     private VitalSign vitalSignForm = new();
     private bool isSubmitting = false;
 
+    private Patient? SelectedPatient { get; set; }
+
+    private string PatientDisplayName => SelectedPatient == null ? "" : $"{SelectedPatient.FirstName} {SelectedPatient.LastName}".Trim();
+    private string PatientDisplayId => SelectedPatient?.PatientId.ToString() ?? (int.TryParse(PatientId, out var pid) ? pid.ToString() : "");
+    private string PatientDisplayGender => SelectedPatient?.Gender ?? "";
+    private string PatientDisplayAge
+    {
+        get
+        {
+            if (SelectedPatient?.DateOfBirth == null)
+            {
+                return "";
+            }
+
+            var dob = SelectedPatient.DateOfBirth.Value.Date;
+            var today = DateTime.Today;
+            var age = today.Year - dob.Year;
+            if (dob > today.AddYears(-age))
+            {
+                age--;
+            }
+
+            return age < 0 ? "" : age.ToString();
+        }
+    }
+
     protected override Task OnInitializedAsync()
     {
         // Set default values for all fields
@@ -217,6 +265,36 @@
         vitalSignForm.DoctorId = 1; // Valid doctor_id from database (Jonel)
         
         return Task.CompletedTask;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        int pid;
+
+        if (!string.IsNullOrEmpty(PatientId) && int.TryParse(PatientId, out pid))
+        {
+            // ok
+        }
+        else
+        {
+            var uri = new Uri(Navigation.Uri);
+            var query = HttpUtility.ParseQueryString(uri.Query);
+            var patientIdParam = query["patientId"];
+            if (string.IsNullOrEmpty(patientIdParam) || !int.TryParse(patientIdParam, out pid))
+            {
+                SelectedPatient = null;
+                return;
+            }
+        }
+
+        try
+        {
+            SelectedPatient = await DbContext.Patients.FirstOrDefaultAsync(p => p.PatientId == pid);
+        }
+        catch
+        {
+            SelectedPatient = null;
+        }
     }
 
     private async Task SaveVitalSign()

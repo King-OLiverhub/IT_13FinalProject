@@ -111,13 +111,19 @@
                                     <div class="pm-actions-grid">
                                         @if (ShowArchived)
                                         {
-                                            <button class="pm-restore-btn" @onclick="() => RestoreBill(b.BillId)">Restore</button>
+                                            <button class="pm-restore-btn" @onclick="() => RestoreBill(b.BillId)" title="Restore Bill" aria-label="Restore Bill">
+                                                <span class="pm-restore-icon" aria-hidden="true"></span>
+                                            </button>
                                             <button class="pm-delete-btn" @onclick="() => DeleteBill(b.BillId)">Delete</button>
                                         }
                                         else
                                         {
-                                            <button class="pm-edit-btn" @onclick="() => EditBill(b)">Update</button>
-                                            <button class="pm-archive-btn" @onclick="() => ArchiveBill(b.BillId)">Archive</button>
+                                            <button type="button" class="pm-edit-btn" aria-label="Update bill" @onclick="() => EditBill(b)">
+                                                <span class="pm-edit-icon" aria-hidden="true"></span>
+                                            </button>
+                                            <button type="button" class="pm-archive-btn" aria-label="Archive bill" @onclick="() => ArchiveBill(b.BillId)">
+                                                <span class="pm-archive-icon" aria-hidden="true"></span>
+                                            </button>
                                         }
                                     </div>
                                 </td>

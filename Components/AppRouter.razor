@@ -220,7 +220,7 @@ else if (path == "admin-receipt-pdf")
 else if (path == "receipt-pdf")
 {
     <DashboardLayout>
-        <ReceiptPdf />
+        <AdminReceiptPdf />
     </DashboardLayout>
 }
 else if (path == "nurse-patient-list")
@@ -235,23 +235,10 @@ else if (path == "nurse-vitals-list")
         <NurseVitalsList />
     </DashboardLayout>
 }
-else if (path == "vital-sign-records")
-{
-    <DashboardLayout>
-        <VitalSignRecords />
-    </DashboardLayout>
-}
 else if (path == "nurse-vitals")
 {
     <DashboardLayout>
         <NurseVitalsForm />
-    </DashboardLayout>
-}
-else if (path.StartsWith("nurse-vitals-view/"))
-{
-    var id = path.Substring("nurse-vitals-view/".Length);
-    <DashboardLayout>
-        <NurseVitalsView VitalSignId="@id" />
     </DashboardLayout>
 }
 else if (path.StartsWith("nurse-vitals-edit/"))

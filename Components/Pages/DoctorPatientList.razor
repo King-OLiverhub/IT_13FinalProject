@@ -131,14 +131,20 @@
                                         }
                                     </td>
                                     <td class="pm-col-actions">
-                                        @if (ActiveTab == PatientTab.New || ActiveTab == PatientTab.Assisted)
-                                        {
-                                            <div class="pm-action-buttons">
+                                        <div class="pm-action-buttons">
+                                            @if (ActiveTab == PatientTab.Archive)
+                                            {
+                                                <button class="pm-restore-btn" @onclick="() => RestorePatient(patient.PatientId)" title="Restore Patient">
+                                                    <span class="pm-restore-icon" aria-hidden="true"></span>
+                                                </button>
+                                            }
+                                            else
+                                            {
                                                 <button class="pm-archive-btn" @onclick="() => ArchivePatient(patient.PatientId)" title="Archive Patient">
                                                     <span class="pm-archive-icon" aria-hidden="true"></span>
                                                 </button>
-                                            </div>
-                                        }
+                                            }
+                                        </div>
                                     </td>
                                     <td class="pm-col-appointment">
                                         @if (ActiveTab == PatientTab.New)
@@ -596,6 +602,50 @@
         catch (Exception ex)
         {
             await JsRuntime.InvokeVoidAsync("alert", $"Error archiving patient: {ex.Message}");
+        }
+    }
+
+    private async Task RestorePatient(int patientId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to restore this patient?");
+
+        if (!confirmed)
+        {
+            return;
+        }
+
+        try
+        {
+            var patient = await DbContext.Patients.FindAsync(patientId);
+            if (patient != null)
+            {
+                patient.IsArchived = false;
+                patient.ArchivedAt = null;
+                await DbContext.SaveChangesAsync();
+
+                // Also restore in local database
+                try
+                {
+                    var localPatient = await LocalDbContext.Patients.FindAsync(patientId);
+                    if (localPatient != null)
+                    {
+                        localPatient.IsArchived = false;
+                        localPatient.ArchivedAt = null;
+                        await LocalDbContext.SaveChangesAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to restore patient in local: {ex.Message}");
+                }
+
+                await LoadPatients();
+                await JsRuntime.InvokeVoidAsync("alert", "Patient restored successfully!");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", $"Error restoring patient: {ex.Message}");
         }
     }
 }

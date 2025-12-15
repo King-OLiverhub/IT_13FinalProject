@@ -15,6 +15,7 @@ namespace IT_13FinalProject.Data
         public DbSet<VitalSign> VitalSigns { get; set; } = null!;
         public DbSet<PharmacyInventory> PharmacyInventory { get; set; } = null!;
         public DbSet<PatientBill> PatientBills { get; set; } = null!;
+        public DbSet<NurseNote> NurseNotes { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -79,6 +80,30 @@ namespace IT_13FinalProject.Data
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
                 entity.Property(e => e.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
                 entity.Property(e => e.IsArchived).HasDefaultValue(false);
+            });
+
+            modelBuilder.Entity<NurseNote>(entity =>
+            {
+                entity.HasKey(e => e.NurseNoteId);
+                entity.Property(e => e.NurseNoteId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn();
+
+                entity.Property(e => e.Category).HasMaxLength(100);
+                entity.Property(e => e.Details).HasMaxLength(2000);
+                entity.Property(e => e.PainScale).HasMaxLength(10);
+                entity.Property(e => e.Mood).HasMaxLength(50);
+                entity.Property(e => e.Activity).HasMaxLength(50);
+                entity.Property(e => e.Nutrition).HasMaxLength(50);
+                entity.Property(e => e.NurseName).HasMaxLength(100);
+
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(e => e.IsArchived).HasDefaultValue(false);
+
+                entity.HasOne(e => e.Patient)
+                    .WithMany()
+                    .HasForeignKey(e => e.PatientId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

@@ -35,6 +35,10 @@
     </div>
 
     <div class="pm-filters-row">
+        <div class="pm-tab-container">
+            <button class="pm-tab-btn @(!ShowArchived ? "active" : "")" @onclick="() => SetArchivedTab(false)">Active Records</button>
+            <button class="pm-tab-btn @(ShowArchived ? "active" : "")" @onclick="() => SetArchivedTab(true)">Archived Records</button>
+        </div>
         <div class="pm-search-row">
             <div class="pm-search-box">
                 <div class="pm-search-icon"></div>
@@ -86,11 +90,14 @@
                             <tr>
                                 <td colspan="7" style="text-align: center; padding: 2rem;">
                                     <div>No vital sign records found.</div>
-                                    <div style="margin-top: 1rem;">
-                                        <button class="pm-add-vitals-btn" @onclick="GoToVitalsForm">
-                                            <span>+ Add Vital Signs</span>
-                                        </button>
-                                    </div>
+                                    @if (!ShowArchived)
+                                    {
+                                        <div style="margin-top: 1rem;">
+                                            <button class="pm-add-vitals-btn" @onclick="GoToVitalsForm">
+                                                <span>+ Add Vital Signs</span>
+                                            </button>
+                                        </div>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -155,6 +162,67 @@
             <button class="pm-page-btn">Next</button>
         </div>
     </section>
+
+    @if (ShowViewModal)
+    {
+        <div class="nv-modal-overlay" @onclick="CloseViewModal">
+            <div class="nv-modal" @onclick:stopPropagation="true">
+                <div class="nv-modal-header">
+                    <h2 class="nv-modal-title">View Vital Signs Record</h2>
+                    <div class="nv-modal-subtitle">@(SelectedVitalSign.Patient?.FirstName + " " + SelectedVitalSign.Patient?.LastName ?? "Unknown")</div>
+                </div>
+
+                <div class="nv-modal-body">
+                    <div class="nv-modal-grid">
+                        <div class="nv-modal-col">
+                            <h3 class="nv-modal-section-title">Medical History</h3>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Allergies</span><span class="nv-modal-value">@(SelectedVitalSign.Allergies ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Past Illnesses</span><span class="nv-modal-value">@(SelectedVitalSign.PastIllnesses ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Current Medications</span><span class="nv-modal-value">@(SelectedVitalSign.CurrentMedications ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Family History</span><span class="nv-modal-value">@(SelectedVitalSign.FamilyHistory ?? "N/A")</span></div>
+                        </div>
+
+                        <div class="nv-modal-col">
+                            <h3 class="nv-modal-section-title">Vital Signs</h3>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Blood Pressure</span><span class="nv-modal-value">@(SelectedVitalSign.BloodPressure ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Heart Rate</span><span class="nv-modal-value">@(SelectedVitalSign.HeartRate?.ToString() ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Temperature</span><span class="nv-modal-value">@(SelectedVitalSign.Temperature?.ToString() ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Weight</span><span class="nv-modal-value">@(SelectedVitalSign.Weight?.ToString() ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Height</span><span class="nv-modal-value">@(SelectedVitalSign.Height?.ToString() ?? "N/A")</span></div>
+                        </div>
+
+                        <div class="nv-modal-col">
+                            <h3 class="nv-modal-section-title">Current Visit Details</h3>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Doctor Assisted</span><span class="nv-modal-value">@(SelectedVitalSign.DoctorAssisted ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Nurse Name</span><span class="nv-modal-value">@(SelectedVitalSign.NurseName ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Date of Visit</span><span class="nv-modal-value">@SelectedVitalSign.RecordedDate.ToString("MM/dd/yyyy")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Time In/out</span><span class="nv-modal-value">@(string.IsNullOrWhiteSpace(SelectedVitalSign.TimeInOut) ? "N/A" : SelectedVitalSign.TimeInOut)</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Department</span><span class="nv-modal-value">@(SelectedVitalSign.Department ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Type of Visit</span><span class="nv-modal-value">@(SelectedVitalSign.TypeOfVisit ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Chief Complaint</span><span class="nv-modal-value">@(SelectedVitalSign.ChiefComplaint ?? "N/A")</span></div>
+                            <div class="nv-modal-row"><span class="nv-modal-label">Duration of Symptoms</span><span class="nv-modal-value">@(SelectedVitalSign.DurationSymptoms ?? "N/A")</span></div>
+                        </div>
+
+                        <div class="nv-modal-col nv-modal-col-notes @(IsNotesExpanded ? "expanded" : "collapsed")">
+                            <div class="nv-modal-notes-header">
+                                <h3 class="nv-modal-section-title" style="margin: 0;">Nursing Notes</h3>
+                                <span class="nv-notes-toggle" role="button" tabindex="0" @onclick="ToggleNotesPanel">
+                                    @(IsNotesExpanded ? "Collapse" : "Expand")
+                                </span>
+                            </div>
+                            <div class="nv-notes-box">
+                                @(string.IsNullOrWhiteSpace(SelectedVitalSign.Remarks) ? "N/A" : SelectedVitalSign.Remarks)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nv-modal-footer">
+                    <button type="button" class="nv-modal-close-btn" @onclick="CloseViewModal">Close</button>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
@@ -162,6 +230,10 @@
     private bool IsLoading = true;
     private string ErrorMessage = "";
     private bool ShowArchived = false;
+
+    private bool ShowViewModal = false;
+    private VitalSign SelectedVitalSign = new();
+    private bool IsNotesExpanded = false;
     
     private readonly char[] Alphabet =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
@@ -179,18 +251,19 @@
             ErrorMessage = "";
             StateHasChanged();
 
-            // Load vital signs based on ShowArchived toggle
+            // Load vital signs based on ShowArchived tab
             if (ShowArchived)
             {
-                // Show all records (both active and archived)
+                // Archived Records tab: show archived only
                 VitalSigns = await DbContext.VitalSigns
                     .Include(vs => vs.Patient)
+                    .Where(vs => vs.IsArchived)
                     .OrderByDescending(vs => vs.RecordedDate)
                     .ToListAsync();
             }
             else
             {
-                // Show only active (non-archived) records
+                // Active Records tab: show non-archived only
                 VitalSigns = await DbContext.VitalSigns
                     .Include(vs => vs.Patient)
                     .Where(vs => !vs.IsArchived)
@@ -213,14 +286,32 @@
 
     private async Task OnToggleArchived(ChangeEventArgs e)
     {
-        ShowArchived = (bool)e.Value;
+        ShowArchived = e.Value is bool b && b;
+        await LoadVitalSigns();
+    }
+
+    private async Task SetArchivedTab(bool showArchived)
+    {
+        ShowArchived = showArchived;
         await LoadVitalSigns();
     }
 
     private void ViewVitals(VitalSign vitalSign)
     {
-        // Navigate to vital signs details view
-        Navigation.NavigateTo($"/nurse-vitals-view/{vitalSign.VitalSignId}");
+        SelectedVitalSign = vitalSign;
+        ShowViewModal = true;
+    }
+
+    private void CloseViewModal()
+    {
+        ShowViewModal = false;
+        SelectedVitalSign = new();
+        IsNotesExpanded = false;
+    }
+
+    private void ToggleNotesPanel()
+    {
+        IsNotesExpanded = !IsNotesExpanded;
     }
 
     private void EditVitals(VitalSign vitalSign)

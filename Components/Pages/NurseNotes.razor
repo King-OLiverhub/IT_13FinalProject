@@ -1,6 +1,14 @@
 @page "/nurse-notes"
 @layout Layout.DashboardLayout
 
+@using IT_13FinalProject.Data
+@using IT_13FinalProject.Models
+@using Microsoft.EntityFrameworkCore
+
+@inject ApplicationDbContext DbContext
+@inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime
+
 <div class="nn-page">
         <div class="nn-header">
             <h1 class="nn-title">Nursing Notes</h1>
@@ -11,40 +19,37 @@
             <div class="nn-section">
                 <div class="nn-section-header">
                     <h2 class="nn-section-title">Recent Notes</h2>
-                    <button class="nn-btn nn-btn-primary">Add New Note</button>
+                    <button class="nn-btn nn-btn-primary" @onclick="() => OpenAddModal()">Add New Note</button>
                 </div>
 
                 <div class="nn-filters">
                     <div class="nn-search-box">
                         <input type="text" placeholder="Search notes..." class="nn-search-input" />
                     </div>
-                    <select class="nn-filter-select">
-                        <option>All Patients</option>
-                        <option>My Patients</option>
-                        <option>Recent</option>
-                    </select>
                 </div>
 
                 <div class="nn-notes-list">
-                    @for (int i = 1; i <= 5; i++)
+                    @foreach (var n in Notes)
                     {
                         <div class="nn-note-card">
                             <div class="nn-note-header">
                                 <div class="nn-patient-info">
-                                    <span class="nn-patient-name">Patient #@i</span>
+                                    <span class="nn-patient-name">@GetNotePatientName(n)</span>
+                                    <button type="button" class="nn-remove-note" @onclick="() => ConfirmRemoveNote(n.NurseNoteId)">Remove Notes</button>
                                 </div>
                                 <div class="nn-note-meta">
-                                    <span class="nn-note-date">@(DateTime.Now.AddDays(-i).ToString("MMM dd, yyyy"))</span>
-                                    <span class="nn-note-time">@(DateTime.Now.AddHours(-i*2).ToString("hh:mm tt"))</span>
+                                    <span class="nn-note-date">@n.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")</span>
+                                    <span class="nn-note-time">@n.CreatedAt.ToLocalTime().ToString("hh:mm tt")</span>
                                 </div>
                             </div>
+
                             <div class="nn-note-content">
                                 <p class="nn-note-text">Patient observed to be stable. Vital signs within normal range. No complaints reported. Medication administered as prescribed. Will continue monitoring.</p>
                                 <div class="nn-note-footer">
                                     <span class="nn-nurse-name">Nurse Johnson</span>
                                     <div class="nn-note-actions">
-                                        <button class="nn-btn-small nn-btn-edit">Edit</button>
-                                        <button class="nn-btn-small nn-btn-view">View Details</button>
+                                        <button class="nn-btn-small nn-btn-edit" @onclick="() => OpenEditModal(n.NurseNoteId)">Edit</button>
+                                        <button class="nn-btn-small nn-btn-view" @onclick="() => OpenViewModal(n.NurseNoteId)">View Details</button>
                                     </div>
                                 </div>
                             </div>
@@ -53,4 +58,611 @@
                 </div>
             </div>
         </div>
+        @if (ShowAddModal)
+        {
+            <div class="nn-modal-overlay" @onclick="CloseModals">
+                <div class="nn-modal" @onclick:stopPropagation="true">
+                    <div class="nn-modal-title">Add Nursing Entry</div>
+
+                    <div class="nn-modal-body">
+                        <div class="nn-form-row">
+                            <label class="nn-form-label">Patient ID</label>
+                            <input class="nn-form-input" value="@SelectedPatientId" readonly />
+                        </div>
+
+                        <div class="nn-form-row">
+                            <label class="nn-form-label">Patient</label>
+                            @if (UsePatientSearch)
+                            {
+                                <div class="nn-input-with-icon">
+                                    @if (string.IsNullOrWhiteSpace(SelectedPatientSearch))
+                                    {
+                                        <span class="nn-input-search-icon" aria-hidden="true"></span>
+                                    }
+                                    <input class="nn-form-input" list="assistedPatients" placeholder="Search patient..." @bind="SelectedPatientSearch" @bind:event="oninput" @onchange="OnSelectedPatientSearchChanged" />
+                                    <datalist id="assistedPatients">
+                                        @foreach (var p in AssistedPatients)
+                                        {
+                                            <option value="@GetPatientOptionValue(p)"></option>
+                                        }
+                                    </datalist>
+                                </div>
+                            }
+                            else
+                            {
+                                <input class="nn-form-input" value="@SelectedPatientLabel" readonly />
+                            }
+                        </div>
+
+                        <div class="nn-form-row">
+                            <label class="nn-form-label">Vital Signs</label>
+                            <div class="nn-readonly">@((MarkupString)SelectedVitalSignsDisplay)</div>
+                        </div>
+
+                        <div class="nn-form-row">
+                            <label class="nn-form-label">Category</label>
+                            <select class="nn-form-select">
+                                <option>Care Provided</option>
+                                <option>Assessment</option>
+                                <option>Medication</option>
+                                <option>Procedure</option>
+                                <option>Patient Education</option>
+                                <option>Monitoring</option>
+                                <option>Others</option>
+                            </select>
+                        </div>
+
+                        <div class="nn-form-row">
+                            <label class="nn-form-label">Details</label>
+                            <textarea class="nn-form-textarea" rows="4"></textarea>
+                        </div>
+
+                        <div class="nn-form-subtitle">Additional Info</div>
+                        <div class="nn-form-grid">
+                            <div class="nn-form-row compact">
+                                <label class="nn-form-label">Pain Scale:</label>
+                                <select class="nn-form-select">
+                                    <option>0/10</option>
+                                    <option>1/10</option>
+                                    <option>2/10</option>
+                                    <option>3/10</option>
+                                    <option>4/10</option>
+                                    <option>5/10</option>
+                                    <option>6/10</option>
+                                    <option>7/10</option>
+                                    <option>8/10</option>
+                                    <option>9/10</option>
+                                    <option>10/10</option>
+                                </select>
+                            </div>
+                            <div class="nn-form-row compact">
+                                <label class="nn-form-label">Mood:</label>
+                                <select class="nn-form-select">
+                                    <option>Comfortable</option>
+                                    <option>Calm</option>
+                                    <option>Anxious</option>
+                                    <option>Agitated</option>
+                                    <option>Depressed</option>
+                                    <option>Irritable</option>
+                                    <option>Drowsy</option>
+                                    <option>Restless</option>
+                                </select>
+                            </div>
+                            <div class="nn-form-row compact">
+                                <label class="nn-form-label">Activity:</label>
+                                <select class="nn-form-select">
+                                    <option>Ambulatory</option>
+                                    <option>Bed Rest</option>
+                                    <option>Up as Tolerated</option>
+                                    <option>Assisted Ambulation</option>
+                                    <option>Wheelchair</option>
+                                    <option>Physical Therapy</option>
+                                </select>
+                            </div>
+                            <div class="nn-form-row compact">
+                                <label class="nn-form-label">Nutrition:</label>
+                                <select class="nn-form-select">
+                                    <option>Tolerating</option>
+                                    <option>NPO</option>
+                                    <option>Clear Liquids</option>
+                                    <option>Full Liquids</option>
+                                    <option>Soft Diet</option>
+                                    <option>Regular Diet</option>
+                                    <option>Poor Appetite</option>
+                                    <option>Needs Assistance</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nn-modal-footer">
+                        <button class="nn-modal-btn nn-modal-btn-secondary" @onclick="CloseModals">Cancel</button>
+                        <button class="nn-modal-btn nn-modal-btn-primary" @onclick="SaveNewNoteAsync">Save</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (ShowEditModal)
+        {
+            <div class="nn-modal-overlay" @onclick="CloseModals">
+                <div class="nn-modal" @onclick:stopPropagation="true">
+                    <div class="nn-modal-title">Edit Nursing Entry</div>
+
+                    <div class="nn-modal-body">
+                        <div class="nn-form-row">
+                            <label class="nn-form-label">Patient ID</label>
+                            <input class="nn-form-input" value="@SelectedPatientId" readonly />
+                        </div>
+
+                        <div class="nn-form-row">
+                            <label class="nn-form-label">Patient</label>
+                            <input class="nn-form-input" value="@SelectedPatientLabel" readonly />
+                        </div>
+
+                        <div class="nn-form-row">
+                            <label class="nn-form-label">Vital Signs</label>
+                            <div class="nn-readonly">@((MarkupString)SelectedVitalSignsDisplay)</div>
+                        </div>
+
+                        <div class="nn-form-row">
+                            <label class="nn-form-label">Category</label>
+                            <select class="nn-form-select">
+                                <option>Care Provided</option>
+                                <option>Assessment</option>
+                                <option>Medication</option>
+                                <option>Procedure</option>
+                                <option>Patient Education</option>
+                                <option>Monitoring</option>
+                                <option>Others</option>
+                            </select>
+                        </div>
+
+                        <div class="nn-form-row">
+                            <label class="nn-form-label">Details</label>
+                            <textarea class="nn-form-textarea" rows="4">Patient assisted with ambulation to bathroom. Tolerated well, no dizziness reported. Will continue to assist with mobility as needed.</textarea>
+                        </div>
+
+                        <div class="nn-form-subtitle">Additional Info</div>
+                        <div class="nn-form-grid">
+                            <div class="nn-form-row compact">
+                                <label class="nn-form-label">Pain Scale:</label>
+                                <select class="nn-form-select">
+                                    <option>0/10</option>
+                                    <option>1/10</option>
+                                    <option>2/10</option>
+                                    <option>3/10</option>
+                                    <option>4/10</option>
+                                    <option>5/10</option>
+                                    <option>6/10</option>
+                                    <option>7/10</option>
+                                    <option>8/10</option>
+                                    <option>9/10</option>
+                                    <option>10/10</option>
+                                </select>
+                            </div>
+                            <div class="nn-form-row compact">
+                                <label class="nn-form-label">Mood:</label>
+                                <select class="nn-form-select">
+                                    <option>Comfortable</option>
+                                    <option>Calm</option>
+                                    <option>Anxious</option>
+                                    <option>Agitated</option>
+                                    <option>Depressed</option>
+                                    <option>Irritable</option>
+                                    <option>Drowsy</option>
+                                    <option>Restless</option>
+                                </select>
+                            </div>
+                            <div class="nn-form-row compact">
+                                <label class="nn-form-label">Activity:</label>
+                                <select class="nn-form-select">
+                                    <option>Ambulatory</option>
+                                    <option>Bed Rest</option>
+                                    <option>Up as Tolerated</option>
+                                    <option>Assisted Ambulation</option>
+                                    <option>Wheelchair</option>
+                                    <option>Physical Therapy</option>
+                                </select>
+                            </div>
+                            <div class="nn-form-row compact">
+                                <label class="nn-form-label">Nutrition:</label>
+                                <select class="nn-form-select">
+                                    <option>Tolerating</option>
+                                    <option>NPO</option>
+                                    <option>Clear Liquids</option>
+                                    <option>Full Liquids</option>
+                                    <option>Soft Diet</option>
+                                    <option>Regular Diet</option>
+                                    <option>Poor Appetite</option>
+                                    <option>Needs Assistance</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nn-modal-footer">
+                        <button class="nn-modal-btn nn-modal-btn-secondary" @onclick="CloseModals">Cancel</button>
+                        <button class="nn-modal-btn nn-modal-btn-primary" @onclick="CloseModals">Save</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (ShowViewModal)
+        {
+            <div class="nn-modal-overlay" @onclick="CloseModals">
+                <div class="nn-modal" @onclick:stopPropagation="true">
+                    <div class="nn-modal-title">Nursing Entry</div>
+
+                    <div class="nn-modal-body">
+                        <div class="nn-view-grid">
+                            <div class="nn-view-row"><span class="nn-view-label">Patient</span><span class="nn-view-value">Juan Dela Cruz - Room 201</span></div>
+                            <div class="nn-view-row"><span class="nn-view-label">Vital Signs</span><span class="nn-view-value">@((MarkupString)SelectedVitalSignsDisplay)</span></div>
+                            <div class="nn-view-row"><span class="nn-view-label">Category</span><span class="nn-view-value">Care Provided</span></div>
+                            <div class="nn-view-row"><span class="nn-view-label">Details</span><span class="nn-view-value">Patient assisted with ambulation to bathroom. Tolerated well, no dizziness reported. Will continue to assist with mobility as needed.</span></div>
+                        </div>
+
+                        <div class="nn-form-subtitle">Additional Info</div>
+                        <div class="nn-view-grid">
+                            <div class="nn-view-row"><span class="nn-view-label">Pain Scale:</span><span class="nn-view-value">2/10</span></div>
+                            <div class="nn-view-row"><span class="nn-view-label">Mood:</span><span class="nn-view-value">Comfortable</span></div>
+                            <div class="nn-view-row"><span class="nn-view-label">Activity:</span><span class="nn-view-value">Ambulatory</span></div>
+                            <div class="nn-view-row"><span class="nn-view-label">Nutrition:</span><span class="nn-view-value">Tolerating</span></div>
+                        </div>
+                    </div>
+
+                    <div class="nn-modal-footer nn-modal-footer-view">
+                        <button class="nn-modal-link" @onclick="CloseModals">Close</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (ShowRemoveConfirm)
+        {
+            <div class="nn-modal-overlay" @onclick="CloseRemoveConfirm">
+                <div class="nn-modal" @onclick:stopPropagation="true">
+                    <div class="nn-modal-title">Remove Notes</div>
+
+                    <div class="nn-modal-body">
+                        <div class="nn-readonly">Are you sure you want to remove this note?</div>
+                    </div>
+
+                    <div class="nn-modal-footer">
+                        <button class="nn-modal-btn nn-modal-btn-secondary" @onclick="CloseRemoveConfirm">Cancel</button>
+                        <button class="nn-modal-btn nn-modal-btn-primary" @onclick="RemoveConfirmed">Remove</button>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
+
+@code {
+    private bool ShowAddModal { get; set; }
+    private bool ShowEditModal { get; set; }
+    private bool ShowViewModal { get; set; }
+
+    private List<NurseNote> Notes { get; set; } = new();
+    private Dictionary<int, int> NoteIdToPatientId { get; set; } = new();
+
+    private bool ShowRemoveConfirm { get; set; }
+
+    private int PendingRemoveNoteId { get; set; }
+
+    private int SelectedNoteId { get; set; }
+
+    private string SelectedPatientId { get; set; } = "";
+
+    private string? SelectedPatientLabel { get; set; }
+
+    private string SelectedVitalSignsDisplay { get; set; } = "BP: 130/85 | Temp: 37.0°C | Pulse: 78 | SpO₂: 97%<br />(Last taken: 02:00 PM)";
+
+    private List<Patient> AssistedPatients { get; set; } = new();
+
+    private string SelectedPatientSearch { get; set; } = string.Empty;
+
+    private bool UsePatientSearch { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAssistedPatientsAsync();
+        await LoadNurseNotesAsync();
+        await TryOpenModalFromQueryAsync();
+    }
+
+    private async Task LoadNurseNotesAsync()
+    {
+        try
+        {
+            Notes = await DbContext.Set<NurseNote>()
+                .AsNoTracking()
+                .Where(n => !n.IsArchived)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
+
+            NoteIdToPatientId = Notes
+                .Where(n => n.PatientId > 0)
+                .ToDictionary(n => n.NurseNoteId, n => n.PatientId);
+        }
+        catch
+        {
+            Notes = new();
+            NoteIdToPatientId = new();
+        }
+    }
+
+    private string GetNotePatientName(NurseNote note)
+    {
+        if (!string.IsNullOrWhiteSpace(note.Patient?.FirstName) || !string.IsNullOrWhiteSpace(note.Patient?.LastName))
+        {
+            return $"{note.Patient?.FirstName} {note.Patient?.LastName}".Trim();
+        }
+
+        var match = AssistedPatients.FirstOrDefault(p => p.PatientId == note.PatientId);
+        if (match != null)
+        {
+            return $"{match.FirstName} {match.LastName}".Trim();
+        }
+
+        return note.PatientId > 0 ? $"Patient #{note.PatientId}" : "Patient";
+    }
+
+    private void ConfirmRemoveNote(int noteId)
+    {
+        PendingRemoveNoteId = noteId;
+        ShowRemoveConfirm = true;
+    }
+
+    private void CloseRemoveConfirm()
+    {
+        ShowRemoveConfirm = false;
+        PendingRemoveNoteId = 0;
+    }
+
+    private void RemoveConfirmed()
+    {
+        if (PendingRemoveNoteId > 0)
+        {
+            if (NoteIdToPatientId.TryGetValue(PendingRemoveNoteId, out var patientId) && patientId > 0)
+            {
+                _ = JsRuntime.InvokeVoidAsync("nurseNotes.unlockPatientId", patientId);
+            }
+
+            var existing = Notes.FirstOrDefault(n => n.NurseNoteId == PendingRemoveNoteId);
+            if (existing != null)
+            {
+                Notes.Remove(existing);
+            }
+        }
+
+        CloseRemoveConfirm();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await TryOpenModalFromQueryAsync();
+    }
+
+    private async Task LoadAssistedPatientsAsync()
+    {
+        try
+        {
+            AssistedPatients = await DbContext.Patients
+                .AsNoTracking()
+                .Where(p => p.IsArchived != true)
+                .OrderBy(p => p.LastName)
+                .ThenBy(p => p.FirstName)
+                .ToListAsync();
+        }
+        catch
+        {
+            AssistedPatients = new();
+        }
+    }
+
+    private string GetPatientOptionValue(Patient p)
+    {
+        return $"{p.PatientId} - {p.FirstName} {p.LastName}";
+    }
+
+    private async Task OnSelectedPatientSearchChanged(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString() ?? string.Empty;
+        SelectedPatientSearch = value;
+
+        var idPart = value.Split('-', 2, StringSplitOptions.TrimEntries)[0];
+        if (!int.TryParse(idPart, out var pid) || pid <= 0)
+        {
+            return;
+        }
+
+        var match = AssistedPatients.FirstOrDefault(p => p.PatientId == pid);
+        if (match == null)
+        {
+            return;
+        }
+
+        await SetSelectedPatientAsync(pid, $"{match.FirstName} {match.LastName}");
+    }
+
+    private async Task SetSelectedPatientAsync(int pid, string? label)
+    {
+        SelectedPatientId = pid.ToString();
+        SelectedPatientLabel = label;
+        SelectedPatientSearch = $"{pid} - {label}";
+
+        var latestVitals = await DbContext.VitalSigns
+            .AsNoTracking()
+            .Where(v => v.PatientId == pid && !v.IsArchived)
+            .OrderByDescending(v => v.RecordedDate)
+            .FirstOrDefaultAsync();
+
+        if (latestVitals != null)
+        {
+            var bp = string.IsNullOrWhiteSpace(latestVitals.BloodPressure) ? "N/A" : latestVitals.BloodPressure;
+            var temp = latestVitals.Temperature.HasValue ? $"{latestVitals.Temperature:0.0}°C" : "N/A";
+            var pulse = latestVitals.HeartRate.HasValue ? latestVitals.HeartRate.Value.ToString() : "N/A";
+            var spo2 = latestVitals.OxygenSaturation.HasValue ? $"{latestVitals.OxygenSaturation:0}%" : "N/A";
+            var taken = latestVitals.RecordedDate.ToString("hh:mm tt");
+
+            SelectedVitalSignsDisplay = $"BP: {bp} | Temp: {temp} | Pulse: {pulse} | SpO₂: {spo2}<br />(Last taken: {taken})";
+        }
+        else
+        {
+            SelectedVitalSignsDisplay = "No vital signs found.";
+        }
+    }
+
+    private async Task TryOpenModalFromQueryAsync()
+    {
+        try
+        {
+            var uri = new Uri(Navigation.Uri);
+            var query = uri.Query ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return;
+            }
+
+            bool openAdd = false;
+            string? patientId = null;
+            string? vs = null;
+
+            var trimmed = query.TrimStart('?');
+            foreach (var pair in trimmed.Split('&', StringSplitOptions.RemoveEmptyEntries))
+            {
+                var kv = pair.Split('=', 2);
+                if (kv.Length != 2)
+                    continue;
+
+                var key = kv[0];
+                var value = Uri.UnescapeDataString(kv[1]);
+
+                if (key.Equals("openAdd", StringComparison.OrdinalIgnoreCase)
+                    && (value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase)))
+                {
+                    openAdd = true;
+                }
+
+                if (key.Equals("patientId", StringComparison.OrdinalIgnoreCase))
+                {
+                    patientId = value;
+                }
+
+                if (key.Equals("vs", StringComparison.OrdinalIgnoreCase))
+                {
+                    vs = value;
+                }
+            }
+
+            if (openAdd && !ShowAddModal)
+            {
+                SelectedPatientId = patientId ?? string.Empty;
+                if (int.TryParse(SelectedPatientId, out var pid) && pid > 0)
+                {
+                    var patient = await DbContext.Patients
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(p => p.PatientId == pid);
+
+                    if (patient != null)
+                    {
+                        SelectedPatientLabel = $"{patient.FirstName} {patient.LastName}";
+                    }
+                    else
+                    {
+                        SelectedPatientLabel = $"Patient #{pid}";
+                    }
+
+                    await SetSelectedPatientAsync(pid, SelectedPatientLabel);
+                }
+                else
+                {
+                    SelectedPatientLabel = null;
+
+                    if (!string.IsNullOrWhiteSpace(vs))
+                    {
+                        SelectedVitalSignsDisplay = vs;
+                    }
+                }
+
+                OpenAddModal(usePatientSearch: false);
+                StateHasChanged();
+            }
+        }
+        catch
+        {
+        }
+    }
+
+    private async Task SaveNewNoteAsync()
+    {
+        if (!int.TryParse(SelectedPatientId, out var pid) || pid <= 0)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Please select a valid patient before saving.");
+            return;
+        }
+
+        try
+        {
+            var note = new NurseNote
+            {
+                PatientId = pid,
+                Category = "Care Provided",
+                Details = string.Empty,
+                NurseName = "Nurse Johnson",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                IsArchived = false
+            };
+
+            DbContext.Add(note);
+            await DbContext.SaveChangesAsync();
+
+            await JsRuntime.InvokeVoidAsync("nurseNotes.lockPatientId", pid);
+
+            CloseModals();
+            await LoadNurseNotesAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", $"Failed to save nurse note: {ex.Message}");
+        }
+    }
+
+    private void OpenAddModal(bool usePatientSearch = true)
+    {
+        CloseModals();
+        UsePatientSearch = usePatientSearch;
+
+        if (string.IsNullOrWhiteSpace(SelectedPatientId))
+        {
+            SelectedPatientSearch = string.Empty;
+        }
+        ShowAddModal = true;
+    }
+
+    private void OpenEditModal(int noteId)
+    {
+        CloseModals();
+        SelectedNoteId = noteId;
+        ShowEditModal = true;
+    }
+
+    private void OpenViewModal(int noteId)
+    {
+        CloseModals();
+        SelectedNoteId = noteId;
+        ShowViewModal = true;
+    }
+
+    private void CloseModals()
+    {
+        ShowAddModal = false;
+        ShowEditModal = false;
+        ShowViewModal = false;
+
+        UsePatientSearch = false;
+    }
+}

@@ -21,6 +21,8 @@
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
         <Nullable>enable</Nullable>
 
+        <StaticWebAssetsCompressionEnabled>false</StaticWebAssetsCompressionEnabled>
+
         <!-- Display name -->
         <ApplicationTitle>IT_13FinalProject</ApplicationTitle>
 

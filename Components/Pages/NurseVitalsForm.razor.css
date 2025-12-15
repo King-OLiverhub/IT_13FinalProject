@@ -92,6 +92,39 @@
     margin-top: 40px; /* push Vital Signs Monitoring clearly below Nurse Consultation Form */
 }
 
+.nv-patient-info {
+    margin: -10px 0 18px;
+}
+
+.nv-patient-info-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 10px;
+}
+
+.nv-patient-info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 38px;
+}
+
+.nv-patient-info-row {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    font-size: 12px;
+}
+
+.nv-patient-info-label {
+    font-weight: 700;
+}
+
+.nv-patient-info-value {
+    color: #333333;
+}
+
 .nv-form-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

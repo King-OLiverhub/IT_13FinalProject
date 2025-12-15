@@ -27,14 +27,6 @@
     <section class="pm-overview">
         <div class="pm-overview-header">
             <h2 class="pm-section-title">Health Record List</h2>
-            <div class="pm-tab-container">
-                <button class="pm-tab-btn @(ShowArchived ? "" : "active")" @onclick="() => SetArchiveView(false)">
-                    Active Records
-                </button>
-                <button class="pm-tab-btn @(ShowArchived ? "active" : "")" @onclick="() => SetArchiveView(true)">
-                    Archived Records
-                </button>
-            </div>
             <div class="pm-show-entries">
                 <span>Show</span>
                 <select @bind="PageSize">
@@ -47,6 +39,14 @@
         </div>
 
         <div class="pm-filters-row">
+            <div class="pm-tab-container">
+                <button class="pm-tab-btn @(ShowArchived ? "" : "active")" @onclick="() => SetArchiveView(false)">
+                    Active Records
+                </button>
+                <button class="pm-tab-btn @(ShowArchived ? "active" : "")" @onclick="() => SetArchiveView(true)">
+                    Archived Records
+                </button>
+            </div>
             <div class="pm-search-row">
                 <div class="pm-search-box">
                     <span class="pm-search-icon"></span>

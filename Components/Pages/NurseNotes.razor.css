@@ -26,10 +26,14 @@
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .nn-section {
     padding: 24px;
+    display: flex;
+    flex-direction: column;
 }
 
 .nn-section-header {
@@ -104,6 +108,9 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    overflow-y: auto;
+    max-height: 70vh;
+    padding-right: 6px;
 }
 
 .nn-note-card {
@@ -137,6 +144,22 @@
     font-weight: 600;
     color: #04524f;
 }
+
+ .nn-remove-note {
+     background: transparent;
+     border: none;
+     padding: 0;
+     margin: 0;
+     width: fit-content;
+     font-size: 10px;
+     line-height: 1.2;
+     color: #0f8b8d;
+     cursor: pointer;
+ }
+
+ .nn-remove-note:hover {
+     text-decoration: underline;
+ }
 
 .nn-patient-id {
     font-size: 12px;
@@ -219,4 +242,184 @@
 
 .nn-btn-view:hover {
     background-color: #f1f3f4;
+}
+
+.nn-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 18px;
+}
+
+.nn-modal {
+    width: min(560px, 92vw);
+    max-height: 90vh;
+    overflow: auto;
+    background: #f3faf9;
+    border-radius: 28px;
+    padding: 28px 26px 22px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+}
+
+.nn-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 18px;
+    color: #000;
+}
+
+.nn-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.nn-form-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.nn-form-row.compact {
+    grid-template-columns: 120px 1fr;
+}
+
+.nn-form-label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #000;
+    padding-top: 6px;
+}
+
+.nn-form-input,
+.nn-form-select,
+.nn-form-textarea {
+    width: 100%;
+    border: 1px solid #0f8b8d;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.nn-form-textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.nn-readonly {
+    font-size: 12px;
+    color: #000;
+    padding-top: 6px;
+    line-height: 1.4;
+}
+
+.nn-form-subtitle {
+    font-weight: 700;
+    font-size: 12px;
+    margin-top: 2px;
+    color: #000;
+}
+
+.nn-form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.nn-input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+ .nn-input-with-icon .nn-form-input {
+     padding-left: 30px;
+ }
+
+.nn-input-with-icon .nn-form-select {
+    padding-left: 30px;
+}
+
+.nn-input-search-icon {
+    position: absolute;
+    left: 10px;
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='none'%3E%3Ccircle cx='7' cy='7' r='4.5' stroke='%230f8b8d' stroke-width='1.6'/%3E%3Cline x1='9.8' y1='9.8' x2='13' y2='13' stroke='%230f8b8d' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px 14px;
+}
+
+.nn-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.nn-modal-btn {
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.nn-modal-btn-secondary {
+    background: #ffffff;
+    border: 2px solid #0f8b8d;
+    color: #0f8b8d;
+}
+
+.nn-modal-btn-primary {
+    background: #0f8b8d;
+    border: 2px solid #0f8b8d;
+    color: #ffffff;
+}
+
+.nn-modal-footer-view {
+    justify-content: flex-end;
+}
+
+.nn-modal-link {
+    background: transparent;
+    border: none;
+    color: #000;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 6px 8px;
+}
+
+.nn-view-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.nn-view-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 12px;
+}
+
+.nn-view-label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #000;
+}
+
+.nn-view-value {
+    font-size: 12px;
+    color: #000;
+    line-height: 1.4;
 }
